@@ -1,1 +1,1 @@
-# bupt-programing-design
+# BUPT程序设计代码仓库
