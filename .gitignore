@@ -3,5 +3,5 @@
 .vscode
 .idea
 __pychache__
-sql_app.db
+*.db
 node_modules
