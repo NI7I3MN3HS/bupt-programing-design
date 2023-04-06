@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
 from .database import Base,engine,SessionLocal
@@ -51,15 +51,15 @@ class Post(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
-    content = Column(String)
+    content = Column(Text)
     create_time = Column(String)
     update_time = Column(String)
     is_deleted = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"))
 
     author = relationship("User", back_populates="posts")
-    comments = relationship("Comment", back_populates="post")
-    likes = relationship("Like", back_populates="post")
+    comments = relationship("Comment", back_populates="posts")
+    likes = relationship("Like", back_populates="posts")
 '''
 帖子表（posts）
 id：帖子ID，主键
@@ -74,7 +74,7 @@ class Comment(Base):
     __tablename__ = "comments"
 
     id = Column(Integer, primary_key=True, index=True)
-    content = Column(String)
+    content = Column(Text)
     create_time = Column(String)
     update_time = Column(String)
     is_deleted = Column(Boolean, default=False)
@@ -153,7 +153,7 @@ class PrivateMessage(Base):
     __tablename__ = "private_messages"
 
     id = Column(Integer, primary_key=True, index=True)
-    content = Column(String)
+    content = Column(Text)
     create_time = Column(String)
     is_read = Column(Boolean, default=False)
     sender_id = Column(Integer, ForeignKey("users.id"))
