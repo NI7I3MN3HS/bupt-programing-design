@@ -1,6 +1,6 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, DateTime
 from sqlalchemy.orm import relationship
-
+from datetime import datetime
 from .database import Base,engine,SessionLocal
 
 class User(Base):
@@ -12,8 +12,8 @@ class User(Base):
     password_hash = Column(String)
     avatar_url = Column(String)
     introduction = Column(String)
-    create_time = Column(String)
-    update_time = Column(String)
+    create_time = Column(DateTime, default=datetime.now)
+    update_time = Column(DateTime, onupdate=datetime.now, default=datetime.now)
     is_admin = Column(Boolean, default=False)
 
     posts = relationship("Post", back_populates="author")
@@ -52,8 +52,8 @@ class Post(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     content = Column(Text)
-    create_time = Column(String)
-    update_time = Column(String)
+    create_time = Column(DateTime, default=datetime.now)
+    update_time = Column(DateTime, onupdate=datetime.now, default=datetime.now)
     is_deleted = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"))
 
@@ -75,8 +75,8 @@ class Comment(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text)
-    create_time = Column(String)
-    update_time = Column(String)
+    create_time = Column(DateTime, default=datetime.now)
+    update_time = Column(DateTime, onupdate=datetime.now, default=datetime.now)
     is_deleted = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
@@ -136,7 +136,7 @@ class Notification(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     content = Column(String)
-    create_time = Column(String)
+    create_time = Column(DateTime, default=datetime.now)
     is_read = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"))
 
@@ -154,7 +154,7 @@ class PrivateMessage(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text)
-    create_time = Column(String)
+    create_time = Column(DateTime, default=datetime.now)
     is_read = Column(Boolean, default=False)
     sender_id = Column(Integer, ForeignKey("users.id"))
     recipient_id = Column(Integer, ForeignKey("users.id"))
