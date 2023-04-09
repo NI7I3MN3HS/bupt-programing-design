@@ -10,14 +10,13 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    password_hash: str
+    password: str
     avatar_url: Optional[str] = None
 
 
 class UserUpdate(UserBase):
     username: Optional[str] = None
     email: Optional[str] = None
-    password_hash: Optional[str] = None
     avatar_url: Optional[str] = None
     introduction: Optional[str] = None
            
