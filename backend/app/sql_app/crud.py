@@ -7,9 +7,9 @@ from . import models, schemas
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = user.password
     db_user = models.User(username=user.username, email=user.email, password_hash=hashed_password, avatar_url=user.avatar_url, introduction=user.introduction)
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
+    db.add(db_user) 
+    db.commit() # 提交保存到数据库中
+    db.refresh(db_user) # 刷新数据库中的数据
     return db_user
 
 # 根据用户id获取用户信息

@@ -2,6 +2,6 @@
 .DS_Store
 .vscode
 .idea
-__pychache__
+__pycache__
 *.db
 node_modules
