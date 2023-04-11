@@ -3,15 +3,22 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
+
 class UserBase(BaseModel):
     username: str
     email: str
-    introduction: Optional[str] = None
 
 
 class UserCreate(UserBase):
     password: str
-    avatar_url: Optional[str] = None
 
 
 class UserUpdate(UserBase):
@@ -19,10 +26,11 @@ class UserUpdate(UserBase):
     email: Optional[str] = None
     avatar_url: Optional[str] = None
     introduction: Optional[str] = None
-           
+
 
 class User(UserBase):
     id: int
+    introduction: Optional[str] = None
     avatar_url: Optional[str] = None
     create_time: datetime
     update_time: datetime
@@ -30,6 +38,7 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
 
 class PostBase(BaseModel):
     title: str
@@ -49,9 +58,10 @@ class Post(PostBase):
     id: int
     user_id: int
     is_deleted: bool = False
-    create_time:datetime
-    update_time:datetime
+    create_time: datetime
+    update_time: datetime
     author: User
+
     class Config:
         orm_mode = True
 
@@ -66,15 +76,17 @@ class CommentBase(BaseModel):
 class CommentCreate(CommentBase):
     pass
 
+
 class CommentUpdate(CommentBase):
     content: Optional[str] = None
     is_deleted: Optional[bool] = False
 
+
 class Comment(CommentBase):
     id: int
     is_deleted: bool = False
-    create_time:datetime
-    update_time:datetime
+    create_time: datetime
+    update_time: datetime
     author: User
     post: Post
     parent: Union["Comment", None] = None
@@ -115,8 +127,8 @@ class LikeCreate(LikeBase):
 class Like(LikeBase):
     id: int
     author: User
-    post: Post 
-    comment: Comment 
+    post: Post
+    comment: Comment
 
     class Config:
         orm_mode = True
@@ -140,13 +152,16 @@ class Notification(NotificationBase):
     class Config:
         orm_mode = True
 
+
 class PrivateMessageBase(BaseModel):
     content: str
     sender_id: int
     receiver_id: int
 
+
 class PrivateMessageCreate(PrivateMessageBase):
     pass
+
 
 class PrivateMessage(PrivateMessageBase):
     id: int
