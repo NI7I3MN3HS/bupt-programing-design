@@ -7,14 +7,13 @@ from fastapi.security import OAuth2PasswordBearer
 from secrets import token_urlsafe
 
 
-
 from sqlalchemy.orm import Session
 
 from ..sql_app import schemas, crud
 from ..sql_app.database import get_db
 
 
-SECRET_KEY =token_urlsafe(32)  # 生成32位随机密钥
+SECRET_KEY = token_urlsafe(32)  # 生成32位随机密钥
 ALGORITHM = "HS256"  # 生成 JWT token 使用的算法
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # JWT token 过期时间，单位为分钟
 
@@ -45,6 +44,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
 
 # 从 JWT token 中获取用户信息
 async def get_current_user(
