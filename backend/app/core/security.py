@@ -4,20 +4,25 @@ from passlib.context import CryptContext
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from secrets import token_urlsafe
+
+
+
 from sqlalchemy.orm import Session
 
 from ..sql_app import schemas, crud
 from ..sql_app.database import get_db
 
 
-SECRET_KEY = "a1c64cbba3c3b570b0a3adb707e532468ab3b588a74a2447aa89faf25ebc8878"  # 用于生成 JWT token 的密钥
+SECRET_KEY =token_urlsafe(32)  # 生成32位随机密钥
 ALGORITHM = "HS256"  # 生成 JWT token 使用的算法
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # JWT token 过期时间，单位为分钟
 
 # 用于对密码进行哈希加密和验证的工具
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")  # 用于获取 JWT token 的 OAuth2 认证方案
+# 用于获取 JWT token 的 OAuth2 认证方案
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 # 对密码进行哈希加密
@@ -40,7 +45,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
 
 # 从 JWT token 中获取用户信息
 async def get_current_user(
