@@ -1,5 +1,4 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, DateTime
-from sqlalchemy.orm import relationship
 from datetime import datetime
 from .database import Base, engine
 
@@ -10,33 +9,13 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
-    password_hash = Column(String)
+    hashed_password = Column(String)
     avatar_url = Column(String)
     introduction = Column(String)
     create_time = Column(DateTime, default=datetime.now)
     update_time = Column(DateTime, onupdate=datetime.now, default=datetime.now)
     is_admin = Column(Boolean, default=False)
-
-    posts = relationship("Post", back_populates="author")
-    comments = relationship("Comment", back_populates="author")
-    followers = relationship(
-        "Follow", back_populates="follower", foreign_keys="Follow.follower_id"
-    )
-    followed = relationship(
-        "Follow", back_populates="followed", foreign_keys="Follow.followed_id"
-    )
-    likes = relationship("Like", back_populates="author")
-    notifications = relationship("Notification", back_populates="receiver")
-    sent_messages = relationship(
-        "PrivateMessage",
-        back_populates="sender",
-        foreign_keys="PrivateMessage.sender_id",
-    )
-    received_messages = relationship(
-        "PrivateMessage",
-        back_populates="recipient",
-        foreign_keys="PrivateMessage.recipient_id",
-    )
+    is_active = Column(Boolean, default=True)
 
 
 """
@@ -64,10 +43,6 @@ class Post(Base):
     is_deleted = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    author = relationship("User", back_populates="posts")
-    comments = relationship("Comment", back_populates="posts")
-    likes = relationship("Like", back_populates="posts")
-
 
 """
 帖子表（posts）
@@ -93,12 +68,6 @@ class Comment(Base):
     post_id = Column(Integer, ForeignKey("posts.id"))
     parent_id = Column(Integer, ForeignKey("comments.id"))
 
-    author = relationship("User", back_populates="comments")
-    posts = relationship("Post", back_populates="comments")
-    parent = relationship("Comment", back_populates="children", remote_side=[id])
-    children = relationship("Comment", back_populates="parent")
-    likes = relationship("Like", back_populates="comment")
-
 
 """
 评论表（comments）
@@ -120,13 +89,6 @@ class Follow(Base):
     follower_id = Column(Integer, ForeignKey("users.id"))
     followed_id = Column(Integer, ForeignKey("users.id"))
 
-    follower = relationship(
-        "User", back_populates="followers", foreign_keys=[follower_id]
-    )
-    followed = relationship(
-        "User", back_populates="followed", foreign_keys=[followed_id]
-    )
-
 
 """
 关注表（follows）
@@ -143,10 +105,6 @@ class Like(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
     comment_id = Column(Integer, ForeignKey("comments.id"))
-
-    author = relationship("User", back_populates="likes")
-    posts = relationship("Post", back_populates="likes")
-    comment = relationship("Comment", back_populates="likes")
 
 
 """
@@ -166,8 +124,6 @@ class Notification(Base):
     create_time = Column(DateTime, default=datetime.now)
     is_read = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"))
-
-    receiver = relationship("User", back_populates="notifications")
 
 
 """
@@ -189,13 +145,6 @@ class PrivateMessage(Base):
     is_read = Column(Boolean, default=False)
     sender_id = Column(Integer, ForeignKey("users.id"))
     recipient_id = Column(Integer, ForeignKey("users.id"))
-
-    sender = relationship(
-        "User", back_populates="sent_messages", foreign_keys=[sender_id]
-    )
-    recipient = relationship(
-        "User", back_populates="received_messages", foreign_keys=[recipient_id]
-    )
 
 
 """

@@ -1,14 +1,15 @@
 from sqlalchemy.orm import Session
-
+from ..core import security
 from . import models, schemas
 
 
 # user crud
 # 创建用户
 def create_user(db: Session, user: schemas.UserCreate):
-    hashed_password = user.password
     db_user = models.User(
-        username=user.username, email=user.email, password_hash=hashed_password
+        username=user.username,
+        email=user.email,
+        hashed_password=security.hash_password(user.password),
     )
     db.add(db_user)
     db.commit()  # 提交保存到数据库中

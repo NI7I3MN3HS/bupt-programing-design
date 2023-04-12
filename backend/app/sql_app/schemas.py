@@ -1,6 +1,6 @@
 from typing import List, Union, Optional
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Token(BaseModel):
@@ -13,28 +13,28 @@ class TokenData(BaseModel):
 
 
 class UserBase(BaseModel):
-    username: str
-    email: str
+    username: str = Field(None, min_length=1, max_length=20)
+    email: str = Field(None, regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
 
 
 class UserCreate(UserBase):
-    password: str
+    password: str = Field(None, min_length=6, max_length=24)
 
 
 class UserUpdate(UserBase):
-    username: Optional[str] = None
-    email: Optional[str] = None
     avatar_url: Optional[str] = None
     introduction: Optional[str] = None
 
 
 class User(UserBase):
     id: int
+    hashed_password: str
     introduction: Optional[str] = None
     avatar_url: Optional[str] = None
     create_time: datetime
     update_time: datetime
     is_admin: bool
+    is_active: bool
 
     class Config:
         orm_mode = True
@@ -60,7 +60,6 @@ class Post(PostBase):
     is_deleted: bool = False
     create_time: datetime
     update_time: datetime
-    author: User
 
     class Config:
         orm_mode = True
@@ -87,10 +86,6 @@ class Comment(CommentBase):
     is_deleted: bool = False
     create_time: datetime
     update_time: datetime
-    author: User
-    post: Post
-    parent: Union["Comment", None] = None
-    children: List["Comment"] = []
 
     class Config:
         orm_mode = True
@@ -107,8 +102,6 @@ class FollowCreate(FollowBase):
 
 class Follow(FollowBase):
     id: int
-    follower: User
-    followed: User
 
     class Config:
         orm_mode = True
@@ -126,9 +119,6 @@ class LikeCreate(LikeBase):
 
 class Like(LikeBase):
     id: int
-    author: User
-    post: Post
-    comment: Comment
 
     class Config:
         orm_mode = True
@@ -147,7 +137,6 @@ class Notification(NotificationBase):
     id: int
     create_time: datetime
     is_read: bool
-    receiver: User
 
     class Config:
         orm_mode = True
@@ -167,8 +156,6 @@ class PrivateMessage(PrivateMessageBase):
     id: int
     create_time: datetime
     is_read: bool
-    sender: User
-    receiver: User
 
     class Config:
         orm_mode = True
