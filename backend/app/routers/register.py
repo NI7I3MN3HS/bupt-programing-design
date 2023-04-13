@@ -7,7 +7,7 @@ from ..sql_app.database import get_db
 from .. import mail
 
 
-origin_code = token_hex(4) # 生成验证码
+origin_code = token_hex(4)  # 生成验证码
 
 router = APIRouter(
     prefix="/register",
@@ -17,7 +17,7 @@ router = APIRouter(
 
 @router.post("/VerifyCode")
 async def send_verify_code(email: str):
-    mail.get_code_email(email, origin_code) # 发送验证码
+    mail.get_code_email(email, origin_code)  # 发送验证码
 
     return {
         "msg": "Verification code sent to your email. Please check and input the code."

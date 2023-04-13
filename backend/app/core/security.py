@@ -45,12 +45,13 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+
 # 验证 JWT token
-def verify_token(token: str,key:str = SECRET_KEY)->str:
+def verify_token(token: str, key: str = SECRET_KEY):
     try:
         return jwt.decode(token, key, algorithms=[ALGORITHM])
     except JWTError:
-        return HTTPException(status_code=403,detail="身份验证失败")
+        return HTTPException(status_code=403, detail="身份验证失败")
 
 
 # 从 JWT token 中获取用户信息
