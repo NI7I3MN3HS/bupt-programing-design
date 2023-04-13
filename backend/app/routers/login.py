@@ -23,7 +23,8 @@ async def login(
 ):
     # 验证用户名和密码是否正确
     user = crud.get_user_by_username(db, username=form_data.username)
-    if not user:
+    email=crud.get_user_by_email(db, email=form_data.username)
+    if not user and not email:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
     if not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect email or password")
