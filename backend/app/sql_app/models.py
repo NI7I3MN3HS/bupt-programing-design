@@ -29,6 +29,7 @@ introduction：个人介绍
 create_time：注册时间
 update_time：最后一次更新时间
 is_admin：是否为管理员，布尔类型
+is_active：是否已被激活，布尔类型
 """
 
 
