@@ -1,10 +1,9 @@
 <template>
   <div class="bbs">
-    <div class="post">
+    <div class="main-column">
+      <!---card模版-->
       <n-card title="标题" class="first">
-        <template #header-extra>
-          <n-button strong secondary round type="error"> 点赞 </n-button>
-        </template>
+        <template #header-extra> </template>
         <el-link class="content" href="https://element-plus.org">
           内容
         </el-link>
@@ -12,9 +11,82 @@
           <div class="author">发布人</div>
         </template>
         <template #action>
-          <n-button strong secondary type="info"> 评论 </n-button>
+          <n-space>
+            <n-button
+              :class="
+                is_likebutton_active === true ? 'like_active' : 'like_default'
+              "
+              :color="
+                is_likebutton_active === true
+                  ? '#056de8'
+                  : 'rgba(5, 109, 232, 0.15)'
+              "
+              :text-color="is_likebutton_active === true ? 'white' : '#056de8'"
+              @click="likebuttonclick"
+            >
+              <template #icon>
+                <n-icon
+                  ><svg
+                    t="1681457768550"
+                    class="icon"
+                    viewBox="0 0 1024 1024"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    p-id="2016"
+                    width="200"
+                    height="200"
+                  >
+                    <path
+                      d="M511.997952 268.025732 146.975708 755.974268l730.048584 0L511.997952 268.025732"
+                      p-id="2017"
+                    ></path>
+                  </svg>
+                </n-icon>
+              </template>
+              赞同
+            </n-button>
+
+            <n-button
+              :class="
+                is_dislikebutton_active === true
+                  ? 'like_active'
+                  : 'like_default'
+              "
+              :color="
+                is_dislikebutton_active === true
+                  ? '#056de8'
+                  : 'rgba(5, 109, 232, 0.15)'
+              "
+              :text-color="
+                is_dislikebutton_active === true ? 'white' : '#056de8'
+              "
+              @click="dislikebuttonclick"
+            >
+              <template #icon>
+                <n-icon
+                  ><svg
+                    t="1681458252944"
+                    class="icon"
+                    viewBox="0 0 1024 1024"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    p-id="1472"
+                    width="200"
+                    height="200"
+                  >
+                    <path
+                      d="M511.997952 755.974268l365.02634-487.950584L146.975708 268.023684 511.997952 755.974268"
+                      p-id="1473"
+                    ></path>
+                  </svg>
+                </n-icon>
+              </template>
+              反对
+            </n-button>
+          </n-space>
         </template>
       </n-card>
+      <!---分割线-->
       <n-card title="标题" class="first">
         <template #header-extra>
           <n-button strong secondary round type="error"> 点赞 </n-button>
@@ -53,13 +125,22 @@
 <script>
 import { defineComponent, ref } from "vue";
 
-export default defineComponent({
-  setup() {
+export default {
+  data() {
     return {
-      page: ref(2),
+      is_likebutton_active: false,
+      is_dislikebutton_active: false,
     };
   },
-});
+  methods: {
+    likebuttonclick() {
+      this.is_likebutton_active = !this.is_likebutton_active;
+    },
+    dislikebuttonclick() {
+      this.is_dislikebutton_active = !this.is_dislikebutton_active;
+    },
+  },
+};
 </script>
 
 <style lang="less">
@@ -78,11 +159,9 @@ export default defineComponent({
   // }
 
   .post {
+    margin-bottom: 10px;
     width: 70%;
-    background-color: rgb(216, 54, 54);
-    height: 100%;
     left: 15%;
-    top: 2%;
 
     // .title{
     //   font-weight: bold;
@@ -103,21 +182,6 @@ export default defineComponent({
     }
     .author {
       font-size: smaller;
-    }
-
-    .first {
-      width: 96%;
-      height: 150px;
-
-      left: 2%;
-      top: 20px;
-    }
-
-    .second {
-      width: 96%;
-      height: 150px;
-      left: 2%;
-      top: 300px;
     }
   }
 }
