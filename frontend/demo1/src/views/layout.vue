@@ -105,7 +105,7 @@
         </div>
       </div>
     </div>
-    <div class="body">
+    <div class="body-content">
       <!--嵌套路由-->
       <router-view></router-view>
     </div>
@@ -221,7 +221,7 @@ const activate = (place) => {
   top: 0px;
   width: 100%;
   position: fixed;
-  z-index: 1000;
+  z-index: 1000; //设置z轴置顶
   background: #fff;
 
   box-shadow: 0 2px 6px 0 #ddd;
@@ -263,7 +263,7 @@ const activate = (place) => {
     }
   }
 }
-.body {
+.body-content {
   position: relative;
   min-height: calc(100vh - 220px);
   margin-top: 60px;
