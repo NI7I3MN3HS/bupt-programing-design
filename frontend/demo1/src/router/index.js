@@ -12,7 +12,6 @@ const router = createRouter({
           path: "",
           component: () => import("../views/bbs.vue"),
         },
-
       ],
     },
     {
@@ -27,7 +26,6 @@ const router = createRouter({
       component: () => import("../views/a.vue"),
     },
   ],
-
 });
 
 export default router;
