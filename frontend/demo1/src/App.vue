@@ -1,14 +1,19 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from "vue-router";
+import { defineComponent } from "vue";
+import { NThemeEditor } from "naive-ui";
 
+defineComponent({
+  components: {
+    NThemeEditor,
+  },
+});
 </script>
 
 <template>
-
-
-  <RouterView />
+  <n-theme-editor>
+    <RouterView />
+  </n-theme-editor>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

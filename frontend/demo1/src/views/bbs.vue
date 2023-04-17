@@ -29,7 +29,7 @@
                 :text-color="
                   is_likebutton_active === true ? 'white' : '#056de8'
                 "
-                @click="likebuttonclick"
+                @click="likebuttonclick()"
               >
                 <template #icon>
                   <n-icon
@@ -63,7 +63,7 @@
                 :text-color="
                   is_dislikebutton_active === true ? 'white' : '#056de8'
                 "
-                @click="dislikebuttonclick"
+                @click="dislikebuttonclick()"
               >
                 <template #icon>
                   <n-icon
@@ -93,7 +93,7 @@
                 text-color="black"
                 color="transparent"
                 :bordered="false"
-                @click="commentsclick"
+                @click="commentsclick()"
               >
                 <template #icon>
                   <svg
@@ -213,32 +213,50 @@
               </n-modal>
 
               <!--收藏模态框2-->
-              <n-modal v-model:show="showModal2">
-                <n-card :style="FavoriteModalCard">
-                  <template #header>
-                    <div class="FavoriteModalCardHeaderH1">创建新收藏夹</div>
-                  </template>
-                  <div class="MyFavoriteInput">
+              <n-config-provider :theme-overrides="themeOverrides">
+                <n-modal v-model:show="showModal2">
+                  <n-card :style="FavoriteModalCard">
+                    <template #header>
+                      <div class="FavoriteModalCardHeaderH1">创建新收藏夹</div>
+                    </template>
                     <n-space vertical>
                       <n-input
-                        v-model:value="value"
+                        v-model:value="favoriteTitle"
                         type="text"
                         placeholder="收藏标题"
                       />
 
                       <n-input
-                        v-model:value="value"
+                        v-model:value="favoriteDescribe"
                         type="textarea"
                         placeholder="收藏描述"
                       />
                     </n-space>
-                  </div>
-                  <template #footer>
-                    <span>返回</span>
-                    <span>创建</span>
-                  </template>
-                </n-card>
-              </n-modal>
+                    <template #footer>
+                      <n-space justify="center">
+                        <span
+                          ><n-button
+                            text-color="#8590a6"
+                            color="#8590a6"
+                            ghost
+                            @click="backtomodal1"
+                            >返回
+                          </n-button></span
+                        >
+                        <span
+                          ><n-button
+                            text-color="white"
+                            color="#056de8"
+                            :disabled="!favoriteTitle"
+                            @click="CreateNewFavorite(favoriteTitle)"
+                            >创建</n-button
+                          >
+                        </span>
+                      </n-space>
+                    </template>
+                  </n-card>
+                </n-modal>
+              </n-config-provider>
 
               <n-button v-if="is_active_expand === true">收起 </n-button>
             </n-space>
@@ -288,6 +306,14 @@ import { defineComponent, ref } from "vue";
 
 export default {
   setup() {
+    const themeOverrides = {
+      Input: {
+        borderFocus: "1px solid #8590a6",
+        boxShadowFocus: "0 0 0 2px rgba(133, 144, 166, 0.2)",
+        borderHover: "1px solid #8590a6",
+        caretColor: "#8590a6FF",
+      },
+    };
     const items = ref([
       { id: 1, title: "收藏夹1", is_favoritebutton_active: false },
       { id: 2, title: "收藏夹2", is_favoritebutton_active: false },
@@ -296,9 +322,11 @@ export default {
 
     return {
       items,
+      themeOverrides,
       showModal1: ref(false),
       showModal2: ref(false),
-      value: ref(null),
+      favoriteTitle: ref(null),
+      favoriteDescribe: ref(null),
     };
   },
   data() {
@@ -339,17 +367,23 @@ export default {
     ShowCreateFavoriteInfo() {
       this.showModal1 = false;
       //打开新modal
-
       this.$nextTick(() => {
         this.showModal2 = true;
       });
     },
-    CreateNewFavorite() {
+    backtomodal1() {
+      this.showModal2 = false;
+      this.$nextTick(() => {
+        this.showModal1 = true;
+      });
+    },
+    CreateNewFavorite(titlename) {
       this.items.push({
         id: this.items.length + 1, //当前收藏夹数量+1
-        title: "收藏夹" + (this.items.length + 1),
+        title: titlename,
         is_favoritebutton_active: false,
       });
+      this.backtomodal1();
     },
   },
 };
@@ -415,16 +449,6 @@ export default {
     .author {
       font-size: smaller;
     }
-  }
-}
-</style>
-
-<style lang="less">
-.MyFavoriteInput {
-  .n-input .n-input--resizable .n-input--stateful {
-    --n-box-shadow-focus: rgba(133, 144, 166, 0.2);
-    --n-border-focus: #8590a6;
-    --n-border-hover: #8590a6;
   }
 }
 </style>
