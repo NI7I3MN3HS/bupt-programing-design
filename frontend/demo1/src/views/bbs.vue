@@ -21,9 +21,6 @@
           <template #action>
             <n-space>
               <n-button
-                :class="
-                  is_likebutton_active === true ? 'like_active' : 'like_default'
-                "
                 :color="
                   is_likebutton_active === true
                     ? '#056de8'
@@ -58,11 +55,6 @@
               </n-button>
 
               <n-button
-                :class="
-                  is_dislikebutton_active === true
-                    ? 'like_active'
-                    : 'like_default'
-                "
                 :color="
                   is_dislikebutton_active === true
                     ? '#056de8'
@@ -128,7 +120,7 @@
                 text-color="black"
                 ghost
                 :bordered="false"
-                @click="showModal = true"
+                @click="showModal1 = true"
               >
                 <template #icon
                   ><svg
@@ -144,26 +136,62 @@
                 >收藏
               </n-button>
 
-              <n-modal v-model:show="showModal">
+              <!---收藏模态框1-->
+              <n-modal v-model:show="showModal1">
                 <n-card :style="FavoriteModalCard">
                   <template #header>
-                    <div class="FavoriteModalCardHeaderH1">添加收藏</div>
+                    <div class="FavoriteModalCardHeaderH1">
+                      添加收藏
+                      <span class="FavoriteModalCloseButton">
+                        <n-button
+                          @click="showModal1 = false"
+                          ghost
+                          :bordered="false"
+                          text-color="black"
+                          color="transparent"
+                          ><template #icon
+                            ><svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59L7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12L5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"
+                                fill="currentColor"
+                              ></path></svg></template
+                        ></n-button>
+                      </span>
+                    </div>
                     <div class="FavoriteModalCardHeaderH2">
                       请选择你喜欢的收藏夹
                     </div>
                   </template>
-
                   <n-list>
                     <n-list-item v-for="item in items" :key="item.id">
-                      <div>{{ item.title }}</div>
-                      <div>
-                        <n-button
-                          size="tiny"
-                          type="text"
-                          @click="deleteItem(item.id)"
-                          >删除</n-button
-                        >
-                      </div>
+                      <n-space justify="space-between">
+                        <span>{{ item.title }}</span>
+                        <span class="FavoriteModalFavoriteButton">
+                          <n-button
+                            @click="favoritebuttonclick(item)"
+                            :color="
+                              item.is_favoritebutton_active === true
+                                ? '#8590a6'
+                                : '#056de8'
+                            "
+                            :text-color="
+                              item.is_favoritebutton_active === true
+                                ? 'white'
+                                : '#056de8'
+                            "
+                            :ghost="!item.is_favoritebutton_active"
+                          >
+                            <span v-if="item.is_favoritebutton_active === true"
+                              >已收藏
+                            </span>
+                            <span v-else>收藏</span></n-button
+                          >
+                        </span>
+                      </n-space>
                     </n-list-item>
                     <n-list-item
                       v-if="items.length === 0"
@@ -173,10 +201,41 @@
                   </n-list>
                   <template #footer>
                     <div class="FavoriteModalCardFooter">
-                      <n-button color="#056de8" text-color="white"
+                      <n-button
+                        color="#056de8"
+                        text-color="white"
+                        @click="ShowCreateFavoriteInfo"
                         >创建收藏夹</n-button
                       >
                     </div>
+                  </template>
+                </n-card>
+              </n-modal>
+
+              <!--收藏模态框2-->
+              <n-modal v-model:show="showModal2">
+                <n-card :style="FavoriteModalCard">
+                  <template #header>
+                    <div class="FavoriteModalCardHeaderH1">创建新收藏夹</div>
+                  </template>
+                  <div class="MyFavoriteInput">
+                    <n-space vertical>
+                      <n-input
+                        v-model:value="value"
+                        type="text"
+                        placeholder="收藏标题"
+                      />
+
+                      <n-input
+                        v-model:value="value"
+                        type="textarea"
+                        placeholder="收藏描述"
+                      />
+                    </n-space>
+                  </div>
+                  <template #footer>
+                    <span>返回</span>
+                    <span>创建</span>
                   </template>
                 </n-card>
               </n-modal>
@@ -230,19 +289,16 @@ import { defineComponent, ref } from "vue";
 export default {
   setup() {
     const items = ref([
-      { id: 1, title: "文章1" },
-      { id: 2, title: "文章2" },
-      { id: 3, title: "文章3" },
+      { id: 1, title: "收藏夹1", is_favoritebutton_active: false },
+      { id: 2, title: "收藏夹2", is_favoritebutton_active: false },
+      { id: 3, title: "收藏夹3", is_favoritebutton_active: false },
     ]);
-
-    function deleteItem(id) {
-      items.value = items.value.filter((item) => item.id !== id);
-    }
 
     return {
       items,
-      showModal: ref(false),
-      deleteItem,
+      showModal1: ref(false),
+      showModal2: ref(false),
+      value: ref(null),
     };
   },
   data() {
@@ -260,9 +316,15 @@ export default {
   methods: {
     likebuttonclick() {
       this.is_likebutton_active = !this.is_likebutton_active;
+      if (this.is_dislikebutton_active === true) {
+        this.is_dislikebutton_active = false;
+      }
     },
     dislikebuttonclick() {
       this.is_dislikebutton_active = !this.is_dislikebutton_active;
+      if (this.is_likebutton_active === true) {
+        this.is_likebutton_active = false;
+      }
     },
     expandclick() {
       this.is_active_expand = !this.is_active_expand;
@@ -271,6 +333,24 @@ export default {
       this.is_active_expand = !this.is_active_expand;
     },
     commentsclick() {},
+    favoritebuttonclick(item) {
+      item.is_favoritebutton_active = !item.is_favoritebutton_active;
+    },
+    ShowCreateFavoriteInfo() {
+      this.showModal1 = false;
+      //打开新modal
+
+      this.$nextTick(() => {
+        this.showModal2 = true;
+      });
+    },
+    CreateNewFavorite() {
+      this.items.push({
+        id: this.items.length + 1, //当前收藏夹数量+1
+        title: "收藏夹" + (this.items.length + 1),
+        is_favoritebutton_active: false,
+      });
+    },
   },
 };
 </script>
@@ -288,6 +368,10 @@ export default {
 }
 .FavoriteModalCardFooter {
   text-align: center;
+}
+.FavoriteModalCloseButton {
+  position: absolute;
+  right: 0px;
 }
 .bbs {
   background-color: rgb(233, 232, 235);
@@ -307,7 +391,7 @@ export default {
     background-color: white;
   }
   .main-column {
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     width: 70%;
     left: 15%;
 
@@ -331,6 +415,16 @@ export default {
     .author {
       font-size: smaller;
     }
+  }
+}
+</style>
+
+<style lang="less">
+.MyFavoriteInput {
+  .n-input .n-input--resizable .n-input--stateful {
+    --n-box-shadow-focus: rgba(133, 144, 166, 0.2);
+    --n-border-focus: #8590a6;
+    --n-border-hover: #8590a6;
   }
 }
 </style>

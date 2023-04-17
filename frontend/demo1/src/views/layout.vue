@@ -172,6 +172,12 @@
       </div>
     </div>
   </div>
+
+  <!--回到顶部 可视高度50-->
+  <div class="BackTop">
+    <n-back-top :bottom="100" :visibility-height="50" iconColorHover="black">
+    </n-back-top>
+  </div>
 </template>
 
 <script setup>
