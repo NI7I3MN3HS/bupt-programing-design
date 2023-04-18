@@ -201,6 +201,11 @@ const options = [
   {
     label: "编辑用户资料",
     key: "editProfile",
+    props: {
+      onClick: () => {
+        router.push("profile");
+      },
+    },
   },
   {
     label: "退出登录",

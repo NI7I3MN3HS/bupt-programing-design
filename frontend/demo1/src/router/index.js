@@ -12,6 +12,10 @@ const router = createRouter({
           path: "",
           component: () => import("../views/bbs.vue"),
         },
+        {
+          path: "/profile",
+          component: () => import("../views/profile.vue"),
+        },
       ],
     },
     {
