@@ -1,157 +1,158 @@
 <template>
   <div class="background">
-    <div class="user">
-      <!-- <div class="img">
-                <img
-            src="http://www.runoob.com/wp-content/uploads/2016/04/trolltunga.jpg" 
-            alt="Norway" width="100" height="100"
-            >
-            </div>
-
-            <div class="edit">
-                <n-button strong secondary type="tertiary">
-                编辑
-            </n-button>
-            </div> -->
-
-      <div class="user1">
-        <el-row>
-          <el-col>
-            <el-card :body-style="{ padding: '0px' }">
-              <img
-                src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                class="image"
-              />
-
-              <div style="padding: 14px">
-                <span>昵称</span>
-
-                <div class="bottom">
-                  <time class="time">{{ currentDate }}</time>
-                  <!-- <el-button text class="button">编辑</el-button> -->
-                </div>
-
-                <div class="edit">
-                  <n-button strong secondary type="tertiary">
-                    编辑个人资料
-                  </n-button>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </div>
+    <div class="ProfileBGImage" />
+    <div class="Avatar">
+      <n-avatar
+        :size="140"
+        src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+      />
     </div>
-
-    <div class="relate">
-      <div class="relate1">
-        <n-card content-style="padding: 0;">
-          <n-tabs
-            type="line"
-            size="large"
-            :tabs-padding="20"
-            pane-style="padding: 20px;"
-          >
-            <n-tab-pane name="发帖"> 发帖 </n-tab-pane>
-            <n-tab-pane name="评论"> 评论 </n-tab-pane>
-          </n-tabs>
+    <div class="ProfileHeader">
+      <div class="UserMain">
+        <n-card content-style="padding:0 24px 20px 24px">
+          <div>
+            <span class="UserName">{{ Username }}</span>
+            <span class="UserPersonalizedSignature">个性签名</span>
+            <span class="EditorProfileButton"
+              ><router-link to="/profile/edit"
+                ><n-button ghost color="#056de8" text-color="#056de8"
+                  >编辑个人资料</n-button
+                ></router-link
+              ></span
+            >
+          </div>
+          <div class="FollowsAndFans">
+            <n-space>
+              <n-button text>
+                <template #icon>
+                  <n-icon>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      viewBox="0 0 512 512"
+                    >
+                      <path
+                        d="M336 256c-20.56 0-40.44-9.18-56-25.84c-15.13-16.25-24.37-37.92-26-61c-1.74-24.62 5.77-47.26 21.14-63.76S312 80 336 80c23.83 0 45.38 9.06 60.7 25.52c15.47 16.62 23 39.22 21.26 63.63c-1.67 23.11-10.9 44.77-26 61C376.44 246.82 356.57 256 336 256zm66-88z"
+                        fill="currentColor"
+                      ></path>
+                      <path
+                        d="M467.83 432H204.18a27.71 27.71 0 0 1-22-10.67a30.22 30.22 0 0 1-5.26-25.79c8.42-33.81 29.28-61.85 60.32-81.08C264.79 297.4 299.86 288 336 288c36.85 0 71 9 98.71 26.05c31.11 19.13 52 47.33 60.38 81.55a30.27 30.27 0 0 1-5.32 25.78A27.68 27.68 0 0 1 467.83 432z"
+                        fill="currentColor"
+                      ></path>
+                      <path
+                        d="M147 260c-35.19 0-66.13-32.72-69-72.93c-1.42-20.6 5-39.65 18-53.62c12.86-13.83 31-21.45 51-21.45s38 7.66 50.93 21.57c13.1 14.08 19.5 33.09 18 53.52c-2.87 40.2-33.8 72.91-68.93 72.91z"
+                        fill="currentColor"
+                      ></path>
+                      <path
+                        d="M212.66 291.45c-17.59-8.6-40.42-12.9-65.65-12.9c-29.46 0-58.07 7.68-80.57 21.62c-25.51 15.83-42.67 38.88-49.6 66.71a27.39 27.39 0 0 0 4.79 23.36A25.32 25.32 0 0 0 41.72 400h111a8 8 0 0 0 7.87-6.57c.11-.63.25-1.26.41-1.88c8.48-34.06 28.35-62.84 57.71-83.82a8 8 0 0 0-.63-13.39c-1.57-.92-3.37-1.89-5.42-2.89z"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                  </n-icon>
+                </template>
+                关注
+              </n-button>
+              <n-button text>
+                <template #icon>
+                  <n-icon>
+                    <svg
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      x="0px"
+                      y="0px"
+                      viewBox="0 0 512 512"
+                      enable-background="new 0 0 512 512"
+                      xml:space="preserve"
+                    >
+                      <path
+                        d="M458,210.409l-145.267-12.476L256,64l-56.743,133.934L54,210.409l110.192,95.524L131.161,448L256,372.686L380.83,448
+	l-33.021-142.066L458,210.409z M272.531,345.286L256,335.312l-16.53,9.973l-59.988,36.191l15.879-68.296l4.369-18.79l-14.577-12.637
+	l-52.994-45.939l69.836-5.998l19.206-1.65l7.521-17.75l27.276-64.381l27.27,64.379l7.52,17.751l19.208,1.65l69.846,5.998
+	l-52.993,45.939l-14.576,12.636l4.367,18.788l15.875,68.299L272.531,345.286z"
+                      ></path>
+                    </svg>
+                  </n-icon>
+                </template>
+                粉丝
+              </n-button></n-space
+            >
+          </div>
         </n-card>
       </div>
-
-      <n-pagination v-model:page="page" :page-count="20" />
     </div>
-
-    <!-- <n-pagination v-model:page="page" :page-count="20" /> -->
   </div>
 </template>
 
-<script setup>
-import { ref } from "vue";
+<script>
+import { ref, defineComponent } from "vue";
+import { useRoute, useRouter } from "vue-router";
+const route = useRoute();
+const router = useRouter();
 
-const currentDate = ref(new Date());
+export default {
+  setup() {
+    const Username = ref("atom");
+
+    return {
+      Username,
+    };
+  },
+};
 </script>
 
 <style lang="less" scoped>
+.n-card {
+  width: 100%;
+  height: 120px;
+}
+.light-green {
+  height: 108px;
+  background-color: rgba(0, 128, 0, 0.12);
+}
+.green {
+  height: 108px;
+  background-color: rgba(0, 128, 0, 0.24);
+}
+
 .background {
   width: 100%;
   background-color: rgb(233, 232, 235);
   min-height: calc(100vh);
-
-  .user {
+  display: block;
+  .ProfileBGImage {
+    height: 250px;
+    background-image: url(https://pic1.zhimg.com/80/v2-c9ccad67cdbdfaceaee4edca8b17f710_1440w.webp);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+  .Avatar {
     position: absolute;
-    width: 22%;
-    background-color: rgb(255, 255, 255);
-    height: 55%;
     left: 15%;
-    top: 5%;
-    .img {
-      left: 5%;
-      top: 10%;
-    }
-    // .edit{
-    //     left: 5%;
-    //     top: 20%;
-    // }
-
-    .user1 {
-      left: 10%;
-      top: 10%;
-      width: 70%;
-
-      // .image{
-      // left: 5%;
-      // top: 10%;
-      // width: 20%;
-      // }
-      .time {
-        font-size: 12px;
-        color: #999;
-      }
-      .bottom {
-        margin-top: 13px;
-        line-height: 12px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      // .button {
-      //     padding: 0;
-      //     min-height: auto;
-      // }
-      .image {
-        width: 100%;
-        display: block;
-      }
-      // .edit{
-      //     left: 5%;
-      //     top: 80%;
-      // }
-    }
+    width: 140px;
+    top: 200px;
+    z-index: 10;
   }
-  .relate {
-    position: absolute;
-    width: 46%;
-    background-color: rgb(255, 255, 255);
-    height: 90%;
-    right: 15%;
-    top: 5%;
-    .relate1 {
-      left: 5%;
-      top: 5%;
-      width: 90%;
-      // height: 200px;  记得改
-    }
+  .ProfileHeader {
+    width: 100%;
   }
-
-  // 换页
-  .n-pagination {
-    justify-content: center;
-    align-items: center;
-    // width: 40%;
-    // background-color: rgb(255, 255, 255);
-    height: 50px;
-    // left: 30%;
-    top: 75%;
-  }
+}
+.UserName {
+  font-size: 40px;
+  font-weight: 700;
+  left: calc(15% + 140px + 20px);
+}
+.UserPersonalizedSignature {
+  font-size: 14px;
+  font-weight: 400;
+  left: calc(15% + 140px + 30px);
+}
+.EditorProfileButton {
+  left: calc(15% + 140px + 500px);
+}
+.FollowsAndFans {
+  left: calc(15% + 140px + 20px);
 }
 </style>
