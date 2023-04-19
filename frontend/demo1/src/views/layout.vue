@@ -199,8 +199,8 @@ const options = [
     },
   },
   {
-    label: "编辑用户资料",
-    key: "editProfile",
+    label: "用户资料",
+    key: "Profile",
     props: {
       onClick: () => {
         router.push("profile");
@@ -212,7 +212,7 @@ const options = [
     key: "logout",
     props: {
       onClick: () => {
-        router.push("a");
+        router.push("loginandregister");
       },
     },
   },
