@@ -3,6 +3,48 @@ from ..core import security
 from . import models, schemas
 
 
+# code crud
+# 创建代码
+def create_code(db: Session, code: str, email: str):
+    db_code = models.Code(
+        email=email,
+        code=code,
+    )
+    db.add(db_code)
+    db.commit()
+    db.refresh(db_code)
+    return db_code
+
+
+# 根据邮箱获取验证码
+def get_code_by_email(db: Session, email: str):
+    return db.query(models.Code).filter(models.Code.email == email).first()
+
+
+# 根据code获取验证码
+def get_code_by_code(db: Session, code: str):
+    return db.query(models.Code).filter(models.Code.code == code).first()
+
+
+# 更新code
+def update_code(db: Session, email: str, code: str):
+    db_code = db.query(models.Code).filter(models.Code.email == email).first()
+    if db_code:
+        db_code.code = code
+        db.commit()
+        db.refresh(db_code)
+        return db_code
+
+
+# 根据用户邮箱删除验证码
+def delete_code(db: Session, code: str):
+    db_code = db.query(models.Code).filter(models.Code.code == code).first()
+    if db_code:
+        db.delete(db_code)
+        db.commit()
+        return db_code
+
+
 # user crud
 # 创建用户
 def create_user(db: Session, user: schemas.UserCreate):

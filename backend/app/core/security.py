@@ -36,7 +36,7 @@ def verify_password(plain_password: str, hashed_password: str):
 
 # 生成 JWT token
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
+    to_encode = data.copy()  # type: ignore
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:

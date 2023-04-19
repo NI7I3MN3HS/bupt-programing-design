@@ -3,6 +3,13 @@ from datetime import datetime
 from .database import Base, engine
 
 
+class Code(Base):
+    __tablename__ = "codes"
+    id = Column(Integer, primary_key=True, index=True)
+    code = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True)
+
+
 class User(Base):
     __tablename__ = "users"
 
