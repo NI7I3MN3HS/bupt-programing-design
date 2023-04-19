@@ -190,7 +190,7 @@ const router = useRouter();
 
 const options = [
   {
-    label: "用户资料",
+    label: "登录/注册",
     key: "profile",
     props: {
       onClick: () => {
