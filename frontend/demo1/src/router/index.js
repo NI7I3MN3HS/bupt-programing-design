@@ -22,17 +22,6 @@ const router = createRouter({
         },
       ],
     },
-    {
-      path: "/loginandregister",
-      name: "loginandregister",
-      component: () => import("../views/LoginAndRegister.vue"),
-    },
-
-    {
-      path: "/a",
-      name: "a",
-      component: () => import("../views/a.vue"),
-    },
   ],
 });
 
