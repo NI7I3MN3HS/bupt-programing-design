@@ -28,18 +28,14 @@ async def update_me(
 # 重置密码
 @router.put("/reset_password")
 async def reset_password(
-    origin_passowrd: str,
-    new_password: str,
+    origin_passowrd: schemas.password = Depends(),
+    new_password: schemas.password2 = Depends(),
     user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db),
 ):
-    if len(origin_password) < 6 or len(origin_password) > 24:
-        raise HTTPException(status_code=400, detail="Password must be 6-24 characters")
-    if not security.verify_password(origin_passowrd, user.hashed_password):
+    if not security.verify_password(origin_passowrd.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect password")
-    if len(new_password) < 6 or len(new_password) > 24:
-        raise HTTPException(status_code=400, detail="Password must be 6-24 characters")
-    hashed_password = security.hash_password(new_password)
+    hashed_password = security.hash_password(new_password.password2)
     # 更新密码
     db_user = crud.get_user(db, user_id=user.id)
     db_user.hashed_password = hashed_password

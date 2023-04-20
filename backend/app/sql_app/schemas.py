@@ -8,6 +8,14 @@ class Code(BaseModel):
     code: str
 
 
+class password(BaseModel):
+    password: str = Field(min_length=6, max_length=24)
+
+
+class password2(BaseModel):
+    password2: str = Field(min_length=6, max_length=24)
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str

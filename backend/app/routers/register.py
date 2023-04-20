@@ -16,7 +16,9 @@ router = APIRouter(
 
 
 @router.post("/VerifyCode")
-async def send_verify_code(Email: schemas.Email, db: Session = Depends(get_db)):
+async def send_verify_code(
+    Email: schemas.Email = Depends(), db: Session = Depends(get_db)
+):
     email = Email.email
     db_user = crud.get_user_by_email(db, email=email)
     if db_user:
@@ -37,7 +39,9 @@ async def send_verify_code(Email: schemas.Email, db: Session = Depends(get_db)):
 
 @router.post("/")
 async def register(
-    user: schemas.UserCreate, Code: schemas.Code, db: Session = Depends(get_db)
+    user: schemas.UserCreate = Depends(),
+    Code: schemas.Code = Depends(),
+    db: Session = Depends(get_db),
 ):
     db_code = crud.get_code_by_code(db, code=Code.code)
     if not db_code:
@@ -52,14 +56,10 @@ async def register(
 
 
 @router.post("/find_password/VerifyCode")
-async def send_verify_code(email: str, db: Session = Depends(get_db)):
-    if (
-        len(email) < 2
-        or len(email) > 32
-        or re.match(r"^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$ ", email)
-    ):
-        raise HTTPException(status_code=400, detail="Invalid Email")
-    # 验证邮箱是否存在
+async def send_verify_code(
+    Email: schemas.Email = Depends(), db: Session = Depends(get_db)
+):
+    email = Email.email
     db_user = crud.get_user_by_email(db, email=email)
     if not db_user:
         raise HTTPException(status_code=400, detail="Email not registered")
@@ -79,18 +79,21 @@ async def send_verify_code(email: str, db: Session = Depends(get_db)):
 
 # 找回密码
 @router.post("/find_password")
-async def find_password(code: str, password: str, db: Session = Depends(get_db)):
+async def find_password(
+    Code: schemas.Code = Depends(),
+    password: schemas.password = Depends(),
+    db: Session = Depends(get_db),
+):
+    code = Code.code
     db_code = crud.get_code_by_code(db, code=code)
     if not db_code:
         raise HTTPException(status_code=400, detail="Verification code error")
     email = db_code.email
-    if len(password) < 6 or len(password) > 24:
-        raise HTTPException(status_code=400, detail="Password must be 6-24 characters")
     db_user = crud.get_user_by_email(db, email=email)
     if not db_user:
         raise HTTPException(status_code=400, detail="Email error")
     # 更新密码
-    db_user.hashed_password = security.hash_password(password)
+    db_user.hashed_password = security.hash_password(password.password)
     db.commit()
     db.refresh(db_user)
     crud.delete_code(db, code=code)
