@@ -1,9 +1,12 @@
-from fastapi import Depends, HTTPException, APIRouter
+import os
+from fastapi import Depends, HTTPException, APIRouter, UploadFile, File
 from sqlalchemy.orm import Session
 from ..sql_app import models, schemas, crud
 from ..sql_app.database import get_db
 from ..core import security
 from .. import mail
+
+UPLOAD_FOLDER = "static/avatar/"
 
 router = APIRouter(prefix="/user", tags=["user"])
 
@@ -22,6 +25,30 @@ async def update_me(
     db: Session = Depends(get_db),
 ):
     db_user = crud.update_user(db, user.id, user_update)
+    return db_user
+
+
+# 上传头像
+@router.post("/upload_avatar")
+async def upload_avatar(
+    avatar: UploadFile = File(
+        ...,
+        max_size=1024 * 1024 * 5,
+        content_type="image/*",
+    ),
+    user: schemas.User = Depends(security.get_current_user),
+    db: Session = Depends(get_db),
+):
+    # 保存文件
+    avatar.filename = "avatar" + str(user.id) + os.path.splitext(avatar.filename)[1]
+    file_path = UPLOAD_FOLDER + avatar.filename
+    with open(file_path, "wb") as f:
+        f.write(avatar.file.read())
+    # 更新数据库
+    db_user = crud.get_user(db, user_id=user.id)
+    db_user.avatar_url = file_path
+    db.commit()
+    db.refresh(db_user)
     return db_user
 
 

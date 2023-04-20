@@ -1,7 +1,7 @@
 from typing import List, Union, Optional
 from datetime import datetime
 from pydantic import BaseModel, Field
-from fastapi import Form
+from fastapi import UploadFile, File
 
 
 class Code(BaseModel):
@@ -21,12 +21,12 @@ class Token(BaseModel):
     token_type: str
 
 
-class Email(BaseModel):
-    email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
-
-
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+
+class Email(BaseModel):
+    email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
 
 
 class UserBase(BaseModel):
@@ -39,7 +39,6 @@ class UserCreate(UserBase):
 
 class UserUpdate(UserBase):
     email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
-    avatar_url: str = Field(None, max_length=256)
     introduction: str = Field(None, max_length=1024)
 
 
