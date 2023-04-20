@@ -44,8 +44,11 @@ async def send_verify_code(Email:schemas.Email, db: Session = Depends(get_db)):
 
 @router.post("/")
 async def register(
-    username: str, password: str, code: str, db: Session = Depends(get_db)
+    user:schemas.UserCreate,Code:schemas.Code,db: Session = Depends(get_db)
 ):
+    code=Code.code
+    username=user.username
+    password=user.password
     if len(username) < 1 or len(username) > 20:
         raise HTTPException(status_code=400, detail="Username must be 1-20 characters")
     if len(password) < 6 or len(password) > 24:
