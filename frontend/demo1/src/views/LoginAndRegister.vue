@@ -23,10 +23,12 @@
           </n-button>
         </n-tab-pane>
         <n-tab-pane name="signup" tab="注册">
-          <n-form :model="RegisterValue">
+          <n-form :model="Email">
             <n-form-item-row label="邮箱">
-              <n-input v-model:value="RegisterValue.email" />
+              <n-input v-model:value="Email.email" />
             </n-form-item-row>
+          </n-form>
+          <n-form :model="RegisterValue">
             <n-button
               type="primary"
               block
@@ -46,7 +48,7 @@
               <n-input v-model:value="RegisterValue.password" />
             </n-form-item-row>
             <n-form-item-row label="重复密码">
-              <n-input v-model:value="RegisterValue.password2" />
+              <n-input v-model:value="RegisterValue.password" />
             </n-form-item-row>
           </n-form>
           <n-button
@@ -67,7 +69,7 @@
 <script>
 import axios from "axios";
 import { roundToNearestMinutes } from "date-fns";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
@@ -78,11 +80,10 @@ export default {
       username: "",
       password: "",
     });
+    const Email = reactive({ email: "" });
     const RegisterValue = reactive({
-      email: "",
       username: "",
       password: "",
-      password2: "",
       verifycode: "",
     });
     return {
@@ -97,17 +98,14 @@ export default {
         });
       },
       RegisterValue,
+      Email,
       clicksendcode() {
-        axios.post("/register/VerifyCode", RegisterValue.email).then(() => {
+        axios.post("/register/VerifyCode", Email).then(() => {
           alert("发送成功");
         });
       },
       clickregister() {
-        let form = new FormData();
-        form.append("username", RegisterValue.username);
-        form.append("password", RegisterValue.password);
-        form.append("verifycode", RegisterValue.verifycode);
-        axios.post("/register/", form).then(() => {
+        axios.post("/register/", RegisterValue).then(() => {
           alert("注册成功");
         });
       },

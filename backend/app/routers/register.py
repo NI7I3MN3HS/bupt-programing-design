@@ -16,7 +16,8 @@ router = APIRouter(
 
 
 @router.post("/VerifyCode")
-async def send_verify_code(email: str, db: Session = Depends(get_db)):
+async def send_verify_code(Email:schemas.Email, db: Session = Depends(get_db)):
+    email=Email.email
     if (
         len(email) < 2
         or len(email) > 32

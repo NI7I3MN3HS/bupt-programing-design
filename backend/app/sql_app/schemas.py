@@ -8,6 +8,8 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+class Email(BaseModel):
+    email: str
 
 class TokenData(BaseModel):
     username: Optional[str] = None
