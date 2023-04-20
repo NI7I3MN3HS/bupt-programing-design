@@ -14,24 +14,24 @@ class TokenData(BaseModel):
 
 
 class UserBase(BaseModel):
-    username: str = Field(None, min_length=1, max_length=20)
-    email: str = Field(None, regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
+    username: str = Field(min_length=1, max_length=20)
+    email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
 
 
 class UserCreate(UserBase):
-    password: str = Field(None, min_length=6, max_length=24)
+    password: str = Field(min_length=6, max_length=24)
 
 
 class UserUpdate(UserBase):
-    avatar_url: Optional[str] = None
-    introduction: Optional[str] = None
+    avatar_url: str = Field(None, max_length=256)
+    introduction: str = Field(None, max_length=1024)
 
 
 class User(UserBase):
     id: int
     hashed_password: str
-    introduction: Optional[str] = None
-    avatar_url: Optional[str] = None
+    avatar_url: str = Field(None, max_length=256)
+    introduction: str = Field(None, max_length=1024)
     create_time: datetime
     update_time: datetime
     is_admin: bool

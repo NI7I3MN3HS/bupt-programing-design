@@ -21,7 +21,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # JWT token 过期时间，单位为�
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # 用于获取 JWT token 的 OAuth2 认证方案
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login/")
 
 
 # 对密码进行哈希加密
@@ -72,7 +72,7 @@ async def get_current_user(
     except JWTError:
         raise credentials_exception
     user = crud.get_user_by_username(db, username=token_data.username)  # type: ignore
-    if user is None:
+    if user is None or user.is_active == False:
         raise credentials_exception
     return user
 

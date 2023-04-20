@@ -34,6 +34,7 @@ async def login(
     if email:
         if not verify_password(form_data.password, email.hashed_password):
             raise HTTPException(status_code=400, detail="Incorrect email or password")
+        form_data.username = email.username
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": form_data.username}, expires_delta=access_token_expires
