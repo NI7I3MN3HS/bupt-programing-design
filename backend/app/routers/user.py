@@ -17,9 +17,9 @@ async def get_me(user: schemas.User = Depends(security.get_current_user)):
 # 更新用户信息
 @router.put("/update")
 async def update_me(
+    user_update: schemas.UserUpdate,
     user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db),
-    user_update: schemas.UserUpdate = Depends(),
 ):
     db_user = crud.update_user(db, user.id, user_update)
     return db_user
@@ -28,8 +28,8 @@ async def update_me(
 # 重置密码
 @router.put("/reset_password")
 async def reset_password(
-    origin_passowrd: schemas.password = Depends(),
-    new_password: schemas.password2 = Depends(),
+    origin_passowrd: schemas.password,
+    new_password: schemas.password2,
     user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db),
 ):

@@ -16,9 +16,7 @@ router = APIRouter(
 
 
 @router.post("/VerifyCode")
-async def send_verify_code(
-    Email: schemas.Email = Depends(), db: Session = Depends(get_db)
-):
+async def send_verify_code(Email: schemas.Email, db: Session = Depends(get_db)):
     email = Email.email
     db_user = crud.get_user_by_email(db, email=email)
     if db_user:
@@ -39,8 +37,8 @@ async def send_verify_code(
 
 @router.post("/")
 async def register(
-    user: schemas.UserCreate = Depends(),
-    Code: schemas.Code = Depends(),
+    user: schemas.UserCreate,
+    Code: schemas.Code,
     db: Session = Depends(get_db),
 ):
     db_code = crud.get_code_by_code(db, code=Code.code)
@@ -56,9 +54,7 @@ async def register(
 
 
 @router.post("/find_password/VerifyCode")
-async def send_verify_code(
-    Email: schemas.Email = Depends(), db: Session = Depends(get_db)
-):
+async def send_verify_code(Email: schemas.Email, db: Session = Depends(get_db)):
     email = Email.email
     db_user = crud.get_user_by_email(db, email=email)
     if not db_user:
@@ -80,8 +76,8 @@ async def send_verify_code(
 # 找回密码
 @router.post("/find_password")
 async def find_password(
-    Code: schemas.Code = Depends(),
-    password: schemas.password = Depends(),
+    Code: schemas.Code,
+    password: schemas.password,
     db: Session = Depends(get_db),
 ):
     code = Code.code
