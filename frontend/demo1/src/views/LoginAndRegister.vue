@@ -10,15 +10,17 @@
         pane-style="padding-left: 4px; padding-right: 4px; box-sizing: border-box;"
       >
         <n-tab-pane name="signin" tab="登录">
-          <n-form>
+          <n-form :model="LoginValue">
             <n-form-item-row label="用户名">
-              <n-input />
+              <n-input v-model="LoginValue.username" />
             </n-form-item-row>
             <n-form-item-row label="密码">
-              <n-input />
+              <n-input v-model="LoginValue.password" />
             </n-form-item-row>
           </n-form>
-          <n-button type="primary" block secondary strong> 登录 </n-button>
+          <n-button type="primary" block secondary strong @click="clicklogin">
+            登录
+          </n-button>
         </n-tab-pane>
         <n-tab-pane name="signup" tab="注册">
           <n-form>
@@ -39,7 +41,31 @@
   </div>
 </template>
 
-<script setup></script>
+<script>
+import axios from "axios";
+import { reactive } from "vue";
+
+export default {
+  setup() {
+    const LoginValue = reactive({
+      username: "",
+      password: "",
+    });
+    return {
+      LoginValue,
+      clicklogin() {
+        axios
+          .post("/login/", LoginValue, {
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          })
+          .then((res) => {
+            console.log("login success!");
+          });
+      },
+    };
+  },
+};
+</script>
 
 <style lang="less" scoped>
 .body {
