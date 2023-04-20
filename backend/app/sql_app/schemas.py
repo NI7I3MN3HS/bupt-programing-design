@@ -3,15 +3,19 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 from fastapi import Form
 
+
 class Code(BaseModel):
     code: str
+
 
 class Token(BaseModel):
     access_token: str
     token_type: str
 
+
 class Email(BaseModel):
     email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
+
 
 class TokenData(BaseModel):
     username: Optional[str] = None
@@ -19,7 +23,6 @@ class TokenData(BaseModel):
 
 class UserBase(BaseModel):
     username: str = Field(min_length=1, max_length=20)
-    email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
 
 
 class UserCreate(UserBase):
@@ -27,6 +30,7 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(UserBase):
+    email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
     avatar_url: str = Field(None, max_length=256)
     introduction: str = Field(None, max_length=1024)
 
@@ -34,6 +38,7 @@ class UserUpdate(UserBase):
 class User(UserBase):
     id: int
     hashed_password: str
+    email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
     avatar_url: str = Field(None, max_length=256)
     introduction: str = Field(None, max_length=1024)
     create_time: datetime

@@ -16,15 +16,8 @@ router = APIRouter(
 
 
 @router.post("/VerifyCode")
-async def send_verify_code(Email:schemas.Email, db: Session = Depends(get_db)):
-    email=Email.email
-    if (
-        len(email) < 2
-        or len(email) > 32
-        or re.match(r"^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$ ", email)
-    ):
-        raise HTTPException(status_code=400, detail="Invalid Email")
-    # 验证邮箱是否存在
+async def send_verify_code(Email: schemas.Email, db: Session = Depends(get_db)):
+    email = Email.email
     db_user = crud.get_user_by_email(db, email=email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -44,25 +37,17 @@ async def send_verify_code(Email:schemas.Email, db: Session = Depends(get_db)):
 
 @router.post("/")
 async def register(
-    user:schemas.UserCreate,Code:schemas.Code,db: Session = Depends(get_db)
+    user: schemas.UserCreate, Code: schemas.Code, db: Session = Depends(get_db)
 ):
-    code=Code.code
-    username=user.username
-    password=user.password
-    if len(username) < 1 or len(username) > 20:
-        raise HTTPException(status_code=400, detail="Username must be 1-20 characters")
-    if len(password) < 6 or len(password) > 24:
-        raise HTTPException(status_code=400, detail="Password must be 6-24 characters")
-    db_code = crud.get_code_by_code(db, code=code)
+    db_code = crud.get_code_by_code(db, code=Code.code)
     if not db_code:
         raise HTTPException(status_code=400, detail="Verification code error")
-    user = schemas.UserCreate(username=username, email=db_code.email, password=password)
     # 验证用户是否存在
     db_user = crud.get_user_by_username(db, username=user.username)
     if db_user:
         raise HTTPException(status_code=400, detail="Username already registered")
-    crud.create_user(db=db, user=user)
-    crud.delete_code(db, code=code)
+    crud.create_user(db=db, user=user, email=db_code.email)
+    crud.delete_code(db, code=Code.code)
     return {"msg": "User registered successfully."}
 
 

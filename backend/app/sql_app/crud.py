@@ -47,10 +47,10 @@ def delete_code(db: Session, code: str):
 
 # user crud
 # 创建用户
-def create_user(db: Session, user: schemas.UserCreate):
+def create_user(db: Session, user: schemas.UserCreate, email: str):
     db_user = models.User(
         username=user.username,
-        email=user.email,
+        email=email,
         hashed_password=security.hash_password(user.password),
     )
     db.add(db_user)
