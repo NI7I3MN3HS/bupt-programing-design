@@ -389,16 +389,6 @@ export default {
   background-color: rgb(233, 232, 235);
   min-height: calc(100vh);
 
-  // 换页
-  // .n-pagination{
-  //   justify-content: center;
-  //   align-items: center;
-  //   // width: 40%;
-  //   // background-color: rgb(255, 255, 255);
-  //   height: 10%;
-  //   // left: 30%;
-  //   top: 800px;
-  // }
   .n-card__action {
     align-items: center;
     background-color: white;
@@ -407,11 +397,7 @@ export default {
     margin-bottom: 0px;
     width: 70%;
     left: 15%;
-
-    // .title{
-    //   font-weight: bold;
-    // }
-
+    
     // 按钮
     .el-link {
       margin-right: 8px;
