@@ -3,13 +3,15 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 from fastapi import Form
 
+class Code(BaseModel):
+    code: str
 
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 class Email(BaseModel):
-    email: str
+    email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
 
 class TokenData(BaseModel):
     username: Optional[str] = None

@@ -39,16 +39,13 @@
               发送验证码
             </n-button>
             <n-form-item-row label="验证码">
-              <n-input v-model:value="RegisterValue.verifycode" />
+              <n-input v-model:value="RegisterValue.Code.code" />
             </n-form-item-row>
             <n-form-item-row label="用户名">
-              <n-input v-model:value="RegisterValue.username" />
+              <n-input v-model:value="RegisterValue.user.username" />
             </n-form-item-row>
             <n-form-item-row label="密码">
-              <n-input v-model:value="RegisterValue.password" />
-            </n-form-item-row>
-            <n-form-item-row label="重复密码">
-              <n-input v-model:value="RegisterValue.password" />
+              <n-input v-model:value="RegisterValue.user.password" />
             </n-form-item-row>
           </n-form>
           <n-button
@@ -82,9 +79,13 @@ export default {
     });
     const Email = reactive({ email: "" });
     const RegisterValue = reactive({
-      username: "",
-      password: "",
-      verifycode: "",
+      user: {
+        username: "",
+        password: "",
+      },
+      Code: {
+        code: "",
+      },
     });
     return {
       LoginValue,
@@ -94,7 +95,7 @@ export default {
         form.append("password", LoginValue.password);
 
         axios.post("/login/", form).then(() => {
-          router.push("/profile");
+          alert("登录成功");
         });
       },
       RegisterValue,
