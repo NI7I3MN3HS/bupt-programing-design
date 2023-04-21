@@ -31,14 +31,15 @@ async def update_me(
 # 上传头像
 @router.post("/upload_avatar")
 async def upload_avatar(
-    avatar: UploadFile = File(
-        ...,
-        max_size=1024 * 1024 * 5,
-        content_type="image/*",
-    ),
+    avatar: UploadFile = File(...),
     user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db),
 ):
+    # 限制文件大小和类型
+    if not avatar.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="File type error")
+    if avatar.size > 1024 * 1024 * 5:
+        raise HTTPException(status_code=400, detail="File size error")
     # 保存文件
     avatar.filename = "avatar" + str(user.id) + os.path.splitext(avatar.filename)[1]
     file_path = UPLOAD_FOLDER + avatar.filename
