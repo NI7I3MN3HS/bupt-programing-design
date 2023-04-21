@@ -17,19 +17,23 @@
             </div>
           </template>
           <n-form ref="formRef" :model="Email" :rules="MailRules">
-            <n-form-item-row label="邮箱" path="email">
-              <n-input v-model:value="Email.email" />
+            <n-form-item-row label="邮箱" path="data.email">
+              <n-input
+                ref="EmailFormItemRef"
+                @change="EmailInputChange"
+                v-model:value="Email.data.email"
+              />
             </n-form-item-row>
           </n-form>
           <n-form :model="RegisterValue">
             <n-form-item-row label="验证码">
               <n-input
-                :disabled="!Email.email"
+                :disabled="!Email.data.email"
                 v-model:value="RegisterValue.Code.code"
               />
               <n-button
                 v-if="!is_sendcode"
-                :disabled="!Email.email"
+                :disabled="!Email.data.email"
                 type="primary"
                 strong
                 @click="clicksendcode"
@@ -78,6 +82,7 @@
           >
         </n-card>
       </div>
+      <LoginForm />
       <div v-if="PageStatus == 1" class="ShowLogin">
         <n-card>
           <n-form :model="LoginValue">
@@ -128,36 +133,47 @@ export default {
       });
   },*/
   setup() {
+    function EmailAlreadyUsed(rule, value) {
+      return Email.detail != "Email already registered";
+    } //验证邮箱是否已经被注册
+    const EmailFormItemRef = ref(null); //邮箱输入框钩子
     const renderCountdown = ({ seconds }) => {
       return `${String(seconds).padStart(2)}秒后可以重发`;
-    };
-    const SendcodeCountdown_active = ref(false);
-    const is_sendcode = ref(false);
-    const formRef = ref(null);
-    const PageStatus = ref(0);
+    }; //倒计时渲染函数
+    const SendcodeCountdown_active = ref(false); //倒计时是否激活
+    const is_sendcode = ref(false); //是否已经发送过验证码
+    const formRef = ref(null); //表单钩子
+    const PageStatus = ref(0); //页面状态
     const LoginValue = reactive({
       username: "",
       password: "",
-    });
-    const Email = reactive({ email: "" });
+    }); //登录表单数据
+    const Email = reactive({ data: { email: "" }, detail: "" }); //邮箱表单数据
     const MailRules = {
-      email: [
-        {
-          required: true,
-          validator(rule, value) {
-            if (!value) {
-              return new Error("邮箱号不能为空！");
-            } else if (
-              !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value)
-            ) {
-              return new Error("请输入正确的邮箱号！");
-            }
-            return true;
+      data: {
+        email: [
+          {
+            validator: EmailAlreadyUsed,
+            message: "该邮箱已被注册",
+            trigger: ["focus"],
           },
-          trigger: ["input", "blur"],
-        },
-      ],
-    };
+          {
+            required: true,
+            validator(rule, value) {
+              if (!value) {
+                return new Error("邮箱号不能为空！");
+              } else if (
+                !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value)
+              ) {
+                return new Error("请输入正确的邮箱号！");
+              }
+              return true;
+            },
+            trigger: ["blur", "input"],
+          },
+        ],
+      },
+    }; //邮箱表单验证规则
     const RegisterValue = reactive({
       user: {
         username: "",
@@ -166,15 +182,16 @@ export default {
       Code: {
         code: "",
       },
-    });
+    }); //注册表单数据
     return {
+      EmailFormItemRef, //邮箱输入框钩子
       renderCountdown, //倒计时渲染函数
       SendcodeCountdown_active, //发送验证码的倒计时
       is_sendcode, //是否发送验证码
       formRef, //声明表单对象
-      PageStatus,
-      LoginValue,
-      MailRules,
+      PageStatus, //页面状态
+      LoginValue, //登录表单数据
+      MailRules, //邮箱表单验证规则
       SendcodeCountdownFinish() {
         SendcodeCountdown_active.value = false;
         is_sendcode.value = false;
@@ -193,9 +210,20 @@ export default {
       clicksendcode() {
         is_sendcode.value = true;
         SendcodeCountdown_active.value = true;
-        axios.post("/register/VerifyCode", Email).then(() => {
-          alert("发送成功");
-        });
+        axios
+          .post("/register/VerifyCode", Email.data)
+          .then(() => {
+            alert("发送成功");
+          })
+          .catch((err) => {
+            const ErrorStatus = err.response.data.detail;
+            Email.detail = ErrorStatus;
+            is_sendcode.value = false;
+            EmailFormItemRef.value?.focus();
+          });
+      },
+      EmailInputChange() {
+        Email.detail = "";
       },
       clickregister() {
         axios.post("/register/", RegisterValue).then(() => {
