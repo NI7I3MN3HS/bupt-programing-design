@@ -79,7 +79,19 @@
         </n-card>
       </div>
       <div v-if="PageStatus == 1" class="ShowLogin">
-        <n-card>222</n-card>
+        <n-card>
+          <n-form :model="LoginValue">
+            <n-form-item-row label="用户名">
+              <n-input v-model:value="LoginValue.username" />
+            </n-form-item-row>
+            <n-form-item-row label="密码">
+              <n-input v-model:value="LoginValue.password" />
+            </n-form-item-row>
+          </n-form>
+          <n-button type="primary" block secondary strong @click="clicklogin">
+            登录
+          </n-button></n-card
+        >
       </div>
     </div>
   </div>
