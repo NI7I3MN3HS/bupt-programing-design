@@ -41,15 +41,17 @@
                             </div>
                         </div>
                         <div class="_right">
-                            <!-- <label class="_item">
-                            <span class="_intro">昵称</span>
-                            <input placeholder="请输入昵称">
-                        </label>
-                        <label class="_item">
-                            <span class="_intro">个人简介</span>
-                            <input placeholder="请介绍你自己" maxlength="200">
-                        </label> -->
-                        <!-- 这里没写完 -->
+                            <label class="_item">
+                                <span class="_intro">昵称</span>
+                                <input class="_input" placeholder="请输入昵称">
+                            </label>
+                            <label class="_item">
+                                <span class="_intro">个人简介</span>
+                                <input class="_input" placeholder="请介绍你自己" maxlength="200">
+                            </label>
+                            <div class="_button">
+                                <n-button type="tertiary">确认提交</n-button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,9 +105,11 @@ export default defineComponent({
     }
 
     .pagemain {
-        min-height: calc(70vh);
+        min-height: calc(80vh);
         margin: 0px 294px;
         display: flex; // 将容器指定为flex布局
+        max-width: 948px;
+        margin: auto; //重要？
 
         .navigation {
             margin-right: 52px;
@@ -139,6 +143,7 @@ export default defineComponent({
 
         .pageview {
             background: #ffffff;
+            // background: #e4c0c0;//调色看位置用
             flex: 1;
             margin-top: 0;
             margin-bottom: 4px;
@@ -153,7 +158,11 @@ export default defineComponent({
 
                 ._main {
                     padding: 0 32px;
+                    display: flex;
+                    align-items: flex-start;
+                    min-height: calc(60vh);
 
+                    // background: #ebd0d0;//调色看位置用
                     ._left {
                         position: absolute;
                         left: 40px;
@@ -179,33 +188,45 @@ export default defineComponent({
                     ._right {
                         padding: 24px 0 0 0;
                         position: absolute;
-                        left: 200px;
+                        left: 180px;
                         display: flex;
                         flex-direction: column;
                         flex: 1;
 
                         ._item {
-                            margin-bottom: 24px;
+                            // width: calc(100%-200px);
+                            //在此处宽度值无效
+                            min-height: calc(15vh);
 
+                            // background: #e5e5e5;//调色看位置用
                             ._intro {
+                                display: flex;
+                                width: 490px;
                                 font-weight: 500;
                                 color: #655e5e;
                                 margin-bottom: 8px;
+                            }
 
-                                input {
-                                    padding: 10px 12px;
-                                    background: #f7f7f8;
-                                    border: none;
-                                    font-size: 16px;
-                                    line-height: 22px
-                                }
+                            ._input {
+                                display: flex;
+                                width: 490px;
+                                padding: 10px 12px;
+                                background: #f7f7f8;
+                                border: none;
+                                outline-style: none;
+                                font-size: 16px;
+                                line-height: 22px
+                            }
+
+                            //这里括号位置粗心大意>_<耽误好多时间
+                            ._button {
+                                display: flex;
+                                width: 250px;
                             }
                         }
-
                     }
                 }
             }
         }
     }
 }</style>
-
