@@ -25,11 +25,13 @@
               />
             </n-form-item-row>
           </n-form>
-          <n-form :model="RegisterValue">
-            <n-form-item-row label="验证码">
+
+          <n-form ref="formRef" :model="RegisterValue" :rules="RegisterRules">
+            <n-form-item-row label="验证码" path="Code.code">
               <n-input
                 :disabled="!Email.data.email"
                 v-model:value="RegisterValue.Code.code"
+                ref="CodeFormItemRef"
               />
               <n-button
                 v-if="!is_sendcode"
@@ -136,7 +138,11 @@ export default {
     function EmailAlreadyUsed(rule, value) {
       return Email.detail != "Email already registered";
     } //验证邮箱是否已经被注册
+    function ErrorCode(rule, value) {
+      return RegisterValue.Code.detail != "Verification code error";
+    } //验证验证码是否正确
     const EmailFormItemRef = ref(null); //邮箱输入框钩子
+    const CodeFormItemRef = ref(null); //验证码输入框钩子
     const renderCountdown = ({ seconds }) => {
       return `${String(seconds).padStart(2)}秒后可以重发`;
     }; //倒计时渲染函数
@@ -183,7 +189,31 @@ export default {
         code: "",
       },
     }); //注册表单数据
+    const RegisterRules = {
+      Code: {
+        code: [
+          {
+            required: true,
+            validator(rule, value) {
+              if (!value) {
+                return new Error("验证码不能为空！");
+              } else if (!/^[0-9a-f]{4}$/.test(value)) {
+                return new Error("请输入正确的验证码！");
+              }
+              return true;
+            },
+            trigger: ["blur", "input"],
+          },
+          {
+            validator: ErrorCode,
+            message: "验证码错误",
+            trigger: ["focus"],
+          },
+        ],
+      },
+    };
     return {
+      RegisterRules, //注册表单验证规则
       EmailFormItemRef, //邮箱输入框钩子
       renderCountdown, //倒计时渲染函数
       SendcodeCountdown_active, //发送验证码的倒计时
@@ -192,6 +222,7 @@ export default {
       PageStatus, //页面状态
       LoginValue, //登录表单数据
       MailRules, //邮箱表单验证规则
+      CodeFormItemRef, //验证码输入框钩子
       SendcodeCountdownFinish() {
         SendcodeCountdown_active.value = false;
         is_sendcode.value = false;
@@ -226,9 +257,16 @@ export default {
         Email.detail = "";
       },
       clickregister() {
-        axios.post("/register/", RegisterValue).then(() => {
-          alert("注册成功");
-        });
+        axios
+          .post("/register/", RegisterValue)
+          .then(() => {
+            alert("注册成功");
+          })
+          .catch((err) => {
+            const ErrorStatus = err.response.data.detail;
+            RegisterValue.Code.detail = ErrorStatus;
+            CodeFormItemRef.value?.focus();
+          });
       },
       switchtologin() {
         PageStatus.value = 1;
