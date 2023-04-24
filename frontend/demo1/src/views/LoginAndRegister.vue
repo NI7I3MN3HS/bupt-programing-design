@@ -1,149 +1,157 @@
 <template>
   <n-config-provider :theme-overrides="themeOverrides">
     <div class="body">
-      <div class="BackGround" />
-      <div class="SiderColumn" />
-      <div class="MainColumn">
-        <!--注册-->
-        <div v-if="PageStatus == 0" class="ShowLRegister">
-          <n-card content-style="padding:56px 24px 24px 24px;">
-            <n-space vertical>
-              <div class="H1">创建一个账户</div>
-              <div class="H2">
-                <span>已有账户？</span
-                ><span
-                  ><n-button
-                    text
-                    @click="SwitchToLoginAndRegister()"
-                    text-color="#056de8"
-                    >登录</n-button
-                  ></span
-                >
-              </div></n-space
-            >
+      <n-layout>
+        <div class="BackGround" />
 
-            <n-form ref="formRef" :model="Email" :rules="MailRules">
-              <n-form-item-row label="邮箱" path="data.email">
-                <n-input
-                  ref="EmailFormItemRef"
-                  @change="EmailInputChange"
-                  v-model:value="Email.data.email"
-                  placeholder="请输入邮箱"
-                />
-              </n-form-item-row>
-            </n-form>
-
-            <n-form ref="formRef" :model="RegisterValue" :rules="RegisterRules">
-              <n-form-item-row label="验证码" path="data.Code.code">
-                <n-input
-                  @change="RegisterInputChange"
-                  :disabled="!Email.data.email"
-                  v-model:value="RegisterValue.data.Code.code"
-                  ref="CodeFormItemRef"
-                  placeholder="请输入验证码"
-                />
-                <n-button
-                  v-if="!is_sendcode"
-                  :disabled="!Email.data.email"
-                  type="primary"
-                  strong
-                  @click="clicksendcode"
-                  color="#056de8"
-                >
-                  获取验证码
-                </n-button>
-                <n-button
-                  v-if="is_sendcode"
-                  :disabled="SendcodeCountdown_active"
-                  type="primary"
-                  strong
-                  @click="clicksendcode"
-                  color="#056de8"
-                >
-                  <n-countdown
-                    :duration="59000"
-                    :render="renderCountdown"
-                    :active="SendcodeCountdown_active"
-                    :on-finish="SendcodeCountdownFinish"
-                  />
-                </n-button>
-              </n-form-item-row>
-              <n-form-item-row label="用户名" path="data.user.username">
-                <n-input
-                  @change="RegisterInputChange"
-                  v-model:value="RegisterValue.data.user.username"
-                  ref="UsernameFormItemRef"
-                  placeholder="请输入用户名"
-                />
-              </n-form-item-row>
-              <n-form-item-row label="密码" path="data.user.password">
-                <n-input
-                  type="password"
-                  show-password-on="click"
-                  placeholder="请输入密码"
-                  v-model:value="RegisterValue.data.user.password"
-                  @input="handlePasswordInput"
-                />
-              </n-form-item-row>
-              <n-form-item-row
-                label="确认密码"
-                path="confirmpassword"
-                ref="rPasswordFormItemRef"
-              >
-                <n-input
-                  type="password"
-                  show-password-on="click"
-                  placeholder="再次输入密码"
-                  v-model:value="RegisterValue.confirmpassword"
-                />
-              </n-form-item-row>
-            </n-form>
-            <n-space justify="center">
-              <n-button color="#056de8" @click="clickregister">
-                创建你的账户</n-button
-              ></n-space
-            >
-          </n-card>
-        </div>
-        <!--登录-->
-        <div v-if="PageStatus == 1" class="ShowLogin">
-          <n-card content-style="padding:144px 24px 144px 24px;">
-            <n-space vertical justify="center" :size="30">
+        <div class="SiderColumn" />
+        <div class="MainColumn">
+          <!--注册-->
+          <div v-if="PageStatus == 0" class="ShowLRegister">
+            <n-card content-style="padding:48px 48px 48px 48px;">
               <n-space vertical>
-                <div class="H1">登录你的账户</div>
+                <div class="H1">创建一个账户</div>
                 <div class="H2">
-                  <span>未有账户？</span
+                  <span>已有账户？</span
                   ><span
                     ><n-button
                       text
                       @click="SwitchToLoginAndRegister()"
                       text-color="#056de8"
-                      >注册</n-button
+                      >登录</n-button
                     ></span
                   >
-                </div>
-              </n-space>
-              <n-form ref="formRef" :model="LoginValue" :rules="LoginRules">
-                <n-form-item-row label="用户名" path="">
+                </div></n-space
+              >
+
+              <n-form ref="formRef" :model="Email" :rules="MailRules">
+                <n-form-item-row label="邮箱" path="data.email">
                   <n-input
-                    ref="UsernameFormItemRef"
-                    @change=""
-                    v-model:value="LoginValue.username"
+                    :disabled="!is_input_email"
+                    ref="EmailFormItemRef"
+                    @change="EmailInputChange"
+                    v-model:value="Email.data.email"
+                    placeholder="请输入邮箱"
                   />
                 </n-form-item-row>
-                <n-form-item-row label="密码">
-                  <n-input v-model:value="LoginValue.password" />
+              </n-form>
+
+              <n-form
+                ref="formRef"
+                :model="RegisterValue"
+                :rules="RegisterRules"
+              >
+                <n-form-item-row label="验证码" path="data.Code.code">
+                  <n-input
+                    @change="RegisterInputChange"
+                    :disabled="!Email.data.email"
+                    v-model:value="RegisterValue.data.Code.code"
+                    ref="CodeFormItemRef"
+                    placeholder="请输入验证码"
+                  />
+                  <n-button
+                    v-if="!is_sendcode"
+                    :disabled="!Email.data.email"
+                    type="primary"
+                    strong
+                    @click="clicksendcode"
+                    color="#056de8"
+                  >
+                    获取验证码
+                  </n-button>
+                  <n-button
+                    v-if="is_sendcode"
+                    :disabled="SendcodeCountdown_active"
+                    type="primary"
+                    strong
+                    @click="clicksendcode"
+                    color="#056de8"
+                  >
+                    <n-countdown
+                      :duration="59000"
+                      :render="renderCountdown"
+                      :active="SendcodeCountdown_active"
+                      :on-finish="SendcodeCountdownFinish"
+                    />
+                  </n-button>
+                </n-form-item-row>
+                <n-form-item-row label="用户名" path="data.user.username">
+                  <n-input
+                    @change="RegisterInputChange"
+                    v-model:value="RegisterValue.data.user.username"
+                    ref="UsernameFormItemRef"
+                    placeholder="请输入用户名"
+                  />
+                </n-form-item-row>
+                <n-form-item-row label="密码" path="data.user.password">
+                  <n-input
+                    type="password"
+                    show-password-on="click"
+                    placeholder="请输入密码"
+                    v-model:value="RegisterValue.data.user.password"
+                    @input="handlePasswordInput"
+                  />
+                </n-form-item-row>
+                <n-form-item-row
+                  label="确认密码"
+                  path="confirmpassword"
+                  ref="rPasswordFormItemRef"
+                >
+                  <n-input
+                    type="password"
+                    show-password-on="click"
+                    placeholder="再次输入密码"
+                    v-model:value="RegisterValue.confirmpassword"
+                  />
                 </n-form-item-row>
               </n-form>
               <n-space justify="center">
-                <n-button color="#056de8" @click="clicklogin">
-                  登录
-                </n-button></n-space
+                <n-button color="#056de8" @click="clickregister">
+                  创建你的账户</n-button
+                ></n-space
               >
-            </n-space>
-          </n-card>
+            </n-card>
+          </div>
+          <!--登录-->
+          <div v-if="PageStatus == 1" class="ShowLogin">
+            <n-card content-style="padding:144px 64px 144px 64px;">
+              <n-space vertical justify="center" :size="30">
+                <n-space vertical>
+                  <div class="H1">登录你的账户</div>
+                  <div class="H2">
+                    <span>未有账户？</span
+                    ><span
+                      ><n-button
+                        text
+                        @click="SwitchToLoginAndRegister()"
+                        text-color="#056de8"
+                        >注册</n-button
+                      ></span
+                    >
+                  </div>
+                </n-space>
+                <n-form ref="formRef" :model="LoginValue" :rules="LoginRules">
+                  <n-form-item-row label="用户名" path="">
+                    <n-input
+                      ref="UsernameFormItemRef"
+                      @change=""
+                      v-model:value="LoginValue.username"
+                    />
+                  </n-form-item-row>
+                  <n-form-item-row label="密码">
+                    <n-input v-model:value="LoginValue.password" />
+                  </n-form-item-row>
+                </n-form>
+                <n-space justify="center">
+                  <n-button color="#056de8" @click="clicklogin">
+                    登录
+                  </n-button></n-space
+                >
+              </n-space>
+            </n-card>
+          </div>
         </div>
-      </div>
+      </n-layout>
     </div>
   </n-config-provider>
 </template>
@@ -199,7 +207,6 @@ export default {
     function validatePasswordSame(rule, value) {
       return value === RegisterValue.data.user.password;
     } //验证两次密码是否一致
-    const is_send_form = ref(false); //是否发送表单
     const EmailFormItemRef = ref(null); //邮箱输入框钩子
     const CodeFormItemRef = ref(null); //验证码输入框钩子
     const UsernameFormItemRef = ref(null); //用户名输入框钩子
@@ -209,6 +216,7 @@ export default {
     }; //倒计时渲染函数
     const SendcodeCountdown_active = ref(false); //倒计时是否激活
     const is_sendcode = ref(false); //是否已经发送过验证码
+    const is_input_email = ref(true); //是否输入邮箱
     const formRef = ref(null); //表单钩子
     const PageStatus = ref(0); //页面状态
     const LoginValue = reactive({
@@ -326,6 +334,7 @@ export default {
       ],
     }; //注册表单验证规则
     return {
+      is_input_email, //是否输入邮箱
       themeOverrides, //naive-ui主题覆盖
       RegisterRules, //注册表单验证规则
       EmailFormItemRef, //邮箱输入框钩子
@@ -339,6 +348,8 @@ export default {
       CodeFormItemRef, //验证码输入框钩子
       UsernameFormItemRef, //用户名输入框钩子
       rPasswordFormItemRef, //确认密码输入框钩子
+      RegisterValue, //注册表单数据
+      Email, //邮箱表单数据
       SendcodeCountdownFinish() {
         SendcodeCountdown_active.value = false;
         is_sendcode.value = false;
@@ -359,9 +370,6 @@ export default {
             UsernameFormItemRef.value?.focus();
           });
       },
-      RegisterValue,
-      Email,
-      is_send_form,
       //点击发送验证码
       clicksendcode() {
         is_sendcode.value = true;
@@ -369,6 +377,7 @@ export default {
         axios
           .post("/register/VerifyCode", Email.data)
           .then((res) => {
+            is_input_email.value = false;
             alert("发送成功");
           })
           .catch((err) => {
@@ -400,25 +409,23 @@ export default {
       clickregister() {
         formRef.value?.validate((errors) => {
           if (!errors) {
-            is_send_form.value = true;
+            axios
+              .post("/register/", RegisterValue.data)
+              .then((res) => {
+                alert("注册成功");
+                PageStatus.value = 1;
+              })
+              .catch((err) => {
+                const ErrorStatus = err.response.data.detail;
+                RegisterValue.detail = ErrorStatus;
+                is_send_form.value = false;
+                if (ErrorStatus == "Verification code error")
+                  CodeFormItemRef.value?.focus();
+                else if (ErrorStatus == "Username already registered")
+                  UsernameFormItemRef.value?.focus();
+              });
           }
         });
-        if (is_send_form.value) {
-          axios
-            .post("/register/", RegisterValue.data)
-            .then((res) => {
-              alert("注册成功");
-            })
-            .catch((err) => {
-              const ErrorStatus = err.response.data.detail;
-              RegisterValue.detail = ErrorStatus;
-              is_send_form.value = false;
-              if (ErrorStatus == "Verification code error")
-                CodeFormItemRef.value?.focus();
-              else if (ErrorStatus == "Username already registered")
-                UsernameFormItemRef.value?.focus();
-            });
-        }
       },
 
       //切换到登录/注册页面
