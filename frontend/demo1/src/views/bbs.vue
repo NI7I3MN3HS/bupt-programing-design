@@ -397,23 +397,6 @@ export default {
     margin-bottom: 0px;
     width: 70%;
     left: 15%;
-    
-    // 按钮
-    .el-link {
-      margin-right: 8px;
-    }
-    .el-link .el-icon--right.el-icon {
-      vertical-align: text-bottom;
-    }
-
-    // 文字
-    .content {
-      font-size: medium;
-      text-decoration: none;
-    }
-    .author {
-      font-size: smaller;
-    }
   }
 }
 </style>

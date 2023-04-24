@@ -11,9 +11,7 @@ defineComponent({
 </script>
 
 <template>
-  <n-theme-editor>
-    <RouterView />
-  </n-theme-editor>
+  <RouterView />
 </template>
 
 <style scoped></style>
