@@ -5,8 +5,6 @@
 
       <div class="SiderColumn" />
       <div class="MainColumn">
-        <!--找回密码-->
-        <div v-if="PageStatus == 2" class="ResetPassword"></div>
         <!--注册-->
         <div v-if="PageStatus == 1" class="ShowLRegister">
           <n-card content-style="padding:48px 48px 48px 48px;">
@@ -140,13 +138,18 @@
                   <n-input
                     v-model:value="LoginValue.password"
                     placeholder="请输入密码"
+                    type="password"
+                    show-password-on="click"
                   />
                 </n-form-item-row>
                 <n-space justify="space-between">
                   <n-checkbox v-model:checked="value" text-color="#8590a6">
                     记住我
                   </n-checkbox>
-                  <n-button text text-color="#8590a6" @click=""
+                  <n-button
+                    text
+                    text-color="#8590a6"
+                    @click="ClickToResetPassword()"
                     >忘记密码？</n-button
                   >
                 </n-space>
@@ -453,7 +456,9 @@ export default {
         }
       },
 
-      //是否验证注册表单
+      ClickToResetPassword() {
+        router.push("/resetpassword");
+      },
     };
   },
 };
