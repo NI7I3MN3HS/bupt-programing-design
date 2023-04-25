@@ -10,8 +10,10 @@ import ElementPlus from "element-plus";
 import "./assets/base.less";
 
 import axios from "axios";
-//axios.defaults.withCredentials = true; //跨域请求时发送cookie
+axios.defaults.withCredentials = true; //跨域请求时发送cookie
 axios.defaults.baseURL = "http://localhost:8000"; //设置默认请求地址
+
+import Cookies from "js-cookie";
 
 const app = createApp(App);
 

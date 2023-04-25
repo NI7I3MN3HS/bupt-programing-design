@@ -5,8 +5,10 @@
 
       <div class="SiderColumn" />
       <div class="MainColumn">
+        <!--找回密码-->
+        <div v-if="PageStatus == 2" class="ResetPassword"></div>
         <!--注册-->
-        <div v-if="PageStatus == 0" class="ShowLRegister">
+        <div v-if="PageStatus == 1" class="ShowLRegister">
           <n-card content-style="padding:48px 48px 48px 48px;">
             <n-space vertical>
               <div class="H1">创建一个账户</div>
@@ -108,7 +110,7 @@
           </n-card>
         </div>
         <!--登录-->
-        <div v-if="PageStatus == 1" class="ShowLogin">
+        <div v-if="PageStatus == 0" class="ShowLogin">
           <n-card content-style="padding:144px 64px 144px 64px;">
             <n-space vertical justify="center" :size="30">
               <n-space vertical>
@@ -128,17 +130,29 @@
               <n-form ref="formRef" :model="LoginValue" :rules="LoginRules">
                 <n-form-item-row label="用户名" path="">
                   <n-input
+                    placeholder="请输入用户名或邮箱"
                     ref="UsernameFormItemRef"
                     @change=""
                     v-model:value="LoginValue.username"
                   />
                 </n-form-item-row>
                 <n-form-item-row label="密码">
-                  <n-input v-model:value="LoginValue.password" />
+                  <n-input
+                    v-model:value="LoginValue.password"
+                    placeholder="请输入密码"
+                  />
                 </n-form-item-row>
+                <n-space justify="space-between">
+                  <n-checkbox v-model:checked="value" text-color="#8590a6">
+                    记住我
+                  </n-checkbox>
+                  <n-button text text-color="#8590a6" @click=""
+                    >忘记密码？</n-button
+                  >
+                </n-space>
               </n-form>
               <n-space justify="center">
-                <n-button color="#056de8" @click="clicklogin">
+                <n-button color="#056de8" @click="ClickLogin()">
                   登录
                 </n-button></n-space
               >
@@ -156,8 +170,6 @@ import { roundToNearestMinutes } from "date-fns";
 import { is } from "date-fns/locale";
 import { reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
 
 export default {
   //暂时用不到
@@ -181,12 +193,21 @@ export default {
       });
   },*/
   setup() {
+    const route = useRoute();
+    const router = useRouter();
     const themeOverrides = {
       Input: {
         borderFocus: "1px solid #8590a6",
         boxShadowFocus: "0 0 0 2px rgba(133, 144, 166, 0.2)",
         borderHover: "1px solid #8590a6",
         caretColor: "#8590a6FF",
+      },
+      Checkbox: {
+        textColor: "rgb(51, 54, 57)",
+        colorChecked: "#056de8FF",
+        borderChecked: "1px solid #056de8",
+        borderFocus: "1px solid #056de8",
+        boxShadowFocus: "0 0 0 2px solid rgba(5,109,232,0.3)",
       },
     }; //naive-ui主题覆盖
     function UsernameAlreadyUsed(rule, value) {
@@ -348,15 +369,16 @@ export default {
         SendcodeCountdown_active.value = false;
         is_sendcode.value = false;
       },
-      clicklogin() {
+      ClickLogin() {
         let form = new FormData();
         form.append("username", LoginValue.username);
         form.append("password", LoginValue.password);
 
         axios
           .post("/login/", form)
-          .then(() => {
-            alert("登录成功");
+          .then((res) => {
+            // Cookies.set("access_token", res.data.access_token, { expires: 1 });
+            router.push("/");
           })
           .catch((err) => {
             const ErrorStatus = err.response.data.detail;
@@ -407,7 +429,7 @@ export default {
               .post("/register/", RegisterValue.data)
               .then((res) => {
                 alert("注册成功");
-                PageStatus.value = 1;
+                PageStatus.value = 0;
               })
               .catch((err) => {
                 const ErrorStatus = err.response.data.detail;

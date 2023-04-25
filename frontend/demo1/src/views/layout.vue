@@ -194,7 +194,7 @@ const options = [
     key: "profile",
     props: {
       onClick: () => {
-        router.push("loginandregister");
+        router.push("/loginandregister");
       },
     },
   },
@@ -203,7 +203,7 @@ const options = [
     key: "Profile",
     props: {
       onClick: () => {
-        router.push("profile");
+        router.push("/profile");
       },
     },
   },
@@ -212,7 +212,7 @@ const options = [
     key: "logout",
     props: {
       onClick: () => {
-        router.push("loginandregister");
+        router.push("/loginandregister");
       },
     },
   },
