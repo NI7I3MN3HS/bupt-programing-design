@@ -95,7 +95,7 @@
                 <n-input
                   type="password"
                   show-password-on="click"
-                  placeholder="再次输入密码"
+                  placeholder="请再次输入密码"
                   v-model:value="RegisterValue.confirmpassword"
                 />
               </n-form-item-row>
@@ -257,11 +257,11 @@ export default {
             required: true,
             validator(rule, value) {
               if (!value) {
-                return new Error("邮箱号不能为空！");
+                return new Error("邮箱号不能为空");
               } else if (
                 !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(value)
               ) {
-                return new Error("请输入正确的邮箱号！");
+                return new Error("请输入正确的邮箱号");
               }
               return true;
             },
@@ -310,7 +310,7 @@ export default {
               required: true,
               validator(rule, value) {
                 if (!value) {
-                  return new Error("用户名不能为空！");
+                  return new Error("用户名不能为空");
                 }
                 return true;
               },
@@ -327,9 +327,9 @@ export default {
               required: true,
               validator(rule, value) {
                 if (!value) {
-                  return new Error("密码不能为空！");
+                  return new Error("密码不能为空");
                 } else if (!/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)) {
-                  return new Error("请输入正确的密码格式！");
+                  return new Error("请输入正确的密码格式");
                 }
                 return true;
               },
@@ -346,7 +346,7 @@ export default {
         },
         {
           validator: validatePasswordSame,
-          message: "两次密码输入不一致!",
+          message: "两次密码输入不一致",
           trigger: ["blur", "password-input"],
         },
       ],
