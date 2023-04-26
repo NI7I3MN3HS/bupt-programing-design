@@ -1,100 +1,115 @@
 <template>
-  <div class="body">
-    <n-config-provider :theme-overrides="themeOverrides">
-      <n-card
-        ><div class="H1">找回密码</div>
-        <div class="H2">验证码将会发送到你的邮箱</div>
-        <n-form ref="formRef" :model="ResetValue" :rules="ResetRules">
-          <n-form-item-row label="邮箱" path="Email.email">
-            <n-input
-              :disabled="is_sendcode"
-              @change="EmailInputChange"
-              placeholder="请输入你的邮箱"
-              ref="EmailFormItemRef"
-              v-model:value="ResetValue.Email.email"
-              ><template v-if="is_sendcode" #suffix>
-                <n-button text text-color="#056de8" @click="BackToInputEmail"
-                  >修改</n-button
-                >
-              </template></n-input
-            >
-          </n-form-item-row>
-          <n-form-item-row
-            v-if="is_sendcode"
-            label="验证码"
-            path="Extra_data.Code.code"
-            ><n-input
-              ref="CodeFormItemRef"
-              @change="CodeInputChange"
-              placeholder="请输入验证码"
-              v-model:value="ResetValue.Extra_data.Code.code"
-            />
+  <div class="Container">
+    <div class="Content">
+      <n-config-provider :theme-overrides="themeOverrides">
+        <n-watermark
+          content="我知道你很急，但是请先别急"
+          cross
+          fullscreen
+          :font-size="16"
+          :line-height="16"
+          :width="384"
+          :height="384"
+          :x-offset="12"
+          :y-offset="60"
+          :rotate="-15"
+          z-index="-1"
+        />
+        <n-card
+          ><div class="H1">找回密码</div>
+          <div class="H2">验证码将会发送到你的邮箱</div>
+          <n-form ref="formRef" :model="ResetValue" :rules="ResetRules">
+            <n-form-item-row label="邮箱" path="Email.email">
+              <n-input
+                :disabled="is_sendcode"
+                @change="EmailInputChange"
+                placeholder="请输入你的邮箱"
+                ref="EmailFormItemRef"
+                v-model:value="ResetValue.Email.email"
+                ><template v-if="is_sendcode" #suffix>
+                  <n-button text text-color="#056de8" @click="BackToInputEmail"
+                    >修改</n-button
+                  >
+                </template></n-input
+              >
+            </n-form-item-row>
+            <n-form-item-row
+              v-if="is_sendcode"
+              label="验证码"
+              path="Extra_data.Code.code"
+              ><n-input
+                ref="CodeFormItemRef"
+                @change="CodeInputChange"
+                placeholder="请输入验证码"
+                v-model:value="ResetValue.Extra_data.Code.code"
+              />
+              <n-button
+                v-if="!is_resendcode"
+                @click="ClickReSendCode"
+                color="#056de8"
+              >
+                重新发送验证码
+              </n-button>
+              <n-button
+                v-if="is_sendcode && is_resendcode"
+                :disabled="SendcodeCountdown_active"
+                @click="ClickSendCode"
+                color="#056de8"
+              >
+                <n-countdown
+                  :duration="5000"
+                  :render="renderCountdown"
+                  :active="SendcodeCountdown_active"
+                  :on-finish="SendcodeCountdownFinish"
+                />
+              </n-button>
+            </n-form-item-row>
+
+            <n-form-item-row
+              v-if="is_sendcode"
+              label="密码"
+              path="Extra_data.password.password"
+              ><n-input
+                type="password"
+                show-password-on="click"
+                @input="handlePasswordInput"
+                placeholder="请输入密码"
+                v-model:value="ResetValue.Extra_data.password.password"
+              />
+            </n-form-item-row>
+            <n-form-item-row
+              v-if="is_sendcode"
+              label="确认密码"
+              path="confirmpassword"
+              ref="rPasswordFormItemRef"
+              ><n-input
+                type="password"
+                show-password-on="click"
+                placeholder="请再次输入密码"
+                v-model:value="ResetValue.confirmpassword"
+              />
+            </n-form-item-row>
+          </n-form>
+          <n-space justify="center">
             <n-button
-              v-if="!is_resendcode"
-              @click="ClickReSendCode"
-              color="#056de8"
-            >
-              重新发送验证码
-            </n-button>
-            <n-button
-              v-if="is_sendcode && is_resendcode"
-              :disabled="SendcodeCountdown_active"
+              v-if="!is_sendcode"
+              :disabled="!ResetValue.Email.email"
               @click="ClickSendCode"
               color="#056de8"
             >
-              <n-countdown
-                :duration="5000"
-                :render="renderCountdown"
-                :active="SendcodeCountdown_active"
-                :on-finish="SendcodeCountdownFinish"
-              />
+              下一步
             </n-button>
-          </n-form-item-row>
-
-          <n-form-item-row
-            v-if="is_sendcode"
-            label="密码"
-            path="Extra_data.password.password"
-            ><n-input
-              type="password"
-              show-password-on="click"
-              @input="handlePasswordInput"
-              placeholder="请输入密码"
-              v-model:value="ResetValue.Extra_data.password.password"
-            />
-          </n-form-item-row>
-          <n-form-item-row
-            v-if="is_sendcode"
-            label="确认密码"
-            path="confirmpassword"
-            ref="rPasswordFormItemRef"
-            ><n-input
-              type="password"
-              show-password-on="click"
-              placeholder="请再次输入密码"
-              v-model:value="ResetValue.confirmpassword"
-            />
-          </n-form-item-row>
-        </n-form>
-        <n-space justify="center">
-          <n-button
-            v-if="!is_sendcode"
-            :disabled="!ResetValue.Email.email"
-            @click="ClickSendCode"
-            color="#056de8"
-          >
-            下一步
-          </n-button>
-          <n-button
-            v-if="is_sendcode"
-            @click="ClickResetPassword"
-            color="#056de8"
-          >
-            重设密码
-          </n-button>
-        </n-space>
-      </n-card>
-    </n-config-provider>
+            <n-button
+              v-if="is_sendcode"
+              @click="ClickResetPassword"
+              color="#056de8"
+            >
+              重设密码
+            </n-button>
+          </n-space>
+        </n-card>
+      </n-config-provider>
+    </div>
   </div>
 </template>
 
@@ -294,11 +309,16 @@ function BackToInputEmail() {
 }
 </script>
 <style scoped lang="less">
-.body {
-  width: 50%;
-  margin: 0 auto;
-  margin-top: calc(50vh - 200px);
+.Container {
+  min-height: calc(100vh);
 }
+.Content {
+  top: 15%;
+  width: 30%;
+  position: absolute;
+  left: 35%;
+}
+
 .H1 {
   font-size: 30px;
   font-weight: 700;
