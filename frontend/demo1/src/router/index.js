@@ -20,6 +20,10 @@ const router = createRouter({
           path: "/profile/edit",
           component: () => import("../views/ProfileEdit.vue"),
         },
+        {
+          path: "/Edit",
+          component: () => import("../views/Edit.vue"),
+        },
       ],
     },
     {
