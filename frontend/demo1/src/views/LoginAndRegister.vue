@@ -125,18 +125,23 @@
                   >
                 </div>
               </n-space>
-              <n-form ref="formRef" :model="LoginValue" :rules="LoginRules">
-                <n-form-item-row label="用户名" path="">
+              <n-form
+                ref="formRef"
+                :model="LoginValue"
+                :rules="LoginRules"
+                :show-require-mark="false"
+              >
+                <n-form-item-row label="用户名" path="data.username">
                   <n-input
                     placeholder="请输入用户名或邮箱"
                     ref="UsernameFormItemRef"
-                    @change=""
-                    v-model:value="LoginValue.username"
+                    @change="LoginInputChange"
+                    v-model:value="LoginValue.data.username"
                   />
                 </n-form-item-row>
-                <n-form-item-row label="密码">
+                <n-form-item-row label="密码" path="data.password">
                   <n-input
-                    v-model:value="LoginValue.password"
+                    v-model:value="LoginValue.data.password"
                     placeholder="请输入密码"
                     type="password"
                     show-password-on="click"
@@ -225,6 +230,15 @@ export default {
     function validatePasswordSame(rule, value) {
       return value === RegisterValue.data.user.password;
     } //验证两次密码是否一致
+    function UserNotExist(rule, value) {
+      return LoginValue.detail != "Incorrect email or username";
+    } //验证用户是否存在
+    function PasswordError(rule, value) {
+      return (
+        LoginValue.detail != "Incorrect username or password" &&
+        LoginValue.detail != "Incorrect email or password"
+      );
+    } //验证密码是否正确
     const EmailFormItemRef = ref(null); //邮箱输入框钩子
     const CodeFormItemRef = ref(null); //验证码输入框钩子
     const UsernameFormItemRef = ref(null); //用户名输入框钩子
@@ -351,6 +365,34 @@ export default {
         },
       ],
     }; //注册表单验证规则
+    const LoginRules = {
+      data: {
+        username: [
+          {
+            required: true,
+            message: "请输入用户名或邮箱",
+            trigger: ["blur", "input"],
+          },
+          {
+            validator: UserNotExist,
+            message: "该用户名或邮箱不存在",
+            trigger: ["focus"],
+          },
+          {
+            validator: PasswordError,
+            message: "用户名或密码错误",
+            trigger: ["focus"],
+          },
+        ],
+        password: [
+          {
+            required: true,
+            message: "请输入密码",
+            trigger: ["blur", "input"],
+          },
+        ],
+      },
+    }; //登录表单验证规则
     return {
       is_input_email, //是否输入邮箱
       themeOverrides, //naive-ui主题覆盖
@@ -368,14 +410,19 @@ export default {
       rPasswordFormItemRef, //确认密码输入框钩子
       RegisterValue, //注册表单数据
       Email, //邮箱表单数据
+      LoginRules, //登录表单验证规则
+
+      //验证码倒计时结束回调
       SendcodeCountdownFinish() {
         SendcodeCountdown_active.value = false;
         is_sendcode.value = false;
       },
+
+      //点击登录按钮
       ClickLogin() {
         let form = new FormData();
-        form.append("username", LoginValue.username);
-        form.append("password", LoginValue.password);
+        form.append("username", LoginValue.data.username);
+        form.append("password", LoginValue.data.password);
 
         axios
           .post("/login/", form)
@@ -384,11 +431,11 @@ export default {
             router.push("/");
           })
           .catch((err) => {
-            const ErrorStatus = err.response.data.detail;
-            LoginValue.detail = ErrorStatus;
+            LoginValue.detail = err.response.data.detail;
             UsernameFormItemRef.value?.focus();
           });
       },
+
       //点击发送验证码
       clicksendcode() {
         is_sendcode.value = true;
@@ -456,6 +503,7 @@ export default {
         }
       },
 
+      //点击忘记密码
       ClickToResetPassword() {
         router.push("/resetpassword");
       },
