@@ -17,8 +17,16 @@ const router = createRouter({
           component: () => import("../views/profile.vue"),
         },
         {
-          path: "/profile/edit",
-          component: () => import("../views/ProfileEdit.vue"),
+          path: "/profile/edit1",
+          component: () => import("../views/profileedit/userinformation.vue"),
+        },
+        {
+          path: "/profile/edit2",
+          component: () => import("../views/profileedit/accountinformation.vue"),
+        },
+        {
+          path: "/profile/edit3",
+          component: () => import("../views/profileedit/password.vue"),
         },
         {
           path: "/Edit",

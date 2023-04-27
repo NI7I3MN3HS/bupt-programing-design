@@ -14,7 +14,7 @@
             <span class="UserName">{{ Username }}</span>
             <span class="UserPersonalizedSignature">个性签名</span>
             <span class="EditorProfileButton"
-              ><router-link to="/profile/edit"
+              ><router-link to="/profile/edit1"
                 ><n-button ghost color="#056de8" text-color="#056de8"
                   >编辑个人资料</n-button
                 ></router-link
