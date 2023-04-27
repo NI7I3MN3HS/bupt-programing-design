@@ -178,6 +178,7 @@ import { roundToNearestMinutes } from "date-fns";
 import { is } from "date-fns/locale";
 import { reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import Cookies from "js-cookie";
 
 export default {
   //暂时用不到
@@ -427,7 +428,8 @@ export default {
         axios
           .post("/login/", form)
           .then((res) => {
-            // Cookies.set("access_token", res.data.access_token, { expires: 1 });
+            console.log(res.data.access_token);
+            Cookies.set("access_token", res.data.access_token, { expires: 1 });
             router.push("/");
           })
           .catch((err) => {

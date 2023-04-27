@@ -84,21 +84,32 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, defineComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import Cookies from "js-cookie";
+import axios from "axios";
 const route = useRoute();
 const router = useRouter();
 
-export default {
-  setup() {
-    const Username = ref("atom");
+const Username = ref(null);
 
-    return {
-      Username,
-    };
+const UserClient = axios.create({
+  baseURL: "http://localhost:8000",
+  timeout: 10000,
+  headers: {
+    Accept: "application/json",
+    Authorization: `Bearer ${Cookies.get("access_token")}`,
   },
-};
+});
+
+UserClient.get("/user/")
+  .then((response) => {
+    Username.value = response.data.username;
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 </script>
 
 <style lang="less" scoped>

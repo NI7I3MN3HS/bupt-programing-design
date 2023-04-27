@@ -181,6 +181,7 @@
 </template>
 
 <script setup>
+import Cookies from "js-cookie";
 import { useRoute, useRouter } from "vue-router";
 import { ref, reactive, defineComponent } from "vue";
 import { useMessage } from "naive-ui";
@@ -213,6 +214,7 @@ const options = [
     props: {
       onClick: () => {
         router.push("/loginandregister");
+        Cookies.remove("access_token");
       },
     },
   },
