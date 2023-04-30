@@ -22,7 +22,8 @@ const router = createRouter({
         },
         {
           path: "/profile/edit2",
-          component: () => import("../views/profileedit/accountinformation.vue"),
+          component: () =>
+            import("../views/profileedit/accountinformation.vue"),
         },
         {
           path: "/profile/edit3",
@@ -43,6 +44,11 @@ const router = createRouter({
       path: "/ResetPassword",
       name: "ResetPassword",
       component: () => import("../views/ResetPassword.vue"),
+    },
+    {
+      path: "/upload",
+      name: "upload",
+      component: () => import("../views/upload.vue"),
     },
   ],
 });
