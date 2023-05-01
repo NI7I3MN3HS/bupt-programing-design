@@ -223,14 +223,26 @@ def get_comments_by_post(db: Session, post_id: int, skip: int = 0, limit: int = 
 
 # follow crud
 # 创建关注
-def create_follow(db: Session, follow: schemas.FollowCreate):
-    db_follow = models.Follow(
-        follower_id=follow.follower_id, followed_id=follow.followed_id
-    )
+def create_follow(db: Session, follow: schemas.FollowCreate, user_id: int):
+    db_follow = models.Follow(follower_id=user_id, followed_id=follow.followed_id)
     db.add(db_follow)
     db.commit()
     db.refresh(db_follow)
     return db_follow
+
+
+# 根据关注者和关注对象获取关注信息
+def get_follow_by_follower_and_followed(
+    db: Session, follower_id: int, followed_id: int
+):
+    return (
+        db.query(models.Follow)
+        .filter(
+            models.Follow.follower_id == follower_id,
+            models.Follow.followed_id == followed_id,
+        )
+        .first()
+    )
 
 
 # 根据关注id获取关注信息
@@ -292,9 +304,9 @@ def cancel_follow(db: Session, follower_id: int, followed_id: int):
 
 # like crud
 # 创建点赞
-def create_like(db: Session, like: schemas.LikeCreate):
+def create_like(db: Session, like: schemas.LikeCreate, user_id: int):
     db_like = models.Like(
-        user_id=like.user_id, post_id=like.post_id, comment_id=like.comment_id
+        user_id=user_id, post_id=like.post_id, comment_id=like.comment_id
     )
     db.add(db_like)
     db.commit()
@@ -305,6 +317,21 @@ def create_like(db: Session, like: schemas.LikeCreate):
 # 根据点赞id获取点赞信息
 def get_like(db: Session, like_id: int):
     return db.query(models.Like).filter(models.Like.id == like_id).first()
+
+
+# 根据用户id和文章id和评论id获取点赞信息
+def get_like_by_user_and_post_and_comment(
+    db: Session, user_id: int, post_id: int, comment_id: int
+):
+    return (
+        db.query(models.Like)
+        .filter(
+            models.Like.user_id == user_id,
+            models.Like.post_id == post_id,
+            models.Like.comment_id == comment_id,
+        )
+        .first()
+    )
 
 
 # 获取所有点赞信息

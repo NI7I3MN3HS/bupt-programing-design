@@ -97,6 +97,7 @@ class CommentDelete(BaseModel):
 
 class Comment(CommentBase):
     id: int
+    user_id: int
     is_deleted: bool = False
     create_time: datetime
     update_time: datetime
@@ -106,7 +107,6 @@ class Comment(CommentBase):
 
 
 class FollowBase(BaseModel):
-    follower_id: int
     followed_id: int
 
 
@@ -116,13 +116,13 @@ class FollowCreate(FollowBase):
 
 class Follow(FollowBase):
     id: int
+    follower_id: int
 
     class Config:
         orm_mode = True
 
 
 class LikeBase(BaseModel):
-    user_id: int
     post_id: Optional[int] = None
     comment_id: Optional[int] = None
 
@@ -133,6 +133,7 @@ class LikeCreate(LikeBase):
 
 class Like(LikeBase):
     id: int
+    user_id: int
 
     class Config:
         orm_mode = True

@@ -8,8 +8,20 @@ from ..core import security
 router = APIRouter(prefix="/comment", tags=["comment"])
 
 
+# 获取评论信息
+@router.post("/{comment_id.id}")
+async def get_comment(
+    comment_id: schemas.CommentDelete,
+    db: Session = Depends(get_db),
+):
+    db_comment = crud.get_comment(db, comment_id=comment_id.id)
+    if db_comment is None:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    return db_comment
+
+
 # 创建评论
-@router.post("/")
+@router.post("/create")
 async def create_comment(
     comment: schemas.CommentBase,
     current_user: schemas.User = Depends(security.get_current_user),

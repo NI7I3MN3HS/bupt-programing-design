@@ -8,8 +8,20 @@ from ..core import security
 router = APIRouter(prefix="/post", tags=["post"])
 
 
+# 获取帖子信息
+@router.post("/{post_id.id}")
+async def get_post(
+    post_id: schemas.PostDelete,
+    db: Session = Depends(get_db),
+):
+    db_post = crud.get_post(db, post_id=post_id.id)
+    if db_post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return db_post
+
+
 # 创建帖子
-@router.post("/")
+@router.post("/create")
 async def create_post(
     post: schemas.PostBase,
     current_user: schemas.User = Depends(security.get_current_user),
