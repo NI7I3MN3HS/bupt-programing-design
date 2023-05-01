@@ -101,8 +101,8 @@ def delete_user(db: Session, user_id: int):
 
 # post crud
 # 创建文章
-def create_post(db: Session, post: schemas.PostCreate):
-    db_post = models.Post(title=post.title, content=post.content, user_id=post.user_id)
+def create_post(db: Session, post: schemas.PostBase, user_id: int):
+    db_post = models.Post(title=post.title, content=post.content, user_id=user_id)
     db.add(db_post)
     db.commit()
     db.refresh(db_post)

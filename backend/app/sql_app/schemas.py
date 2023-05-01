@@ -58,17 +58,16 @@ class User(UserBase):
 
 
 class PostBase(BaseModel):
-    title: str
-    content: str
+    title: str = Field(min_length=1, max_length=64)
+    content: str = Field(min_length=1)
 
 
-class PostCreate(PostBase):
-    user_id: int
+class PostDelete(BaseModel):
+    id: int
 
 
 class PostUpdate(PostBase):
-    title: Optional[str] = None
-    content: Optional[str] = None
+    id: int
 
 
 class Post(PostBase):
