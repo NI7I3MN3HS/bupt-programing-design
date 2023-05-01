@@ -152,10 +152,10 @@ def get_posts_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100
 
 # comment crud
 # 创建评论
-def create_comment(db: Session, comment: schemas.CommentCreate):
+def create_comment(db: Session, comment: schemas.CommentCreate, user_id: int):
     db_comment = models.Comment(
         content=comment.content,
-        user_id=comment.user_id,
+        user_id=user_id,
         post_id=comment.post_id,
         parent_id=comment.parent_id,
     )
@@ -173,19 +173,6 @@ def get_comment(db: Session, comment_id: int):
 # 获取所有评论信息
 def get_comments(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Comment).offset(skip).limit(limit).all()
-
-
-# 更新评论信息
-def update_comment(db: Session, comment_id: int, comment: schemas.CommentUpdate):
-    db_comment = (
-        db.query(models.Comment).filter(models.Comment.id == comment_id).first()
-    )
-    if db_comment:
-        for key, value in comment.dict(exclude_unset=True).items():
-            setattr(db_comment, key, value)
-        db.commit()
-        db.refresh(db_comment)
-        return db_comment
 
 
 # 根据评论id删除评论

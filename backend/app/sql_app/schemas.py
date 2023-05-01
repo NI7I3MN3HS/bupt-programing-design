@@ -82,8 +82,7 @@ class Post(PostBase):
 
 
 class CommentBase(BaseModel):
-    content: str
-    user_id: int
+    content: str = Field(min_length=1)
     post_id: int
     parent_id: Union[int, None] = None
 
@@ -92,9 +91,8 @@ class CommentCreate(CommentBase):
     pass
 
 
-class CommentUpdate(CommentBase):
-    content: Optional[str] = None
-    is_deleted: Optional[bool] = False
+class CommentDelete(BaseModel):
+    id: int
 
 
 class Comment(CommentBase):
