@@ -148,6 +148,10 @@ class NotificationCreate(NotificationBase):
     pass
 
 
+class NotificationDelete(BaseModel):
+    id: int
+
+
 class Notification(NotificationBase):
     id: int
     create_time: datetime

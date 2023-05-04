@@ -1,5 +1,5 @@
 from fastapi import Depends, FastAPI
-from .routers import login, register, user, post, comment, follow, like
+from .routers import login, register, user, post, comment, follow, like, notification
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -18,3 +18,4 @@ app.include_router(post.router)
 app.include_router(comment.router)
 app.include_router(follow.router)
 app.include_router(like.router)
+app.include_router(notification.router)
