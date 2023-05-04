@@ -12,10 +12,18 @@
             <nav class="navigation">
                 <ul class="swiper">
                     <li class="slide">
-                        <a herf="" class="route">个人资料</a>
+                        <router-link to="/profile/edit1">
+                            <span class="route">
+                                个人资料
+                            </span>
+                        </router-link>
                     </li>
                     <li class="slide">
-                        <a herf="" class="route exact">账号信息</a>
+                        <router-link to="/profile/edit2">
+                            <span class="route exact">
+                                账号信息
+                            </span>
+                        </router-link>
                     </li>
                 </ul>
             </nav>
@@ -104,6 +112,12 @@ export default defineComponent({
                     margin: 0;
                     text-align: left;
                     border-bottom: 1px solid #e5e5e5;
+                    a {
+                        text-decoration: none;
+                    }
+                    .router-link-active {
+                        text-decoration: none;    
+                    }
                     .route {
                         font-size: 16px;
                         font-weight: 600;

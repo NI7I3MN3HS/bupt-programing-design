@@ -14,24 +14,18 @@
                 <!-- 点击后的after未实现 -->
                 <ul class="swiper">
                     <li class="slide">
-                        <span class="route exact">
-                            <router-link to="/profile/edit1">
-                                <n-button text strong color="#fd281a" size="large" type="primary">
+                        <router-link to="/profile/edit1">
+                            <span class="route exact">
                                 个人资料
-                                </n-button>
-                            </router-link>
-                        </span>
-                        <!-- <a herf="" class="route exact">个人资料</a> -->
+                            </span>
+                        </router-link>
                     </li>
                     <li class="slide">
-                        <span class="route">
-                            <router-link to="/profile/edit2">
-                                <n-button text strong size="large">
-                                    账号信息
-                                </n-button>
-                            </router-link>
-                        </span>
-                        <!-- <a herf="" class="route">账号信息</a> -->
+                        <router-link to="/profile/edit2">
+                            <span class="route">
+                                账号信息
+                            </span>
+                        </router-link>
                     </li>
                 </ul>
             </nav>
@@ -140,7 +134,12 @@ export default defineComponent({
                     margin: 0;
                     text-align: left;
                     border-bottom: 1px solid #e5e5e5;
-
+                    a {
+                        text-decoration: none;
+                    }
+                    .router-link-active {
+                        text-decoration: none;    
+                    }
                     .route {
                         font-size: 16px;
                         font-weight: 600;
@@ -148,7 +147,6 @@ export default defineComponent({
                         display: block;
                         padding: 16px 0;
                     }
-
                     .exact {
                         position: relative;
                         color: #fd281a;
