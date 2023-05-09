@@ -191,12 +191,15 @@ import { ref, reactive, defineComponent } from "vue";
 import { useMessage } from "naive-ui";
 import { property } from "lodash";
 import useAuthStore from "@/stores/modules/AuthStore";
+import useUserStore from "@/stores/modules/UserStore";
 import { storeToRefs } from "pinia";
 const route = useRoute();
 const router = useRouter();
 
 //导入请求状态
 const authStore = useAuthStore();
+//导入用户状态
+const userStore = useUserStore();
 
 const { is_Authenticated } = storeToRefs(authStore);
 
@@ -228,6 +231,7 @@ const options = [
     props: {
       onClick: () => {
         authStore.logout();
+        userStore.$reset();
         router.push("/loginandregister");
       },
     },

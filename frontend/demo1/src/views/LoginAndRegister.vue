@@ -174,6 +174,7 @@
 
 <script>
 import useAuthStore from "@/stores/modules/AuthStore";
+import useUserStore from "@/stores/modules/UserStore";
 import axios from "axios";
 import { roundToNearestMinutes } from "date-fns";
 import { is } from "date-fns/locale";
@@ -206,8 +207,10 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const authStore = useAuthStore();
+    const userStore = useUserStore();
     function login() {
       authStore.login();
+      userStore.setUserInfo();
     }
     const themeOverrides = {
       Input: {

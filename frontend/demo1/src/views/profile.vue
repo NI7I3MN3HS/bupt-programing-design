@@ -97,8 +97,6 @@ const userStore = useUserStore();
 const { username } = storeToRefs(userStore);
 
 const Username = ref(username);
-
-userStore.setUserInfo();
 </script>
 
 <style lang="less" scoped>
