@@ -69,30 +69,34 @@
               热门搜索
             </n-drawer-content>
           </n-drawer>
+
           <!--信息按钮-->
           <div class="user-notice">
-            <n-icon size="30" color="black">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                viewBox="0 0 24 24"
-              >
-                <g
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+            <n-badge :value="NoticeNumber" :max="15">
+              <n-icon size="30" color="black">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  viewBox="0 0 24 24"
                 >
-                  <path
-                    d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6"
-                  ></path>
-                  <path d="M9 17v1a3 3 0 0 0 6 0v-1"></path>
-                </g>
-              </svg>
-            </n-icon>
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6"
+                    ></path>
+                    <path d="M9 17v1a3 3 0 0 0 6 0v-1"></path>
+                  </g>
+                </svg>
+              </n-icon>
+            </n-badge>
           </div>
 
+          <!--头像下拉菜单-->
           <div class="user-avatar">
             <n-dropdown trigger="click" :options="options">
               <n-avatar
@@ -226,6 +230,8 @@ const activate = (place) => {
   active.value = true;
   placement.value = place;
 };
+
+const NoticeNumber = ref(5);
 </script>
 
 <style lang="less">

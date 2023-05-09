@@ -87,29 +87,18 @@
 <script setup>
 import { ref, defineComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import Cookies from "js-cookie";
-import axios from "axios";
+import useUserStore from "@/stores/modules/UserStore";
+import { storeToRefs } from "pinia";
 const route = useRoute();
 const router = useRouter();
 
-const Username = ref(null);
+const userStore = useUserStore();
 
-const UserClient = axios.create({
-  baseURL: "http://localhost:8000",
-  timeout: 10000,
-  headers: {
-    Accept: "application/json",
-    Authorization: `Bearer ${Cookies.get("access_token")}`,
-  },
-});
+const { username } = storeToRefs(userStore);
 
-UserClient.get("/user/")
-  .then((response) => {
-    Username.value = response.data.username;
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+const Username = ref(username);
+
+userStore.setUserInfo();
 </script>
 
 <style lang="less" scoped>
