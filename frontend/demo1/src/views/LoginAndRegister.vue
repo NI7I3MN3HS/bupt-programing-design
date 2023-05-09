@@ -173,6 +173,7 @@
 </template>
 
 <script>
+import useAuthStore from "@/stores/modules/AuthStore";
 import axios from "axios";
 import { roundToNearestMinutes } from "date-fns";
 import { is } from "date-fns/locale";
@@ -204,6 +205,10 @@ export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
+    const authStore = useAuthStore();
+    function login() {
+      authStore.login();
+    }
     const themeOverrides = {
       Input: {
         borderFocus: "1px solid #8590a6",
@@ -395,6 +400,7 @@ export default {
       },
     }; //登录表单验证规则
     return {
+      login,
       is_input_email, //是否输入邮箱
       themeOverrides, //naive-ui主题覆盖
       RegisterRules, //注册表单验证规则
@@ -428,8 +434,8 @@ export default {
         axios
           .post("/login/", form)
           .then((res) => {
-            console.log(res.data.access_token);
             Cookies.set("access_token", res.data.access_token, { expires: 1 });
+            login();
             router.push("/");
           })
           .catch((err) => {

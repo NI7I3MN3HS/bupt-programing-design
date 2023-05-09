@@ -190,11 +190,19 @@ import { useRoute, useRouter } from "vue-router";
 import { ref, reactive, defineComponent } from "vue";
 import { useMessage } from "naive-ui";
 import { property } from "lodash";
+import useAuthStore from "@/stores/modules/AuthStore";
+import { storeToRefs } from "pinia";
 const route = useRoute();
 const router = useRouter();
 
+//导入请求状态
+const authStore = useAuthStore();
+
+const { is_Authenticated } = storeToRefs(authStore);
+
 const options = [
   {
+    show: is_Authenticated.value ? false : true,
     label: "登录/注册",
     key: "profile",
     props: {
@@ -204,6 +212,7 @@ const options = [
     },
   },
   {
+    show: is_Authenticated.value ? true : false,
     label: "用户资料",
     key: "Profile",
     props: {
@@ -213,12 +222,13 @@ const options = [
     },
   },
   {
+    show: is_Authenticated.value ? true : false,
     label: "退出登录",
     key: "logout",
     props: {
       onClick: () => {
+        authStore.logout();
         router.push("/loginandregister");
-        Cookies.remove("access_token");
       },
     },
   },

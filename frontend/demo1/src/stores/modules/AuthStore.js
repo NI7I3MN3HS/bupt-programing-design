@@ -8,7 +8,17 @@ const useAuthStore = defineStore("auth", {
       is_Authenticated: Cookies.get("access_token") ? true : false,
     };
   },
-  getters: {},
+  actions: {
+    login() {
+      this.token = Cookies.get("access_token");
+      this.is_Authenticated = true;
+      console.log("login");
+    },
+    logout() {
+      Cookies.remove("access_token");
+      this.is_Authenticated = false;
+    },
+  },
 });
 
 export default useAuthStore;
