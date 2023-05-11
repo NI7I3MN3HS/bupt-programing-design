@@ -30,8 +30,8 @@ const router = createRouter({
           component: () => import("../views/profileedit/password.vue"),
         },
         {
-          path: "/Edit",
-          component: () => import("../views/Edit.vue"),
+          path: "/WritePost",
+          component: () => import("../views/WritePost.vue"),
         },
       ],
     },
