@@ -1,5 +1,5 @@
 <template>
-  <n-upload :custom-request="myUpload">
+  <n-upload :custom-request="myUpload" :show-file-list="false">
     <n-button>点击选择文件</n-button>
   </n-upload>
 </template>
