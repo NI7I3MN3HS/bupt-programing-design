@@ -1,3 +1,5 @@
+//认证状态管理
+
 import { defineStore } from "pinia";
 import Cookies from "js-cookie";
 

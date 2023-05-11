@@ -1,36 +1,23 @@
-//个人用户状态管理
+//其他用户状态管理
 
 import { defineStore } from "pinia";
 import axios from "axios";
-import useAuthStore from "@/stores/modules/AuthStore";
-
-//导入请求状态
-const authStore = useAuthStore();
-
-//定义请求头
-const UserClient = axios.create({
-  baseURL: "http://localhost:8000",
-  timeout: 10000,
-  headers: {
-    Accept: "application/json",
-    Authorization: `Bearer ${authStore.token}`,
-  },
-});
 
 const useUserStore = defineStore("user", {
   state: () => {
     return {
+      id: 0,
       username: "",
       email: "",
       avatar_url: null,
       is_active: true,
-      id: 0,
-      introduction: null,
+      introduction: "",
     };
   },
   actions: {
     setUserInfo() {
-      UserClient.get("/user/")
+      axios
+        .post("/user/")
         .then((response) => {
           this.username = response.data.username;
           this.email = response.data.email;
@@ -45,5 +32,3 @@ const useUserStore = defineStore("user", {
     },
   },
 });
-
-export default useUserStore;
