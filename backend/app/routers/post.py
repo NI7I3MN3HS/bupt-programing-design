@@ -9,12 +9,12 @@ router = APIRouter(prefix="/post", tags=["post"])
 
 
 # 获取帖子信息
-@router.post("/{post_id.id}")
+@router.get("/{post_id}")
 async def get_post(
-    post_id: schemas.PostDelete,
+    post_id: int,
     db: Session = Depends(get_db),
 ):
-    db_post = crud.get_post(db, post_id=post_id.id)
+    db_post = crud.get_post(db, post_id=post_id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post not found")
     return db_post
