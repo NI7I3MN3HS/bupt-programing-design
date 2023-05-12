@@ -3,7 +3,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
-const useUserStore = defineStore("user", {
+const useOtherUserStore = defineStore("user", {
   state: () => {
     return {
       id: 0,
@@ -15,15 +15,14 @@ const useUserStore = defineStore("user", {
     };
   },
   actions: {
-    setUserInfo() {
+    GetDefiniteUserInfo(user_id) {
       axios
-        .post("/user/")
+        .get("/user/", { params: { id: user_id } })
         .then((response) => {
           this.username = response.data.username;
           this.email = response.data.email;
           this.avatar_url = response.data.avatar_url;
           this.is_active = response.data.is_active;
-          this.id = response.data.id;
           this.introduction = response.data.introduction;
         })
         .catch((error) => {
@@ -32,3 +31,5 @@ const useUserStore = defineStore("user", {
     },
   },
 });
+
+export default useOtherUserStore;

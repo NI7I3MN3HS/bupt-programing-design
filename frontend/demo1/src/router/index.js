@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import useAuthStore from "../stores/modules/AuthStore";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,7 @@ const router = createRouter({
         {
           path: "/WritePost",
           component: () => import("../views/WritePost.vue"),
+          meta: { requiresAuth: true },
         },
       ],
     },
@@ -51,6 +53,21 @@ const router = createRouter({
       component: () => import("../views/upload.vue"),
     },
   ],
+});
+
+router.beforeEach((to, from) => {
+  const authStore = useAuthStore();
+  // 而不是去检查每条路由记录
+  // to.matched.some(record => record.meta.requiresAuth)
+  if (to.meta.requiresAuth && !authStore.is_Authenticated) {
+    // 此路由需要授权，请检查是否已登录
+    // 如果没有，则重定向到登录页面
+    return {
+      path: "/loginandregister",
+      // 保存我们所在的位置，以便以后再来
+      query: { redirect: to.fullPath },
+    };
+  }
 });
 
 export default router;
