@@ -29,51 +29,39 @@
           </div>
         </router-link>
         <div class="header-right">
-          <!--搜索按钮-->
-          <div class="header-search">
-            <n-button
-              @click="activate('top')"
-              text
-              style="font-size: 30px"
-              color="white"
-            >
-              <n-icon>
-                <svg
-                  t="1679069498934"
-                  class="icon"
-                  viewBox="0 0 1024 1024"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  p-id="9562"
-                  width="200"
-                  height="200"
-                >
-                  <path
-                    d="M416 192C537.6 192 640 294.4 640 416S537.6 640 416 640 192 537.6 192 416 294.4 192 416 192M416 128C256 128 128 256 128 416S256 704 416 704 704 576 704 416 576 128 416 128L416 128z"
-                    fill="#272636"
-                    p-id="9563"
-                  ></path>
-                  <path
-                    d="M832 864c-6.4 0-19.2 0-25.6-6.4l-192-192c-12.8-12.8-12.8-32 0-44.8s32-12.8 44.8 0l192 192c12.8 12.8 12.8 32 0 44.8C851.2 864 838.4 864 832 864z"
-                    fill="#272636"
-                    p-id="9564"
-                  ></path>
-                </svg>
-              </n-icon>
+          <n-space align="center" size="large">
+            <!--搜索按钮-->
+            <n-button @click="activate('top')" text block>
+              <template #icon>
+                <n-icon size="36">
+                  <svg
+                    t="1679069498934"
+                    class="icon"
+                    viewBox="0 0 1024 1024"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    p-id="9562"
+                    width="200"
+                    height="200"
+                  >
+                    <path
+                      d="M416 192C537.6 192 640 294.4 640 416S537.6 640 416 640 192 537.6 192 416 294.4 192 416 192M416 128C256 128 128 256 128 416S256 704 416 704 704 576 704 416 576 128 416 128L416 128z"
+                      fill="#272636"
+                      p-id="9563"
+                    ></path>
+                    <path
+                      d="M832 864c-6.4 0-19.2 0-25.6-6.4l-192-192c-12.8-12.8-12.8-32 0-44.8s32-12.8 44.8 0l192 192c12.8 12.8 12.8 32 0 44.8C851.2 864 838.4 864 832 864z"
+                      fill="#272636"
+                      p-id="9564"
+                    ></path>
+                  </svg>
+                </n-icon>
+              </template>
             </n-button>
-          </div>
-          <!--搜索抽屉-->
-          <n-drawer v-model:show="active" :height="180" :placement="placement">
-            <n-drawer-content>
-              <n-input size="large" round placeholder="搜索" />
-              热门搜索
-            </n-drawer-content>
-          </n-drawer>
 
-          <!--信息按钮-->
-          <div class="user-notice">
+            <!--信息按钮-->
             <n-badge :value="NoticeNumber" :max="15">
-              <n-icon size="30" color="black">
+              <n-icon size="31" color="black">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -94,18 +82,17 @@
                 </svg>
               </n-icon>
             </n-badge>
-          </div>
 
-          <!--头像下拉菜单-->
-          <div class="user-avatar">
+            <!--头像下拉菜单-->
             <n-dropdown trigger="click" :options="options">
               <n-avatar
                 round
-                size="large"
-                src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                :size="36"
+                :src="avatar_url"
+                fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
               />
             </n-dropdown>
-          </div>
+          </n-space>
         </div>
       </div>
     </div>
@@ -178,6 +165,14 @@
     </div>
   </div>
 
+  <!--搜索抽屉-->
+  <n-drawer v-model:show="active" :height="180" :placement="placement">
+    <n-drawer-content>
+      <n-input size="large" round placeholder="搜索" />
+      热门搜索
+    </n-drawer-content>
+  </n-drawer>
+
   <!--回到顶部 可视高度50-->
   <div class="BackTop">
     <n-back-top :bottom="100" :visibility-height="50" iconColorHover="black">
@@ -188,7 +183,7 @@
 <script setup>
 import Cookies from "js-cookie";
 import { useRoute, useRouter } from "vue-router";
-import { ref, reactive, defineComponent } from "vue";
+import { ref, reactive, defineComponent, onBeforeMount } from "vue";
 import { useMessage } from "naive-ui";
 import { property } from "lodash";
 import useAuthStore from "@/stores/modules/AuthStore";
@@ -203,6 +198,14 @@ const authStore = useAuthStore();
 const userStore = useUserStore();
 
 const { is_Authenticated } = storeToRefs(authStore);
+const { avatar_url } = storeToRefs(userStore);
+
+onBeforeMount(() => {
+  if (is_Authenticated.value) {
+    userStore.setUserInfo();
+    console.log(avatar_url);
+  }
+});
 
 const options = [
   {

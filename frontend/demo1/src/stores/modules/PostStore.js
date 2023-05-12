@@ -23,7 +23,7 @@ const usePostStore = defineStore("post", {
   state: () => {
     return {
       post_id: 0, //帖子id
-      post_username: "", //发帖用户
+      post_user_id: "", //发帖用户id
       post_title: "", //帖子标题
       post_content: "", //帖子内容
       post_comment: [""], //评论
@@ -43,19 +43,19 @@ const usePostStore = defineStore("post", {
       this.post_content = content;
     },
     //获取帖子信息
-    GetPostInfo() {
+    GetPostInfo(postid) {
       axios
-        .get("/post/")
+        .get(`/post/${postid}`)
         .then((response) => {
-          this.post_id = response.data.post_id;
-          this.post_username = response.data.post_username;
-          this.post_title = response.data.post_title;
-          this.post_content = response.data.post_content;
+          this.post_id = response.data.id;
+          this.post_user_id = response.data.user_id;
+          this.post_title = response.data.title;
+          this.post_content = response.data.content;
           this.post_comment = response.data.post_comment;
           this.post_like = response.data.post_like;
           this.post_dislike = response.data.post_dislike;
-          this.post_create_time = response.data.post_create_time;
-          this.post_update_time = response.data.post_update_time;
+          this.post_create_time = response.data.create_time;
+          this.post_update_time = response.data.update_time;
         })
         .catch((error) => {
           console.error(error);

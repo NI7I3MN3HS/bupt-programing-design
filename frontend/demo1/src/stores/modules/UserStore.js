@@ -22,7 +22,7 @@ const useUserStore = defineStore("user", {
     return {
       username: "",
       email: "",
-      avatar_url: null,
+      avatar_url: "",
       is_active: true,
       id: 0,
       introduction: null,

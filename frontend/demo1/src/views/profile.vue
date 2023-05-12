@@ -2,16 +2,13 @@
   <div class="background">
     <div class="ProfileBGImage" />
     <div class="Avatar">
-      <n-avatar
-        :size="140"
-        src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-      />
+      <n-avatar :size="140" :src="avatar_url" />
     </div>
     <div class="ProfileHeader">
       <div class="UserMain">
         <n-card content-style="padding:0 24px 20px 24px">
           <div>
-            <span class="UserName">{{ Username }}</span>
+            <span class="UserName">{{ username }}</span>
             <span class="UserPersonalizedSignature">个性签名</span>
             <span class="EditorProfileButton"
               ><router-link to="/profile/edit1"
@@ -94,9 +91,7 @@ const router = useRouter();
 
 const userStore = useUserStore();
 
-const { username } = storeToRefs(userStore);
-
-const Username = ref(username);
+const { username, avatar_url } = storeToRefs(userStore);
 </script>
 
 <style lang="less" scoped>
