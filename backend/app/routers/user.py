@@ -6,7 +6,7 @@ from ..sql_app.database import get_db
 from ..core import security
 from .. import mail
 
-UPLOAD_FOLDER = "static/avatar/"
+UPLOAD_FOLDER = "../frontend/demo1/public/static/avatar/"
 
 router = APIRouter(prefix="/user", tags=["user"])
 
