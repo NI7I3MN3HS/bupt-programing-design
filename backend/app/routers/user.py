@@ -76,13 +76,13 @@ async def upload_avatar(
 @router.put("/reset_password")
 async def reset_password(
     origin_passowrd: schemas.password,
-    new_password: schemas.password2,
+    new_password: schemas.password,
     user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db),
 ):
     if not security.verify_password(origin_passowrd.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect password")
-    hashed_password = security.hash_password(new_password.password2)
+    hashed_password = security.hash_password(new_password.password)
     # 更新密码
     db_user = crud.get_user(db, user_id=user.id)
     db_user.hashed_password = hashed_password

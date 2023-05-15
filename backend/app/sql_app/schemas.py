@@ -12,10 +12,6 @@ class password(BaseModel):
     password: str = Field(min_length=6, max_length=24)
 
 
-class password2(BaseModel):
-    password2: str = Field(min_length=6, max_length=24)
-
-
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -157,25 +153,6 @@ class NotificationDelete(BaseModel):
 
 
 class Notification(NotificationBase):
-    id: int
-    create_time: datetime
-    is_read: bool
-
-    class Config:
-        orm_mode = True
-
-
-class PrivateMessageBase(BaseModel):
-    content: str
-    sender_id: int
-    receiver_id: int
-
-
-class PrivateMessageCreate(PrivateMessageBase):
-    pass
-
-
-class PrivateMessage(PrivateMessageBase):
     id: int
     create_time: datetime
     is_read: bool

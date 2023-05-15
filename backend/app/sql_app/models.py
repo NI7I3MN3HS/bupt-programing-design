@@ -144,25 +144,4 @@ user_id：接收通知的用户ID，外键
 """
 
 
-class PrivateMessage(Base):
-    __tablename__ = "private_messages"
-
-    id = Column(Integer, primary_key=True, index=True)
-    content = Column(Text)
-    create_time = Column(DateTime, default=datetime.now)
-    is_read = Column(Boolean, default=False)
-    sender_id = Column(Integer, ForeignKey("users.id"))
-    recipient_id = Column(Integer, ForeignKey("users.id"))
-
-
-"""
-站内信表（private_messages）
-id：站内信ID，主键
-content：站内信内容
-create_time：站内信创建时间
-is_read：是否已读，布尔类型
-sender_id：发送者ID，外键
-recipient_id：接收者ID，外键
-"""
-
 Base.metadata.create_all(bind=engine)
