@@ -211,14 +211,8 @@ def get_comments_by_comment(
 
 
 # 获取文章的所有评论
-def get_comments_by_post(db: Session, post_id: int, skip: int = 0, limit: int = 100):
-    return (
-        db.query(models.Comment)
-        .filter(models.Comment.post_id == post_id)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+def get_comments_by_post(db: Session, post_id: int):
+    return db.query(models.Comment).filter(models.Comment.post_id == post_id).all()
 
 
 # follow crud
