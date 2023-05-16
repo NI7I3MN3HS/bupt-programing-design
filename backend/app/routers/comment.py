@@ -21,7 +21,7 @@ async def get_comment(
 
 
 # 获取帖子的评论
-@router.post("/{post_id}")
+@router.get("/{post_id}")
 async def get_post_comments(
     post_id: int,
     db: Session = Depends(get_db),
@@ -29,7 +29,7 @@ async def get_post_comments(
     db_post = crud.get_post(db, post_id=post_id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post not found")
-    return crud.get_post_comments(db=db, post_id=post_id)
+    return crud.get_comments_by_post(db=db, post_id=post_id)
 
 
 # 创建评论

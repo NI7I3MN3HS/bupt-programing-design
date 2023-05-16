@@ -250,25 +250,13 @@ def get_follows(db: Session, skip: int = 0, limit: int = 100):
 
 
 # 获取用户的所有关注
-def get_follows_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100):
-    return (
-        db.query(models.Follow)
-        .filter(models.Follow.follower_id == user_id)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+def get_follows_by_user(db: Session, user_id: int):
+    return db.query(models.Follow).filter(models.Follow.follower_id == user_id).all()
 
 
 # 获取用户的所有粉丝
-def get_followers_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100):
-    return (
-        db.query(models.Follow)
-        .filter(models.Follow.followed_id == user_id)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+def get_followers_by_user(db: Session, user_id: int):
+    return db.query(models.Follow).filter(models.Follow.followed_id == user_id).all()
 
 
 # 根据关注id删除关注
