@@ -31,3 +31,21 @@ async def delete_like(
     if db_like is None:
         raise HTTPException(status_code=404, detail="Like not found")
     return crud.delete_like(db=db, like_id=db_like.id)
+
+
+# 获取文章点赞数
+@router.get("/post/{post_id}")
+async def get_post_like_count(
+    post_id: int,
+    db: Session = Depends(get_db),
+):
+    return crud.get_post_like_count(db, post_id=post_id)
+
+
+# 获取评论点赞数
+@router.get("/comment/{comment_id}")
+async def get_comment_like_count(
+    comment_id: int,
+    db: Session = Depends(get_db),
+):
+    return crud.get_comment_like_count(db, comment_id=comment_id)

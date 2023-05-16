@@ -211,14 +211,8 @@ def get_comments_by_comment(
 
 
 # 获取文章的所有评论
-def get_comments_by_post(db: Session, post_id: int, skip: int = 0, limit: int = 100):
-    return (
-        db.query(models.Comment)
-        .filter(models.Comment.post_id == post_id)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+def get_comments_by_post(db: Session, post_id: int):
+    return db.query(models.Comment).filter(models.Comment.post_id == post_id).all()
 
 
 # follow crud
@@ -256,25 +250,13 @@ def get_follows(db: Session, skip: int = 0, limit: int = 100):
 
 
 # 获取用户的所有关注
-def get_follows_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100):
-    return (
-        db.query(models.Follow)
-        .filter(models.Follow.follower_id == user_id)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+def get_follows_by_user(db: Session, user_id: int):
+    return db.query(models.Follow).filter(models.Follow.follower_id == user_id).all()
 
 
 # 获取用户的所有粉丝
-def get_followers_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100):
-    return (
-        db.query(models.Follow)
-        .filter(models.Follow.followed_id == user_id)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+def get_followers_by_user(db: Session, user_id: int):
+    return db.query(models.Follow).filter(models.Follow.followed_id == user_id).all()
 
 
 # 根据关注id删除关注
@@ -312,6 +294,16 @@ def create_like(db: Session, like: schemas.LikeCreate, user_id: int):
     db.commit()
     db.refresh(db_like)
     return db_like
+
+
+# 获取帖子的点赞数
+def get_post_like_count(db: Session, post_id: int):
+    return db.query(models.Like).filter(models.Like.post_id == post_id).count()
+
+
+# 获取评论的点赞数
+def get_comment_like_count(db: Session, comment_id: int):
+    return db.query(models.Like).filter(models.Like.comment_id == comment_id).count()
 
 
 # 根据点赞id获取点赞信息
@@ -423,14 +415,10 @@ def get_notifications(db: Session, skip: int = 0, limit: int = 100):
 
 
 # 获取用户的所有通知
-def get_notifications_by_user(
-    db: Session, user_id: int, skip: int = 0, limit: int = 100
-):
+def get_notifications_by_user(db: Session, user_id: int):
     return (
         db.query(models.Notification)
         .filter(models.Notification.user_id == user_id)
-        .offset(skip)
-        .limit(limit)
         .all()
     )
 
