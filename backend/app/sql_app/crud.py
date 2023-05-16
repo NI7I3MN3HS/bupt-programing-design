@@ -405,14 +405,10 @@ def get_notifications(db: Session, skip: int = 0, limit: int = 100):
 
 
 # 获取用户的所有通知
-def get_notifications_by_user(
-    db: Session, user_id: int, skip: int = 0, limit: int = 100
-):
+def get_notifications_by_user(db: Session, user_id: int):
     return (
         db.query(models.Notification)
         .filter(models.Notification.user_id == user_id)
-        .offset(skip)
-        .limit(limit)
         .all()
     )
 

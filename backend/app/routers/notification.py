@@ -21,6 +21,15 @@ async def get_notification(
     return db_notification
 
 
+# 获取用户的所有通知信息
+@router.get("/all")
+async def get_all_notification(
+    current_user: schemas.User = Depends(security.get_current_user),
+    db: Session = Depends(get_db),
+):
+    return crud.get_notifications_by_use(db, user_id=current_user.id)
+
+
 # 创建通知信息
 @router.post("/create")
 async def create_notification(
