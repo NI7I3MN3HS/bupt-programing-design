@@ -296,6 +296,16 @@ def create_like(db: Session, like: schemas.LikeCreate, user_id: int):
     return db_like
 
 
+# 获取帖子的点赞数
+def get_post_like_count(db: Session, post_id: int):
+    return db.query(models.Like).filter(models.Like.post_id == post_id).count()
+
+
+# 获取评论的点赞数
+def get_comment_like_count(db: Session, comment_id: int):
+    return db.query(models.Like).filter(models.Like.comment_id == comment_id).count()
+
+
 # 根据点赞id获取点赞信息
 def get_like(db: Session, like_id: int):
     return db.query(models.Like).filter(models.Like.id == like_id).first()
