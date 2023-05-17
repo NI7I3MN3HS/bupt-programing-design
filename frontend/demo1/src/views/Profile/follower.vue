@@ -67,7 +67,7 @@ const UserClient = axios.create({
 });
 
 //获取当前用户的关注用户信息
-function getFollowedUser(user_id) {
+function getFollowerUser(user_id) {
   axios
     .get(`/user/${user_id}`)
     .then((response) => {
@@ -89,7 +89,7 @@ function getFollowedUser(user_id) {
 
 //组件挂载前获取数据
 onBeforeMount(() => {
-  getFollowedUser(data.value.follower_id);
+  getFollowerUser(data.value.follower_id);
 });
 
 //创建关注

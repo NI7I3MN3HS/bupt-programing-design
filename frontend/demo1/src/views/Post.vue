@@ -25,17 +25,11 @@
           <n-button color="#056de8" @click="CreateComment">发表</n-button>
           <n-divider />
           <div v-for="item in post_comment">
-            <n-card>
-              <template #header
-                ><n-space
-                  ><n-avatar></n-avatar>
-                  <div>作者{{ commentUsername(id) }}</div></n-space
-                ></template
-              >
-              <div v-html="item.content"></div>
-            </n-card>
+            <CommentCard :data="item" />
           </div>
-          <n-card>评论已经到底了！</n-card>
+          <n-card
+            ><n-space justify="center"><div>评论已经到底了！</div></n-space>
+          </n-card>
         </n-space>
       </div>
     </div>
@@ -49,6 +43,7 @@ import usePostStore from "../stores/modules/PostStore";
 import useAuthStore from "../stores/modules/AuthStore";
 import { storeToRefs } from "pinia";
 import CommentEditor from "../components/CommentEditor.vue";
+import CommentCard from "../components/CommentCard.vue";
 import axios from "axios";
 
 const router = useRouter();
@@ -108,10 +103,6 @@ function CreateComment() {
     router.push("/loginandregister");
   }
 }
-
-const commentUsername = computed((id) => {
-  return getCommentUser(id);
-});
 </script>
 
 <style scoped lang="less">
@@ -130,5 +121,8 @@ const commentUsername = computed((id) => {
 .post_title {
   font-size: 50px;
   font-weight: bolder;
+}
+.CommentZone {
+  margin-bottom: 5ch;
 }
 </style>
