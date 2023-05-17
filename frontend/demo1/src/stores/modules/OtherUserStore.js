@@ -17,7 +17,7 @@ const useOtherUserStore = defineStore("user", {
   actions: {
     GetDefiniteUserInfo(user_id) {
       axios
-        .get("/user/", { params: { id: user_id } })
+        .get(`/user/${user_id}`)
         .then((response) => {
           this.username = response.data.username;
           this.email = response.data.email;

@@ -259,6 +259,16 @@ def get_followers_by_user(db: Session, user_id: int):
     return db.query(models.Follow).filter(models.Follow.followed_id == user_id).all()
 
 
+# 获取用户的关注数
+def get_follows_count_by_user(db: Session, user_id: int):
+    return db.query(models.Follow).filter(models.Follow.follower_id == user_id).count()
+
+
+# 获取用户的粉丝数
+def get_followers_count_by_user(db: Session, user_id: int):
+    return db.query(models.Follow).filter(models.Follow.followed_id == user_id).count()
+
+
 # 根据关注id删除关注
 def delete_follow(db: Session, follow_id: int):
     db_follow = db.query(models.Follow).filter(models.Follow.id == follow_id).first()
