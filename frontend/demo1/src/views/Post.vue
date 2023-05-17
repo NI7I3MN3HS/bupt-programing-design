@@ -98,6 +98,7 @@ function CreateComment() {
         console.error(error);
       });
     comment_input.value.commentvalueHtml = ""; //清空评论框
+    postStore.GetPostInfo(route.params.id); //重新获取帖子信息
   } else {
     alert("请先登录");
     router.push("/loginandregister");
