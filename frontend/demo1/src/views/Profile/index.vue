@@ -70,9 +70,9 @@
                     >
                       <path
                         d="M458,210.409l-145.267-12.476L256,64l-56.743,133.934L54,210.409l110.192,95.524L131.161,448L256,372.686L380.83,448
-	l-33.021-142.066L458,210.409z M272.531,345.286L256,335.312l-16.53,9.973l-59.988,36.191l15.879-68.296l4.369-18.79l-14.577-12.637
-	l-52.994-45.939l69.836-5.998l19.206-1.65l7.521-17.75l27.276-64.381l27.27,64.379l7.52,17.751l19.208,1.65l69.846,5.998
-	l-52.993,45.939l-14.576,12.636l4.367,18.788l15.875,68.299L272.531,345.286z"
+      l-33.021-142.066L458,210.409z M272.531,345.286L256,335.312l-16.53,9.973l-59.988,36.191l15.879-68.296l4.369-18.79l-14.577-12.637
+      l-52.994-45.939l69.836-5.998l19.206-1.65l7.521-17.75l27.276-64.381l27.27,64.379l7.52,17.751l19.208,1.65l69.846,5.998
+      l-52.993,45.939l-14.576,12.636l4.367,18.788l15.875,68.299L272.531,345.286z"
                       ></path>
                     </svg>
                   </n-icon>
@@ -84,13 +84,18 @@
         </n-card>
       </div>
     </div>
-    <div class="ProfileContent"></div>
+    <div class="ProfileContent">
+      <div v-for="item in followData">
+        <Follow :data="item" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, defineComponent, watch, onBeforeMount } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import Follow from "@/views/Profile/follow.vue";
 import useUserStore from "@/stores/modules/UserStore";
 import axios from "axios";
 const route = useRoute();
@@ -106,7 +111,10 @@ const userData = reactive({
   follower_count: null,
 });
 
-function fetchUser(user_id) {
+const followData = ref([]);
+
+//获取当前用户详情的用户信息
+function fetchProfileUserInfo(user_id) {
   axios
     .get(`/user/${user_id}`)
     .then((response) => {
@@ -123,6 +131,7 @@ function fetchUser(user_id) {
     .then((response) => {
       console.log(response.data);
       userData.follow_count = response.data.count;
+      followData.value = response.data.followeds;
     })
     .catch((error) => {
       console.error(error);
@@ -140,12 +149,12 @@ function fetchUser(user_id) {
 
 //组件挂载前获取数据
 onBeforeMount(() => {
-  fetchUser(route.params.id);
+  fetchProfileUserInfo(route.params.id);
   //路由参数更新时，重新获取数据
   watch(
     () => route.params.id,
     async (newId) => {
-      fetchUser(newId);
+      fetchProfileUserInfo(newId);
     }
   );
 });

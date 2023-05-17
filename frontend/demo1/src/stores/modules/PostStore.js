@@ -26,7 +26,7 @@ const usePostStore = defineStore("post", {
       post_user_id: "", //发帖用户id
       post_title: "", //帖子标题
       post_content: "", //帖子内容
-      post_comment: [""], //评论
+      post_comment: [], //评论
       post_like: 0, //点赞数
       post_dislike: 0, //点踩数
       post_create_time: "", //创建时间
@@ -56,6 +56,14 @@ const usePostStore = defineStore("post", {
           this.post_dislike = response.data.post_dislike;
           this.post_create_time = response.data.create_time;
           this.post_update_time = response.data.update_time;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      axios
+        .get(`/comment/${postid}`)
+        .then((response) => {
+          this.post_comment = response.data;
         })
         .catch((error) => {
           console.error(error);
