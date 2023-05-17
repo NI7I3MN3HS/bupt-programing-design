@@ -18,6 +18,19 @@ async def create_follow(
     return crud.create_follow(db=db, follow=follow, user_id=current_user.id)
 
 
+# 判断是否关注
+@router.get("/is_followed/{followed_id}")
+async def is_followed(
+    followed_id: int,
+    current_user: schemas.User = Depends(security.get_current_user),
+    db: Session = Depends(get_db),
+):
+    return (
+        crud.get_follow_by_follower_and_followed(db, current_user.id, followed_id)
+        is not None
+    )
+
+
 # 取消关注
 @router.delete("/delete")
 async def delete_follow(
