@@ -34,18 +34,24 @@ async def delete_follow(
 
 
 # 获取用户的所有关注
-@router.get("/get_followed")
+@router.get("/get_followed/{user_id}")
 async def get_followed(
-    current_user: schemas.User = Depends(security.get_current_user),
+    user_id: int,
     db: Session = Depends(get_db),
 ):
-    return crud.get_follows_by_user(db=db, user_id=current_user.id)
+    return {
+        "count": crud.get_follows_count_by_user(db=db, user_id=user_id),
+        "followeds": crud.get_follows_by_user(db=db, user_id=user_id),
+    }
 
 
 # 获取用户的所有粉丝
-@router.get("/get_follower")
+@router.get("/get_follower/{user_id}")
 async def get_follower(
-    current_user: schemas.User = Depends(security.get_current_user),
+    user_id: int,
     db: Session = Depends(get_db),
 ):
-    return crud.get_followers_by_user(db=db, followed_id=current_user.id)
+    return {
+        "count": crud.get_followers_count_by_user(db=db, user_id=user_id),
+        "followers": crud.get_followers_by_user(db=db, user_id=user_id),
+    }
