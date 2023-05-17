@@ -112,19 +112,6 @@ function CreateComment() {
 const commentUsername = computed((id) => {
   return getCommentUser(id);
 });
-
-function getCommentUser(user_id) {
-  axios
-    .get(`/user/${user_id}`)
-    .then((response) => {
-      console.log(response.data.username);
-      return response.data.username;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  return response.data.username;
-}
 </script>
 
 <style scoped lang="less">

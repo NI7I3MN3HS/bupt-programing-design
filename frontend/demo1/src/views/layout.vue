@@ -211,7 +211,7 @@ const options = [
   {
     show: is_Authenticated.value ? false : true,
     label: "登录/注册",
-    key: "profile",
+    key: "LoginandRegister",
     props: {
       onClick: () => {
         router.push("/loginandregister");
@@ -224,7 +224,7 @@ const options = [
     key: "Profile",
     props: {
       onClick: () => {
-        router.push("/profile");
+        router.push(`/user/${userStore.id}`);
       },
     },
   },

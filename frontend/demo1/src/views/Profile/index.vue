@@ -12,21 +12,32 @@
             <span class="UserPersonalizedSignature">{{
               userData.introduction
             }}</span>
-            <span class="EditorProfileButton"
-              ><router-link to="/profile/edit1"
-                ><n-button
-                  ghost
-                  color="#056de8"
-                  text-color="#056de8"
-                  v-if="userStore.id == userData.id"
-                  >编辑个人资料</n-button
-                ></router-link
-              ></span
-            >
+            <span class="EditorProfileButton">
+              <n-button
+                @click="toEditProfile"
+                ghost
+                color="#056de8"
+                text-color="#056de8"
+                v-if="userStore.id == userData.id"
+                >编辑个人资料</n-button
+              >
+              <n-button
+                v-if="
+                  userStore.id != userData.id && !userData.is_followed_by_me
+                "
+                @click="CreateFollow"
+                >关注</n-button
+              >
+              <n-button
+                v-if="userStore.id != userData.id && userData.is_followed_by_me"
+                @click="DeleteFollow"
+                >取消关注</n-button
+              >
+            </span>
           </div>
           <div class="FollowsAndFans">
             <n-space>
-              <n-button text>
+              <n-button text @click="toFollowedTab">
                 <template #icon>
                   <n-icon>
                     <svg
@@ -55,7 +66,7 @@
                 </template>
                 {{ userData.follow_count }}关注
               </n-button>
-              <n-button text>
+              <n-button text @click="toFollowerTab">
                 <template #icon>
                   <n-icon>
                     <svg
@@ -85,8 +96,11 @@
       </div>
     </div>
     <div class="ProfileContent">
-      <div v-for="item in followData">
+      <div v-if="pageTab == 1" v-for="item in followData">
         <Follow :data="item" />
+      </div>
+      <div v-if="pageTab == 2" v-for="item in followerData">
+        <Follower :data="item" />
       </div>
     </div>
   </div>
@@ -94,24 +108,47 @@
 
 <script setup>
 import { ref, reactive, defineComponent, watch, onBeforeMount } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
 import Follow from "@/views/Profile/follow.vue";
+import Follower from "@/views/Profile/follower.vue";
+import useAuthStore from "@/stores/modules/AuthStore";
 import useUserStore from "@/stores/modules/UserStore";
 import axios from "axios";
+
 const route = useRoute();
 const router = useRouter();
 
+const authStore = useAuthStore();
 const userStore = useUserStore();
 
+//定义axios请求头
+const UserClient = axios.create({
+  baseURL: "http://localhost:8000",
+  timeout: 10000,
+  headers: {
+    Accept: "application/json",
+    Authorization: `Bearer ${authStore.token}`,
+  },
+});
+
+//当前页用户数据
 const userData = reactive({
   avatar_url: null,
   username: null,
   introduction: null,
+  id: null,
   follow_count: null,
   follower_count: null,
+  is_followed_by_me: null,
 });
 
+//当前页关注列表数据
 const followData = ref([]);
+//当前页粉丝列表数据
+const followerData = ref([]);
+
+//0-帖子 1-关注 2-粉丝
+const pageTab = ref(0);
 
 //获取当前用户详情的用户信息
 function fetchProfileUserInfo(user_id) {
@@ -122,6 +159,7 @@ function fetchProfileUserInfo(user_id) {
       userData.avatar_url = response.data.avatar_url;
       userData.username = response.data.username;
       userData.introduction = response.data.introduction;
+      userData.id = response.data.id;
     })
     .catch((error) => {
       console.error(error);
@@ -141,23 +179,76 @@ function fetchProfileUserInfo(user_id) {
     .then((response) => {
       console.log(response.data);
       userData.follower_count = response.data.count;
+      followerData.value = response.data.followers;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  UserClient.get(`/follow/is_followed/${user_id}`)
+    .then((response) => {
+      console.log(response.data);
+      userData.is_followed_by_me = response.data;
     })
     .catch((error) => {
       console.error(error);
     });
 }
 
+//仅当 id 更改时才获取用户数据
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.params.id !== from.params.id) {
+    fetchProfileUserInfo(to.params.id);
+  }
+});
+
 //组件挂载前获取数据
 onBeforeMount(() => {
   fetchProfileUserInfo(route.params.id);
-  //路由参数更新时，重新获取数据
-  watch(
-    () => route.params.id,
-    async (newId) => {
-      fetchProfileUserInfo(newId);
-    }
-  );
 });
+
+//跳转到编辑个人资料页面
+function toEditProfile() {
+  router.push("/profile/edit1");
+}
+
+//创建关注当前用户
+function CreateFollow() {
+  UserClient.post(`/follow/create`, { followed_id: userData.id })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  userData.is_followed_by_me = true;
+}
+
+//取消关注当前用户
+function DeleteFollow() {
+  UserClient.delete(`/follow/delete`, {
+    data: { followed_id: userData.id },
+  })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  userData.is_followed_by_me = false;
+}
+
+//跳转到帖子列表页面
+function toIndexTab() {
+  pageTab.value = 0;
+}
+//跳转到关注列表页面
+function toFollowedTab() {
+  pageTab.value = 1;
+}
+//跳转到粉丝列表页面
+function toFollowerTab() {
+  pageTab.value = 2;
+}
 </script>
 
 <style lang="less" scoped>

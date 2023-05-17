@@ -12,12 +12,12 @@
           >
         </div>
         <n-button
-          v-if="is_followed && userStore.id != data.followed_id"
+          v-if="is_followed && userStore.id != data.follower_id"
           @click="DeleteFollow"
           >取消关注</n-button
         >
         <n-button
-          v-if="!is_followed && userStore.id != data.followed_id"
+          v-if="!is_followed && userStore.id != data.follower_id"
           @click="CreateFollow"
           >关注</n-button
         >
@@ -25,6 +25,7 @@
     </n-card>
   </div>
 </template>
+
 <script setup>
 import {
   ref,
@@ -53,8 +54,17 @@ const { data } = toRefs(props);
 console.log(data.value);
 
 const userData = ref({});
-
 const is_followed = ref();
+
+//定义axios请求头
+const UserClient = axios.create({
+  baseURL: "http://localhost:8000",
+  timeout: 10000,
+  headers: {
+    Accept: "application/json",
+    Authorization: `Bearer ${authStore.token}`,
+  },
+});
 
 //获取当前用户的关注用户信息
 function getFollowedUser(user_id) {
@@ -67,7 +77,7 @@ function getFollowedUser(user_id) {
     .catch((error) => {
       console.error(error);
     });
-  UserClient.get(`/follow/is_followed/${data.value.followed_id}`)
+  UserClient.get(`/follow/is_followed/${data.value.follower_id}`)
     .then((response) => {
       console.log(response.data);
       is_followed.value = response.data;
@@ -79,22 +89,12 @@ function getFollowedUser(user_id) {
 
 //组件挂载前获取数据
 onBeforeMount(() => {
-  getFollowedUser(data.value.followed_id);
-});
-
-//定义axios请求头
-const UserClient = axios.create({
-  baseURL: "http://localhost:8000",
-  timeout: 10000,
-  headers: {
-    Accept: "application/json",
-    Authorization: `Bearer ${authStore.token}`,
-  },
+  getFollowedUser(data.value.follower_id);
 });
 
 //创建关注
 function CreateFollow() {
-  UserClient.post(`/follow/create`, { followed_id: data.value.followed_id })
+  UserClient.post(`/follow/create`, { followed_id: data.value.follower_id })
     .then((response) => {
       console.log(response.data);
     })
@@ -106,7 +106,7 @@ function CreateFollow() {
 //取消关注
 function DeleteFollow() {
   UserClient.delete(`/follow/delete`, {
-    data: { followed_id: data.value.followed_id },
+    data: { followed_id: data.value.follower_id },
   })
     .then((response) => {
       console.log(response.data);
