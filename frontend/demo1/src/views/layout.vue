@@ -183,7 +183,7 @@
 <script setup>
 import Cookies from "js-cookie";
 import { useRoute, useRouter } from "vue-router";
-import { ref, reactive, defineComponent, onBeforeMount } from "vue";
+import { ref, reactive, defineComponent, onBeforeMount, onMounted } from "vue";
 import { useMessage } from "naive-ui";
 import { property } from "lodash";
 import useAuthStore from "@/stores/modules/AuthStore";
@@ -200,10 +200,9 @@ const userStore = useUserStore();
 const { is_Authenticated } = storeToRefs(authStore);
 const { avatar_url } = storeToRefs(userStore);
 
-onBeforeMount(() => {
+onMounted(() => {
   if (is_Authenticated.value) {
     userStore.setUserInfo();
-    console.log(avatar_url);
   }
 });
 
@@ -235,6 +234,7 @@ const options = [
     props: {
       onClick: () => {
         authStore.logout();
+        authStore.$reset();
         userStore.$reset();
         router.push("/loginandregister");
       },

@@ -1,21 +1,8 @@
 //个人用户状态管理
 
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import axios from "axios";
-import useAuthStore from "@/stores/modules/AuthStore";
-
-//导入请求状态
-const authStore = useAuthStore();
-
-//定义请求头
-const UserClient = axios.create({
-  baseURL: "http://localhost:8000",
-  timeout: 10000,
-  headers: {
-    Accept: "application/json",
-    Authorization: `Bearer ${authStore.token}`,
-  },
-});
+import Cookies from "js-cookie";
 
 const useUserStore = defineStore("user", {
   state: () => {
@@ -30,6 +17,15 @@ const useUserStore = defineStore("user", {
   },
   actions: {
     setUserInfo() {
+      //定义请求头
+      const UserClient = axios.create({
+        baseURL: "http://localhost:8000",
+        timeout: 10000,
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${Cookies.get("access_token")}`,
+        },
+      });
       UserClient.get("/user/")
         .then((response) => {
           this.username = response.data.username;

@@ -207,10 +207,8 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const authStore = useAuthStore();
-    const userStore = useUserStore();
     function login() {
       authStore.login();
-      userStore.setUserInfo();
     }
     const themeOverrides = {
       Input: {
