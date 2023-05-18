@@ -3,7 +3,7 @@
     <div class="Post_Container">
       <n-space vertical>
         <div class="post_title">{{ post_title }}</div>
-        <n-card>
+        <n-card style="min-width: 60ch" :bordered="false">
           <n-space justify="space-between">
             <n-button text color="black" @click="toAuthorProfile">
               <n-space align="center">
@@ -200,8 +200,11 @@ function DeleteFollow() {
   margin-bottom: 5ch;
 }
 .post_title {
-  font-size: 50px;
-  font-weight: bolder;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 42px;
+  color: #292525;
+  margin: 40px auto 0px;
 }
 .CommentZoneBG {
   background-color: #f4f4f4;
