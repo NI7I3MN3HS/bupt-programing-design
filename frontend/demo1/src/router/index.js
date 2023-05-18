@@ -61,6 +61,11 @@ const router = createRouter({
       name: "upload",
       component: () => import("../views/upload.vue"),
     },
+    {
+      path: "/postcard",
+      name: "postcard",
+      component: () => import("../components/PostCard.vue"),
+    },
   ],
 });
 
