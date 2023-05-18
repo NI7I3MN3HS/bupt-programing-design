@@ -92,6 +92,14 @@
                 fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
               />
             </n-dropdown>
+            <n-button
+              v-if="is_Authenticated"
+              block
+              @click="toWritePost"
+              color="#056de8"
+            >
+              发帖
+            </n-button>
           </n-space>
         </div>
       </div>
@@ -250,6 +258,14 @@ const activate = (place) => {
 };
 
 const NoticeNumber = ref(5);
+
+function toWritePost() {
+  if (is_Authenticated.value) {
+    router.push("/WritePost");
+  } else {
+    router.push("/loginandregister");
+  }
+}
 </script>
 
 <style lang="less">

@@ -23,10 +23,10 @@
           }}</n-button>
         </n-space>
         <!-- 这里是正文内容 -->
-        <WangEditor v-if="EditorStatus == 0" />
-        <Markdown v-if="EditorStatus == 1" />
+        <WangEditor ref="Editor" v-if="EditorStatus == 0" />
+        <Markdown ref="MarkdownEditor" v-if="EditorStatus == 1" />
         <n-divider />
-        <n-button @click="Post" color="#056de8">发布</n-button>
+        <n-button @click="CreatePost" color="#056de8">发布</n-button>
       </n-card>
     </div>
   </n-config-provider>
@@ -35,18 +35,64 @@
 <script setup>
 import WangEditor from "@/components/WangEditor.vue";
 import Markdown from "@/components/Markdown.vue";
-import { ref } from "vue";
-import { storeToRefs } from "pinia";
-import usePostStore from "../stores/modules/PostStore";
+import { computed, ref } from "vue";
+import useAuthStore from "../stores/modules/AuthStore";
+import axios from "axios";
+import { useRoute, useRouter } from "vue-router";
 
-const postStore = usePostStore();
+const router = useRouter();
+const route = useRoute();
 
-const { post_title } = storeToRefs(postStore);
+const authStore = useAuthStore();
 
-const Title = ref(post_title);
+const Title = ref();
 
-function Post() {
-  postStore.CreatePost();
+//富文本编辑器
+const Editor = ref();
+//Markdown编辑器
+const MarkdownEditor = ref();
+
+//文章内容
+const ContentInput = computed(() => {
+  if (EditorStatus.value == 0) {
+    return Editor.value.valueHtml;
+  } else {
+    return MarkdownEditor.value;
+  }
+});
+
+//定义请求头
+const UserClient = axios.create({
+  baseURL: "http://localhost:8000",
+  timeout: 10000,
+  headers: {
+    Accept: "application/json",
+    Authorization: `Bearer ${authStore.token}`,
+  },
+});
+
+//创建帖子
+function CreatePost() {
+  if (authStore.is_Authenticated) {
+    //后期改一下路径
+    UserClient.post("/post/create", {
+      title: Title.value,
+      content: ContentInput.value,
+    })
+      .then((response) => {
+        //跳转到帖子详情页
+        router.push(`/post/${response.data.id}`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    //清空标题和内容
+    Title.value = "";
+    Editor.value = "";
+    MarkdownEditor.value = "";
+  } else {
+    alert("请先登录");
+  }
 }
 
 const EditorStatus = ref(0);

@@ -24,15 +24,14 @@ import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { storeToRefs } from "pinia";
 import usePostStore from "../stores/modules/PostStore";
 
-// 导入文章状态
-const postStore = usePostStore();
-const { post_content } = storeToRefs(postStore);
-
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef();
 
 // 内容 HTML
-const valueHtml = ref(post_content);
+const valueHtml = ref("");
+
+//暴露valueHtml给父组件使用
+defineExpose({ valueHtml });
 
 const toolbarConfig = {};
 const editorConfig = { placeholder: "请输入内容..." };

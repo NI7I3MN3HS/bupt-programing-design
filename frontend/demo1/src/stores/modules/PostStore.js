@@ -34,14 +34,6 @@ const usePostStore = defineStore("post", {
     };
   },
   actions: {
-    //设置帖子标题
-    SetPostTitle(title) {
-      this.post_title = title;
-    },
-    //设置帖子内容
-    SetPostContent(content) {
-      this.post_content = content;
-    },
     //获取帖子信息
     GetPostInfo(postid) {
       axios
@@ -68,24 +60,6 @@ const usePostStore = defineStore("post", {
         .catch((error) => {
           console.error(error);
         });
-    },
-    //创建帖子
-    CreatePost() {
-      if (authStore.is_Authenticated) {
-        //后期改一下路径
-        UserClient.post("/post/create", {
-          title: this.post_title,
-          content: this.post_content,
-        })
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      } else {
-        alert("请先登录");
-      }
     },
   },
 });
