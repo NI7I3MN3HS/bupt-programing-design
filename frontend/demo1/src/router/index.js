@@ -23,6 +23,11 @@ const router = createRouter({
           component: () => import("../views/Profile/index.vue"),
         },
         {
+          path: "/user/UserNotFound",
+          name: "UserNotFound",
+          component: () => import("../views/Profile/user404.vue"),
+        },
+        {
           path: "/profile/edit1",
           component: () => import("../views/profileedit/userinformation.vue"),
         },

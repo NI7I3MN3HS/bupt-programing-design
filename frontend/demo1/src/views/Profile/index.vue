@@ -22,6 +22,7 @@
                 >编辑个人资料</n-button
               >
               <n-button
+                color="#056de8"
                 v-if="
                   userStore.id != userData.id && !userData.is_followed_by_me
                 "
@@ -29,6 +30,7 @@
                 >关注</n-button
               >
               <n-button
+                color="#8590a6"
                 v-if="userStore.id != userData.id && userData.is_followed_by_me"
                 @click="DeleteFollow"
                 >取消关注</n-button
@@ -162,7 +164,7 @@ function fetchProfileUserInfo(user_id) {
       userData.id = response.data.id;
     })
     .catch((error) => {
-      console.error(error);
+      router.push("/user/UserNotFound");
     });
   axios
     .get(`/follow/get_followed/${user_id}`)
