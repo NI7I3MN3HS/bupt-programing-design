@@ -22,6 +22,7 @@
                 >编辑个人资料</n-button
               >
               <n-button
+                color="#056de8"
                 v-if="
                   userStore.id != userData.id && !userData.is_followed_by_me
                 "
@@ -29,6 +30,7 @@
                 >关注</n-button
               >
               <n-button
+                color="#8590a6"
                 v-if="userStore.id != userData.id && userData.is_followed_by_me"
                 @click="DeleteFollow"
                 >取消关注</n-button
@@ -162,7 +164,7 @@ function fetchProfileUserInfo(user_id) {
       userData.id = response.data.id;
     })
     .catch((error) => {
-      console.error(error);
+      router.push("/user/UserNotFound");
     });
   axios
     .get(`/follow/get_followed/${user_id}`)
@@ -184,14 +186,16 @@ function fetchProfileUserInfo(user_id) {
     .catch((error) => {
       console.error(error);
     });
-  UserClient.get(`/follow/is_followed/${user_id}`)
-    .then((response) => {
-      console.log(response.data);
-      userData.is_followed_by_me = response.data;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  if (authStore.is_Authenticated == true) {
+    UserClient.get(`/follow/is_followed/${user_id}`)
+      .then((response) => {
+        console.log(response.data);
+        userData.is_followed_by_me = response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 }
 
 //仅当 id 更改时才获取用户数据
@@ -213,14 +217,19 @@ function toEditProfile() {
 
 //创建关注当前用户
 function CreateFollow() {
-  UserClient.post(`/follow/create`, { followed_id: userData.id })
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  userData.is_followed_by_me = true;
+  if (authStore.is_Authenticated == false) {
+    alert("请先登录");
+    router.push("/loginandregister");
+  } else {
+    UserClient.post(`/follow/create`, { followed_id: userData.id })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    userData.is_followed_by_me = true;
+  }
 }
 
 //取消关注当前用户

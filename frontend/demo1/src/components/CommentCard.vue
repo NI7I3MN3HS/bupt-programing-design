@@ -34,7 +34,7 @@ const props = defineProps({
 });
 const { data } = toRefs(props);
 
-console.log(data.value);
+//console.log(data.value);
 
 //获取当前评论的用户信息
 const userData = ref({});

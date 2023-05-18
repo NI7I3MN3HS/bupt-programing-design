@@ -23,7 +23,10 @@ const usePostStore = defineStore("post", {
   state: () => {
     return {
       post_id: 0, //帖子id
-      post_user_id: "", //发帖用户id
+      post_user_id: 0, //发帖用户id
+      post_author_name: "", //发帖用户名
+      post_author_avatar_url: "", //发帖用户头像
+      post_author_introduction: "", //发帖用户简介
       post_title: "", //帖子标题
       post_content: "", //帖子内容
       post_comment: [], //评论
@@ -31,35 +34,34 @@ const usePostStore = defineStore("post", {
       post_dislike: 0, //点踩数
       post_create_time: "", //创建时间
       post_update_time: "", //更新时间
+      is_follow_author: false, //是否关注作者
     };
   },
   actions: {
-    //获取帖子信息
-    GetPostInfo(postid) {
-      axios
-        .get(`/post/${postid}`)
-        .then((response) => {
-          this.post_id = response.data.id;
-          this.post_user_id = response.data.user_id;
-          this.post_title = response.data.title;
-          this.post_content = response.data.content;
-          this.post_comment = response.data.post_comment;
-          this.post_like = response.data.post_like;
-          this.post_dislike = response.data.post_dislike;
-          this.post_create_time = response.data.create_time;
-          this.post_update_time = response.data.update_time;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      axios
-        .get(`/comment/${postid}`)
-        .then((response) => {
-          this.post_comment = response.data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+    //获取帖子信息：异步写法
+    async GetPostInfoAsync(postid) {
+      const response = await axios.get(`/post/${postid}`);
+      this.post_id = response.data.id;
+      this.post_user_id = response.data.user_id;
+      this.post_title = response.data.title;
+      this.post_content = response.data.content;
+      this.post_comment = response.data.post_comment;
+      this.post_like = response.data.post_like;
+      this.post_dislike = response.data.post_dislike;
+      this.post_create_time = response.data.create_time;
+      this.post_update_time = response.data.update_time;
+      const comment = await axios.get(`/comment/${postid}`);
+      this.post_comment = comment.data;
+      const author = await axios.get(`/user/${response.data.user_id}`);
+      this.post_author_name = author.data.username;
+      this.post_author_avatar_url = author.data.avatar_url;
+      this.post_author_introduction = author.data.introduction;
+      if (authStore.is_Authenticated === true) {
+        const is_follow = await UserClient.get(
+          `/follow/is_followed/${this.post_user_id}`
+        );
+        this.is_follow_author = is_follow.data;
+      }
     },
   },
 });
