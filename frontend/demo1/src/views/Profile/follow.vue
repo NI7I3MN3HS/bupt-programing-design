@@ -67,14 +67,16 @@ function getFollowedUser(user_id) {
     .catch((error) => {
       console.error(error);
     });
-  UserClient.get(`/follow/is_followed/${data.value.followed_id}`)
-    .then((response) => {
-      console.log(response.data);
-      is_followed.value = response.data;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  if (authStore.is_Authenticated == true) {
+    UserClient.get(`/follow/is_followed/${data.value.followed_id}`)
+      .then((response) => {
+        console.log(response.data);
+        is_followed.value = response.data;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 }
 
 //组件挂载前获取数据
@@ -94,14 +96,18 @@ const UserClient = axios.create({
 
 //创建关注
 function CreateFollow() {
-  UserClient.post(`/follow/create`, { followed_id: data.value.followed_id })
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  is_followed.value = true;
+  if (authStore.is_Authenticated == false) {
+    alert("请先登录");
+  } else {
+    UserClient.post(`/follow/create`, { followed_id: data.value.followed_id })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    is_followed.value = true;
+  }
 }
 //取消关注
 function DeleteFollow() {

@@ -26,6 +26,7 @@ const usePostStore = defineStore("post", {
       post_user_id: 0, //发帖用户id
       post_author_name: "", //发帖用户名
       post_author_avatar_url: "", //发帖用户头像
+      post_author_introduction: "", //发帖用户简介
       post_title: "", //帖子标题
       post_content: "", //帖子内容
       post_comment: [], //评论
@@ -33,6 +34,7 @@ const usePostStore = defineStore("post", {
       post_dislike: 0, //点踩数
       post_create_time: "", //创建时间
       post_update_time: "", //更新时间
+      is_follow_author: false, //是否关注作者
     };
   },
   actions: {
@@ -53,6 +55,13 @@ const usePostStore = defineStore("post", {
       const author = await axios.get(`/user/${response.data.user_id}`);
       this.post_author_name = author.data.username;
       this.post_author_avatar_url = author.data.avatar_url;
+      this.post_author_introduction = author.data.introduction;
+      if (authStore.is_Authenticated === true) {
+        const is_follow = await UserClient.get(
+          `/follow/is_followed/${this.post_user_id}`
+        );
+        this.is_follow_author = is_follow.data;
+      }
     },
   },
 });

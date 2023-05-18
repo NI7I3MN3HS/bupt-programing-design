@@ -4,16 +4,36 @@
       <n-space vertical>
         <div class="post_title">{{ post_title }}</div>
         <n-card>
-          <n-button text color="black" @click="toAuthorProfile">
-            <template #icon
-              ><n-avatar
-                :size="36"
-                :src="post_author_avatar_url"
-                fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-              ></n-avatar
-            ></template>
-            {{ post_author_name }}
-          </n-button>
+          <n-space justify="space-between">
+            <n-button text color="black" @click="toAuthorProfile">
+              <n-space align="center">
+                <n-avatar
+                  round
+                  :size="36"
+                  :src="post_author_avatar_url"
+                  fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
+                ></n-avatar>
+                <n-space vertical>
+                  <div style="font-weight: 600; font-size: 16px">
+                    {{ post_author_name }}
+                  </div>
+                  <div>{{ post_author_introduction }}</div>
+                </n-space>
+              </n-space>
+            </n-button>
+            <n-button
+              color="#056de8"
+              v-if="userStore.id != post_user_id && !is_follow_author"
+              @click="CreateFollow"
+              >关注</n-button
+            >
+            <n-button
+              color="#8590a6"
+              v-if="userStore.id != post_user_id && is_follow_author"
+              @click="DeleteFollow"
+              >取消关注</n-button
+            >
+          </n-space>
         </n-card>
       </n-space>
 
@@ -49,6 +69,7 @@ import { onBeforeMount, ref, watch, computed } from "vue";
 import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
 import usePostStore from "../stores/modules/PostStore";
 import useAuthStore from "../stores/modules/AuthStore";
+import useUserStore from "../stores/modules/UserStore";
 import { storeToRefs } from "pinia";
 import CommentEditor from "../components/CommentEditor.vue";
 import CommentCard from "../components/CommentCard.vue";
@@ -61,6 +82,8 @@ const route = useRoute();
 const authStore = useAuthStore();
 //导入帖子状态
 const postStore = usePostStore();
+//导入用户状态
+const userStore = useUserStore();
 
 const {
   post_content,
@@ -69,6 +92,8 @@ const {
   post_user_id,
   post_author_name,
   post_author_avatar_url,
+  is_follow_author,
+  post_author_introduction,
 } = storeToRefs(postStore);
 
 //评论框ref
@@ -122,6 +147,34 @@ function CreateComment() {
 //进入作者主页
 function toAuthorProfile() {
   router.push(`/user/${post_user_id.value}`);
+}
+//创建关注
+function CreateFollow() {
+  if (authStore.is_Authenticated == false) {
+    alert("请先登录");
+  } else {
+    UserClient.post(`/follow/create`, { followed_id: post_user_id.value })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    is_follow_author.value = true;
+  }
+}
+//取消关注
+function DeleteFollow() {
+  UserClient.delete(`/follow/delete`, {
+    data: { followed_id: post_user_id.value },
+  })
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  is_follow_author.value = false;
 }
 </script>
 
