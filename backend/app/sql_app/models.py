@@ -112,7 +112,7 @@ class Like(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
-    comment_id = Column(Integer, ForeignKey("comments.id"))
+    comment_id = Column(Integer, ForeignKey("comments.id"),default=0)
 
 
 """

@@ -56,7 +56,7 @@
                 全部评论（{{ post_comment_count }}）
               </div>
             </n-space>
-            <CommentEditor ref="comment_input" />
+            <CommentEditor ref="comment_input" :Width="1" />
             <n-button color="#056de8" @click="CreateComment">发表</n-button>
             <div v-for="item in post_comment">
               <CommentCard :data="item" />
@@ -234,6 +234,7 @@ function CreatePostLike() {
   background-color: #f4f4f4;
 }
 .CommentZone {
+  width: 40vw;
   margin-top: 5ch;
   margin-bottom: 5ch;
 }

@@ -7,7 +7,7 @@
       :mode="mode"
     />
     <Editor
-      style="height: 6ch; overflow-y: hidden; width: 60ch"
+      style="height: 6ch; overflow-y: hidden"
       v-model="commentvalueHtml"
       :defaultConfig="editorConfig"
       :mode="mode"

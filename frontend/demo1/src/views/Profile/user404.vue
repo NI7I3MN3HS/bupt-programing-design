@@ -25,6 +25,6 @@ function toIndex() {
 <style lang="less">
 .PageContainer {
   width: 100%;
-  height: calc(100ch - 60px);
+  height: calc(100vh - 60px);
 }
 </style>
