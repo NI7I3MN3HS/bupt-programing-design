@@ -18,6 +18,23 @@ async def create_like(
     return crud.create_like(db=db, like=like, user_id=current_user.id)
 
 
+# 判断是否点赞
+@router.get("/is_like/{post_id}/{comment_id}")
+async def is_like(
+    post_id: int,
+    comment_id: int,
+    current_user: schemas.User = Depends(security.get_current_user),
+    db: Session = Depends(get_db),
+):
+    db_like = crud.get_like_by_user_and_post_and_comment(
+        db, current_user.id, post_id, comment_id
+    )
+    if db_like is None:
+        return False
+    else:
+        return True
+
+
 # 取消点赞
 @router.delete("/delete")
 async def delete_like(
