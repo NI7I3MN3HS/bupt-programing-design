@@ -165,6 +165,13 @@
     <n-back-top :bottom="100" :visibility-height="50" iconColorHover="black">
     </n-back-top>
   </div>
+  <n-button
+    type="info"
+    round
+    style="position: fixed; right: 20px; bottom: 20px"
+  >
+    浮动按钮
+  </n-button>
 </template>
 
 <script setup>

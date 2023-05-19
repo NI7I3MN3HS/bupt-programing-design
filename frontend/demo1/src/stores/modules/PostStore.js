@@ -30,6 +30,7 @@ const usePostStore = defineStore("post", {
       post_title: "", //帖子标题
       post_content: "", //帖子内容
       post_comment: [], //评论
+      post_comment_count: 0, //评论数
       post_like: 0, //点赞数
       post_dislike: 0, //点踩数
       post_create_time: "", //创建时间
@@ -41,18 +42,18 @@ const usePostStore = defineStore("post", {
     //获取帖子信息：异步写法
     async GetPostInfoAsync(postid) {
       const response = await axios.get(`/post/${postid}`);
-      this.post_id = response.data.id;
-      this.post_user_id = response.data.user_id;
-      this.post_title = response.data.title;
-      this.post_content = response.data.content;
-      this.post_comment = response.data.post_comment;
-      this.post_like = response.data.post_like;
+      this.post_id = response.data.post.id;
+      this.post_user_id = response.data.post.user_id;
+      this.post_title = response.data.post.title;
+      this.post_content = response.data.post.content;
       this.post_dislike = response.data.post_dislike;
-      this.post_create_time = response.data.create_time;
-      this.post_update_time = response.data.update_time;
-      const comment = await axios.get(`/comment/${postid}`);
+      this.post_create_time = response.data.post.create_time;
+      this.post_update_time = response.data.post.update_time;
+      this.post_comment_count = response.data.comment_count;
+      this.post_like = response.data.like_count;
+      const comment = await axios.get(`/comment/post/${postid}`);
       this.post_comment = comment.data;
-      const author = await axios.get(`/user/${response.data.user_id}`);
+      const author = await axios.get(`/user/${response.data.post.user_id}`);
       this.post_author_name = author.data.username;
       this.post_author_avatar_url = author.data.avatar_url;
       this.post_author_introduction = author.data.introduction;

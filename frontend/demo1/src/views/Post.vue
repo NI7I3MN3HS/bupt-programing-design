@@ -39,6 +39,11 @@
 
       <n-divider />
       <div v-html="post_content"></div>
+      <n-divider />
+      <n-space justify="center">
+        <n-button @click="CreatePostLike">like</n-button>
+        <div>点赞数：{{ post_like }}</div>
+      </n-space>
     </div>
   </div>
   <div class="CommentZoneBG">
@@ -47,7 +52,9 @@
         <div class="CommentZone">
           <n-space vertical>
             <n-space justify="center">
-              <div style="font-size: 16px">全部评论</div>
+              <div style="font-size: 16px">
+                全部评论（{{ post_comment_count }}）
+              </div>
             </n-space>
             <CommentEditor ref="comment_input" />
             <n-button color="#056de8" @click="CreateComment">发表</n-button>
@@ -94,6 +101,8 @@ const {
   post_author_avatar_url,
   is_follow_author,
   post_author_introduction,
+  post_like,
+  post_comment_count,
 } = storeToRefs(postStore);
 
 //评论框ref
@@ -137,7 +146,7 @@ function CreateComment() {
         console.error(error);
       });
     comment_input.value.commentvalueHtml = ""; //清空评论框
-    postStore.GetPostInfo(route.params.id); //重新获取帖子信息
+    postStore.GetPostInfoAsync(route.params.id); //重新获取帖子信息
   } else {
     alert("请先登录");
     router.push("/loginandregister");
@@ -175,6 +184,21 @@ function DeleteFollow() {
       console.error(error);
     });
   is_follow_author.value = false;
+}
+//创建帖子点赞
+function CreatePostLike() {
+  if (authStore.is_Authenticated == false) {
+    alert("请先登录");
+  } else {
+    UserClient.post(`/post/like/create`, { post_id: postStore.post_id })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    postStore.GetPostInfoAsync(route.params.id); //重新获取帖子信息
+  }
 }
 </script>
 

@@ -23,11 +23,6 @@ const router = createRouter({
           component: () => import("../views/Profile/index.vue"),
         },
         {
-          path: "/user/UserNotFound",
-          name: "UserNotFound",
-          component: () => import("../views/Profile/user404.vue"),
-        },
-        {
           path: "/profile/edit1",
           component: () => import("../views/profileedit/userinformation.vue"),
         },
@@ -48,6 +43,10 @@ const router = createRouter({
         {
           path: "/post/:id",
           component: () => import("../views/Post.vue"),
+        },
+        {
+          path: "/notice",
+          component: () => import("../views/Notice/index.vue"),
         },
       ],
     },
@@ -70,6 +69,11 @@ const router = createRouter({
       path: "/postcard",
       name: "postcard",
       component: () => import("../components/PostCard.vue"),
+    },
+    {
+      path: "/user/UserNotFound",
+      name: "UserNotFound",
+      component: () => import("../views/Profile/user404.vue"),
     },
   ],
 });

@@ -226,7 +226,7 @@ def get_comments_count_by_comment(db: Session, comment_id: int):
 def get_comments_by_post(db: Session, post_id: int):
     return (
         db.query(models.Comment)
-        .filter(models.Comment.post_id == post_id, models.Comment.parent_id == None)
+        .filter(models.Comment.post_id == post_id, models.Comment.parent_id == 0)
         .all()
     )
 
@@ -235,7 +235,7 @@ def get_comments_by_post(db: Session, post_id: int):
 def get_comments_count_by_post(db: Session, post_id: int):
     return (
         db.query(models.Comment)
-        .filter(models.Comment.post_id == post_id, models.Comment.parent_id == None)
+        .filter(models.Comment.post_id == post_id, models.Comment.parent_id == 0)
         .count()
     )
 
