@@ -56,7 +56,7 @@
                 全部评论（{{ post_comment_count }}）
               </div>
             </n-space>
-            <CommentEditor ref="comment_input" :Width="1" />
+            <CommentEditor ref="comment_input" />
             <n-button color="#056de8" @click="CreateComment">发表</n-button>
             <div v-for="item in post_comment">
               <CommentCard :data="item" />
