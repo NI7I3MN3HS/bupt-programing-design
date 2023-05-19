@@ -14,7 +14,7 @@ async def get_all_notification(
     current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db),
 ):
-    return crud.get_notifications_by_use(db, user_id=current_user.id)
+    return crud.get_notifications_by_user(db, user_id=current_user.id)
 
 
 # 创建通知信息
