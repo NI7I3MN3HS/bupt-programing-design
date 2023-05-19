@@ -1,7 +1,7 @@
 <template>
   <n-card
     :bordered="false"
-    header-style="padding:0 0 20 0"
+    header-style="padding:0 0 10px 0"
     content-style="padding: 0 0"
   >
     <template #header
@@ -118,4 +118,11 @@ onBeforeMount(() => {
 });
 </script>
 
-<style lang="less"></style>
+<style scoped lang="less">
+.CommentContent {
+  margin: 0 48px;
+}
+.CommentAction {
+  margin: 1ch 48px;
+}
+</style>

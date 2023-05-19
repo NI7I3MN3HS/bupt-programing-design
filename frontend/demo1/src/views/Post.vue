@@ -202,7 +202,7 @@ function CreatePostLike() {
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
 .Page_Container {
   width: 70%;
   height: 100%;

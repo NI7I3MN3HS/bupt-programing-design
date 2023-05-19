@@ -1,5 +1,5 @@
 <template>
-  <n-card header-style="padding:20px 24px 20px 24px">
+  <n-card header-style="padding:20px 24px 10px 24px">
     <template #header
       ><n-space
         ><n-avatar round :src="userData.avatar_url" />
@@ -192,7 +192,7 @@ function CreateSecondaryComment() {
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
 .CommentContent {
   margin: 0 48px;
 }
