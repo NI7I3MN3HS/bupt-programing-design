@@ -74,7 +74,7 @@ class Comment(Base):
     is_deleted = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
-    parent_id = Column(Integer, ForeignKey("comments.id"))
+    parent_id = Column(Integer, ForeignKey("comments.id"), default=None)
 
 
 """
