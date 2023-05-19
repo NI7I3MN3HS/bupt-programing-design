@@ -115,8 +115,21 @@ def get_post(db: Session, post_id: int):
 
 
 # 获取所有文章信息
-def get_posts(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Post).offset(skip).limit(limit).all()
+def get_posts(db: Session):
+    posts = db.query(models.Post).all()
+    post_info = []
+    for post in posts:
+        post_info.append(
+            {
+                "id": post.id,
+                "title": post.title,
+                "created_time": post.create_time,
+                "user_id": post.user_id,
+                "comment_count": get_comments_count_by_post(db, post.id),
+                "like_count": get_comments_count_by_post(db, post.id),
+            }
+        )
+    return post_info
 
 
 # 更新文章信息
@@ -198,21 +211,33 @@ def get_comments_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 
 
 
 # 获取评论的所有评论
-def get_comments_by_comment(
-    db: Session, comment_id: int, skip: int = 0, limit: int = 100
-):
+def get_comments_by_comment(db: Session, comment_id: int):
+    return db.query(models.Comment).filter(models.Comment.parent_id == comment_id).all()
+
+
+# 获取评论的评论数
+def get_comments_count_by_comment(db: Session, comment_id: int):
     return (
-        db.query(models.Comment)
-        .filter(models.Comment.parent_id == comment_id)
-        .offset(skip)
-        .limit(limit)
-        .all()
+        db.query(models.Comment).filter(models.Comment.parent_id == comment_id).count()
     )
 
 
 # 获取文章的所有评论
 def get_comments_by_post(db: Session, post_id: int):
-    return db.query(models.Comment).filter(models.Comment.post_id == post_id).all()
+    return (
+        db.query(models.Comment)
+        .filter(models.Comment.post_id == post_id, models.Comment.parent_id == None)
+        .all()
+    )
+
+
+# 获取文章的评论数
+def get_comments_count_by_post(db: Session, post_id: int):
+    return (
+        db.query(models.Comment)
+        .filter(models.Comment.post_id == post_id, models.Comment.parent_id == None)
+        .count()
+    )
 
 
 # follow crud
