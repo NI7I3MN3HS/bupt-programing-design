@@ -126,7 +126,7 @@ def get_posts(db: Session):
                 "created_time": post.create_time,
                 "user_id": post.user_id,
                 "comment_count": get_comments_count_by_post(db, post.id),
-                "like_count": get_comments_count_by_post(db, post.id),
+                "like_count":  get_post_like_count(db, post.id),
             }
         )
     return post_info
@@ -231,9 +231,8 @@ def get_comments_by_comment(db: Session, comment_id: int):
                 "like_count": get_comments_count_by_comment(db, comment.id),
             }
         )
-    return post_info
+    return comment_info
 
-    return
 
 
 # 获取评论的评论数
