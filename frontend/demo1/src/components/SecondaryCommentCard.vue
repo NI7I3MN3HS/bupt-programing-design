@@ -6,14 +6,20 @@
   >
     <template #header
       ><n-space>
-        <n-avatar round :src="userData.avatar_url" />
-        <div>{{ userData.username }}</div>
+        <n-avatar round :src="userData.avatar_url" :size="40" />
+        <div style="font-size: 14px; font-weight: 600">
+          {{ userData.username }}
+        </div>
 
-        <div v-if="data.user_id != thisCommentUserId">
+        <div v-if="data.reply_user_id != 0">
           <n-space
-            ><div>回复</div>
-            <n-avatar round :src="thisCommentUseravatar" />
-            <div>{{ thisCommentUsername }}</div></n-space
+            ><div style="font-size: 14px; color: #8e8787">回复</div>
+            <!--
+            <n-avatar round :src="replyUserData.avatar_url" :size="40" />
+          -->
+            <div style="font-size: 14px; font-weight: 600">
+              {{ replyUserData.username }}
+            </div></n-space
           >
         </div>
       </n-space>
@@ -65,6 +71,7 @@ import {
   onBeforeMount,
   toRefs,
   defineProps,
+  defineExpose,
   computed,
   defineEmits,
 } from "vue";
@@ -75,28 +82,20 @@ const props = defineProps({
   data: {
     type: Object,
   },
-  thisCommentUserId: {
-    type: Number,
-  },
-  thisCommentUsername: {
-    type: String,
-  },
-  thisCommentUseravatar: {
-    type: String,
-  },
 });
-const { data, thisCommentUserId, thisCommentUseravatar, thisCommentUsername } =
-  toRefs(props);
+const { data } = toRefs(props);
 
 //调用父组件的方法
 const emits = defineEmits(["toSecondaryComment"]);
 
 function toSecondaryComment() {
-  emits("toSecondaryComment");
+  emits("toSecondaryComment", data.value.user_id);
 }
 
 //获取当前评论的用户信息
 const userData = ref({});
+//获取当前评论回复的用户信息
+const replyUserData = ref({});
 
 console.log(data.value);
 
@@ -110,6 +109,16 @@ function getCommentUser(user_id) {
     .catch((err) => {
       console.log(err);
     });
+  if (data.value.reply_user_id != 0) {
+    axios
+      .get(`/user/${data.value.reply_user_id}`)
+      .then((res) => {
+        replyUserData.value = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 }
 
 ////组件挂载前获取数据
