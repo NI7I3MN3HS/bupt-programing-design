@@ -80,13 +80,13 @@ class CommentBase(BaseModel):
 
 
 class CommentCreate(CommentBase):
-    pass
+    reply_user_id: int = 0
 
 
 class Comment(CommentBase):
     id: int
     user_id: int
-    is_deleted: bool = False
+    reply_user_id: int = 0
     create_time: datetime
     update_time: datetime
 

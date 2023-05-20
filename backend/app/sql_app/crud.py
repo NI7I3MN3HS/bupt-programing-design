@@ -168,6 +168,7 @@ def get_posts_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100
 def create_comment(db: Session, comment: schemas.CommentCreate, user_id: int):
     db_comment = models.Comment(
         content=comment.content,
+        reply_user_id=comment.reply_user_id,
         user_id=user_id,
         post_id=comment.post_id,
         parent_id=comment.parent_id,
@@ -212,7 +213,27 @@ def get_comments_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 
 
 # 获取评论的所有评论
 def get_comments_by_comment(db: Session, comment_id: int):
-    return db.query(models.Comment).filter(models.Comment.parent_id == comment_id).all()
+    comments = (
+        db.query(models.Comment).filter(models.Comment.parent_id == comment_id).all()
+    )
+    comment_info = []
+    for comment in comments:
+        comment_info.append(
+            {
+                "id": comment.id,
+                "content": comment.content,
+                "created_time": comment.create_time,
+                "update_time": comment.update_time,
+                "reply_user_id": comment.reply_user_id,
+                "user_id": comment.user_id,
+                "post_id": comment.post_id,
+                "parent_id": comment.parent_id,
+                "like_count": get_comments_count_by_comment(db, comment.id),
+            }
+        )
+    return post_info
+
+    return
 
 
 # 获取评论的评论数
@@ -333,7 +354,11 @@ def create_like(db: Session, like: schemas.LikeCreate, user_id: int):
 
 # 获取帖子的点赞数
 def get_post_like_count(db: Session, post_id: int):
-    return db.query(models.Like).filter(models.Like.post_id == post_id,models.Like.comment_id==0).count()
+    return (
+        db.query(models.Like)
+        .filter(models.Like.post_id == post_id, models.Like.comment_id == 0)
+        .count()
+    )
 
 
 # 获取评论的点赞数

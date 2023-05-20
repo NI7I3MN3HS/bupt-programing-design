@@ -52,7 +52,7 @@ async def get_comment_replies(
 # 创建评论
 @router.post("/create")
 async def create_comment(
-    comment: schemas.CommentBase,
+    comment: schemas.CommentCreate,
     current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db),
 ):

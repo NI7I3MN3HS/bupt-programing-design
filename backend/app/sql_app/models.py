@@ -71,7 +71,7 @@ class Comment(Base):
     content = Column(Text)
     create_time = Column(DateTime, default=datetime.now)
     update_time = Column(DateTime, onupdate=datetime.now, default=datetime.now)
-    is_deleted = Column(Boolean, default=False)
+    reply_user_id = Column(Integer, default=0)
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
     parent_id = Column(Integer, ForeignKey("comments.id"), default=0)
@@ -83,7 +83,7 @@ id：评论ID，主键
 content：评论内容
 create_time：评论创建时间
 update_time：最后一次更新时间
-is_deleted：是否已被删除，布尔类型
+reply_user_id：回复用户ID，可以为空
 user_id：评论用户ID，外键
 post_id：所属帖子ID，外键
 parent_id：父评论ID，外键，可以为空
@@ -112,7 +112,7 @@ class Like(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
-    comment_id = Column(Integer, ForeignKey("comments.id"),default=0)
+    comment_id = Column(Integer, ForeignKey("comments.id"), default=0)
 
 
 """
