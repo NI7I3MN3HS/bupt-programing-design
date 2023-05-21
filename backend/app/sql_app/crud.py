@@ -123,6 +123,7 @@ def get_posts(db: Session):
             {
                 "id": post.id,
                 "title": post.title,
+                "content": post.content[:100],
                 "created_time": post.create_time,
                 "user_id": post.user_id,
                 "comment_count": get_comments_count_by_post(db, post.id),
