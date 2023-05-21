@@ -36,9 +36,8 @@
           </n-space>
         </n-card>
       </n-space>
-
       <n-divider />
-      <div v-html="post_content"></div>
+      <div style="max-width: calc(70vw)" v-html="post_content"></div>
       <n-divider />
       <n-space justify="center">
         <n-button @click="CreatePostLike">like</n-button>

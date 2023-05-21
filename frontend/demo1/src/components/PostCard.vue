@@ -1,26 +1,30 @@
 <template>
-  <n-card hoverable
-    ><n-space
-      ><div class="Left">
-        <n-avatar :size="48" :src="userData.avatar_url" round />
-      </div>
-      <div class="Right">
-        <div class="PostInfo">
-          <n-space align="center">
-            <div class="AuthorName">{{ userData.username }}</div>
-            <div class="PostTime">{{ data.created_time }}</div>
+  <n-card hoverable>
+    <template #default>
+      <n-space
+        ><div class="Left">
+          <n-avatar :size="48" :src="userData.avatar_url" round />
+        </div>
+        <div class="Right">
+          <div class="PostInfo">
+            <n-space align="center">
+              <div class="AuthorName">{{ userData.username }}</div>
+              <div class="PostTime">{{ data.created_time }}</div>
+            </n-space>
+          </div>
+          <n-space vertical>
+            <div class="PostTitle" @click="toPost(data.id)">
+              {{ data.title }}
+            </div>
+            <div class="PostContent" @click="toPost(data.id)">
+              <n-ellipsis style="max-width: 400px" :line-clamp="2">
+                <div v-html="data.content"></div>
+              </n-ellipsis>
+            </div>
           </n-space>
         </div>
-        <n-space vertical>
-          <div class="PostTitle">{{ data.title }}</div>
-          <div class="PostContent">
-            <n-ellipsis style="max-width: 400px" :line-clamp="2">
-              <div style="max-height: 100px" v-html="data.content"></div>
-            </n-ellipsis>
-          </div>
-        </n-space>
-      </div>
-    </n-space>
+      </n-space>
+    </template>
     <template #footer>
       <div class="PostExtraInfo">
         <n-space align="center">
@@ -101,6 +105,10 @@ import {
   defineEmits,
 } from "vue";
 import useAuthStore from "../stores/modules/AuthStore";
+import { useRouter } from "vue-router";
+
+//获取路由
+const router = useRouter();
 
 const authStore = useAuthStore();
 
@@ -194,6 +202,14 @@ function DeletePostLike() {
 //跳转到评论区
 function toCommentZone() {
   window.location.href = `/post/${data.value.id}`;
+}
+
+// 跳转到帖子详情页
+function toPost(post_id) {
+  console.log(post_id);
+  router.push({
+    path: `/post/${post_id}`,
+  });
 }
 </script>
 

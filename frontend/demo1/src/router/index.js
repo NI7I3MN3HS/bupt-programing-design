@@ -11,10 +11,6 @@ const router = createRouter({
       children: [
         {
           path: "",
-          component: () => import("../views/bbs.vue"),
-        },
-        {
-          path: "index",
           name: "index",
           component: () => import("../views/Post/index.vue"),
         },

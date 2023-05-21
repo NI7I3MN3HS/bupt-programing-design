@@ -3,7 +3,7 @@
     <div class="PageContainer">
       <n-space align="center" vertical>
         <div v-for="item in postList" class="PostList">
-          <PostCard :data="item" @click="toPost(item.id)" />
+          <PostCard :data="item" />
         </div>
       </n-space>
     </div>
@@ -17,8 +17,6 @@ import { useRouter } from "vue-router";
 import axios from "axios";
 
 const postList = ref([]);
-
-const router = useRouter();
 
 function fetchAllPost() {
   axios
@@ -36,13 +34,6 @@ function fetchAllPost() {
 onBeforeMount(() => {
   fetchAllPost();
 });
-
-// 跳转到帖子详情页
-function toPost(post_id) {
-  router.push({
-    path: `/post/${post_id}`,
-  });
-}
 </script>
 
 <style scoped lang="less">
