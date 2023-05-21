@@ -2,15 +2,19 @@
   <n-card header-style="padding:20px 24px 10px 24px">
     <template #header
       ><n-space
-        ><n-avatar round :src="userData.avatar_url" />
-        <div>{{ userData.username }}</div></n-space
+        ><n-avatar round :src="userData.avatar_url" :size="40" />
+        <div style="font-weight: 600; font-size: 14px">
+          {{ userData.username }}
+        </div></n-space
       ></template
     >
     <n-space vertical>
+      <!--评论区内容-->
       <div class="CommentContent" v-html="data.content"></div>
+      <!--评论区操作-->
       <div class="CommentAction">
         <n-space align="center">
-          <n-button text color="black" @click="toSecondaryComment">
+          <n-button text color="black" @click="toSecondaryComment(0)">
             <template #icon
               ><n-icon
                 ><svg
@@ -41,23 +45,21 @@
           ></n-button>
         </n-space>
       </div>
+      <!--二级评论区-->
       <div class="SecondaryCommentZone">
         <n-space vertical>
           <div v-for="item in comment_comment">
             <SecondaryCommentCard
               :data="item"
-              :thisCommentUserId="data.user_id"
-              :thisCommentUsername="userData.username"
-              :thisCommentUseravatar="userData.avatar_url"
               @toSecondaryComment="toSecondaryComment"
             />
           </div>
-          <CommentEditor v-if="showSecondaryCommentInput" ref="comment_input" />
-          <n-button
+          <SecondaryCommentInput
             v-if="showSecondaryCommentInput"
-            @click="CreateSecondaryComment"
-            >回复</n-button
-          >
+            :parent_id="data.id"
+            :reply_id="reply_id"
+            @RefreshSecondaryComment="getSecondaryComment(data.id)"
+          />
         </n-space>
       </div>
     </n-space>
@@ -76,25 +78,21 @@ import {
   computed,
 } from "vue";
 import axios from "axios";
-import CommentEditor from "./CommentEditor.vue";
-import { Create } from "@vicons/ionicons5";
 import useAuthStore from "../stores/modules/AuthStore";
-import useUserStore from "../stores/modules/UserStore";
-import usePostStore from "../stores/modules/PostStore";
 import { useRouter, useRoute } from "vue-router";
 import SecondaryCommentCard from "./SecondaryCommentCard.vue";
+import SecondaryCommentInput from "./SecondaryCommentInput.vue";
 
 const router = useRouter();
 const route = useRoute();
 
 const authStore = useAuthStore();
-const userStore = useUserStore();
-const postStore = usePostStore();
 
-const comment_input = ref(null); //评论输入框
 const showSecondaryCommentInput = ref(false); //二级评论输入框是否显示
 
 const comment_comment = ref([]); //二级评论
+
+const reply_id = ref(0); //回复的评论id
 
 //获取二级评论
 function getSecondaryComment(comment_id) {
@@ -107,16 +105,6 @@ function getSecondaryComment(comment_id) {
       console.log(err);
     });
 }
-
-//定义axios请求头
-const UserClient = axios.create({
-  baseURL: "http://localhost:8000",
-  timeout: 10000,
-  headers: {
-    Accept: "application/json",
-    Authorization: `Bearer ${authStore.token}`,
-  },
-});
 
 const props = defineProps({
   //子组件接收父组件传递过来的值
@@ -163,31 +151,15 @@ onBeforeMount(() => {
 });
 
 //跳转到二级评论框
-function toSecondaryComment() {
-  showSecondaryCommentInput.value = !showSecondaryCommentInput.value;
-}
-
-//创建二级评论
-function CreateSecondaryComment() {
-  console.log("创建二级评论");
+function toSecondaryComment(val) {
+  //如果用户已经登录
   if (authStore.is_Authenticated) {
-    //后期改一下路径
-    UserClient.post("/comment/create", {
-      content: comment_input.value.commentvalueHtml,
-      post_id: postStore.post_id,
-      parent_id: data.value.id,
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    comment_input.value.commentvalueHtml = ""; //清空评论框
-    getSecondaryComment(data.value.id); //重新获取二级评论
+    showSecondaryCommentInput.value = !showSecondaryCommentInput.value;
+    if (showSecondaryCommentInput.value == true) {
+      reply_id.value = val; //如果显示二级评论框，就把回复的评论id赋值给reply_id
+    } else reply_id.value = 0; //否则就把reply_id清空
   } else {
     alert("请先登录");
-    router.push("/loginandregister");
   }
 }
 </script>
