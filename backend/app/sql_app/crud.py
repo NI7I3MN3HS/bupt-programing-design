@@ -154,14 +154,22 @@ def delete_post(db: Session, post_id: int):
 
 
 # 获取用户的所有文章
-def get_posts_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100):
-    return (
-        db.query(models.Post)
-        .filter(models.Post.user_id == user_id)
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
+def get_posts_by_user(db: Session, user_id: int):
+    posts = db.query(models.Post).filter(models.Post.user_id == user_id).all()
+    post_info = []
+    for post in posts:
+        post_info.append(
+            {
+                "id": post.id,
+                "title": post.title,
+                "content": post.content[:300],
+                "created_time": post.create_time,
+                "user_id": post.user_id,
+                "comment_count": get_comments_count_by_post(db, post.id),
+                "like_count":  get_post_like_count(db, post.id),
+            }
+        )
+    return post_info
 
 
 # comment crud

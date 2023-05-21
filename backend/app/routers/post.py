@@ -70,3 +70,11 @@ async def get_post(
         "comment_count": crud.get_comments_count_by_post(db, post_id=post_id),
         "like_count": crud.get_post_like_count(db, post_id=post_id),
     }
+
+# 获取用户发帖信息
+@router.get("/user/{user_id}")
+async def get_user_posts(
+    user_id: int,
+    db: Session = Depends(get_db),
+):
+    return crud.get_posts_by_user(db, user_id=user_id)

@@ -57,7 +57,7 @@
                 color="#056de8"
               >
                 <n-countdown
-                  :duration="5000"
+                  :duration="59000"
                   :render="renderCountdown"
                   :active="SendcodeCountdown_active"
                   :on-finish="SendcodeCountdownFinish"
@@ -192,7 +192,9 @@ const ResetRules = {
             if (!value) {
               return new Error("密码不能为空");
             } else if (!/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value)) {
-              return new Error("请输入正确的密码格式");
+              return new Error(
+                "请输入正确的密码格式:至少8位,包含一个大写字母和一个数字"
+              );
             }
             return true;
           },
