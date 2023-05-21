@@ -304,7 +304,7 @@ function toWritePost() {
 }
 .body-content {
   position: relative;
-  min-height: calc(100vh - 220px);
+  min-height: calc(100vh);
   margin-top: 60px;
 }
 .footer {
