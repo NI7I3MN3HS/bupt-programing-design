@@ -17,7 +17,10 @@
               {{ data.title }}
             </div>
             <div class="PostContent" @click="toPost(data.id)">
-              <n-ellipsis style="max-width: 400px" :line-clamp="2">
+              <n-ellipsis
+                style="max-width: 490px; max-height: 200px"
+                :line-clamp="2"
+              >
                 <div v-html="data.content"></div>
               </n-ellipsis>
             </div>
@@ -216,7 +219,7 @@ function toPost(post_id) {
 <style lang="less" scoped>
 .n-card {
   width: 600px;
-  height: 200px;
+  height: 300px;
 }
 .AuthorName {
   font-size: 14px;

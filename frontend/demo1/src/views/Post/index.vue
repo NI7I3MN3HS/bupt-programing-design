@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import PostCard from "../../components/PostCard.vue";
+import PostCard from "@/components/PostCard.vue";
 import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
@@ -39,11 +39,11 @@ onBeforeMount(() => {
 <style scoped lang="less">
 .BackGround {
   background-color: #f4f4f4;
-  min-height: calc(100vh);
+  min-height: 100vh;
 }
 .PageContainer {
-  top: 50px;
   width: 60%;
   margin: 0 auto;
+  padding: 50px 0px 50px 0px;
 }
 </style>

@@ -36,6 +36,7 @@ const usePostStore = defineStore("post", {
       post_create_time: "", //创建时间
       post_update_time: "", //更新时间
       is_follow_author: false, //是否关注作者
+      is_like_post: false, //是否点赞帖子
     };
   },
   actions: {
@@ -62,6 +63,10 @@ const usePostStore = defineStore("post", {
           `/follow/is_followed/${this.post_user_id}`
         );
         this.is_follow_author = is_follow.data;
+        const is_like = await UserClient.get(
+          `/like/is_like/${this.post_id}/${0}`
+        );
+        this.is_like_post = is_like.data;
       }
     },
   },

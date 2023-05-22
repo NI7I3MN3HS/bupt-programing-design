@@ -38,8 +38,8 @@ import {
   computed,
 } from "vue";
 import axios from "axios";
-import useAuthStore from "../../stores/modules/AuthStore";
-import useUserStore from "../../stores/modules/UserStore";
+import useAuthStore from "@/stores/modules/AuthStore";
+import useUserStore from "@/stores/modules/UserStore";
 const authStore = useAuthStore();
 const userStore = useUserStore();
 

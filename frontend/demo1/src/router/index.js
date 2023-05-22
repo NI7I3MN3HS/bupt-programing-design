@@ -39,7 +39,7 @@ const router = createRouter({
         {
           path: "/post/:id",
           name: "post",
-          component: () => import("../views/Post.vue"),
+          component: () => import("../views/Post/Post.vue"),
         },
         {
           path: "/notice",
@@ -61,11 +61,6 @@ const router = createRouter({
       path: "/upload",
       name: "upload",
       component: () => import("../views/upload.vue"),
-    },
-    {
-      path: "/postcard",
-      name: "postcard",
-      component: () => import("../components/PostCard.vue"),
     },
     {
       path: "/user/UserNotFound",

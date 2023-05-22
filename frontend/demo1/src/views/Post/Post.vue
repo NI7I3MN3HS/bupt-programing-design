@@ -37,11 +37,54 @@
         </n-card>
       </n-space>
       <n-divider />
-      <div style="max-width: calc(70vw)" v-html="post_content"></div>
+      <div
+        style="max-width: calc(70vw)"
+        v-html="post_content"
+        class="PostContent"
+      ></div>
       <n-divider />
       <n-space justify="center">
-        <n-button @click="CreatePostLike">like</n-button>
-        <div>点赞数：{{ post_like }}</div>
+        <!--点赞按钮-->
+        <n-button text @click="CreatePostLike" v-if="is_like_post == false">
+          <template #icon>
+            <n-icon>
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path
+                  d="M24.926 16.496a2.389 2.389 0 00-2.27-3.137l-4.61.002.1-.754c.275-2.09.178-3.497-.292-4.17-.417-.596-1.085-1-1.642-1.047-.767-.065-1.282.248-1.454.908-.077.297-.57 1.56-1.002 2.47-.797 1.68-1.45 2.59-2.313 2.59-.56 0-1.446 0-2.66.003a.744.744 0 00-.744.743v9.534c0 .41.333.744.744.744h11.985c.94 0 1.772-.61 2.057-1.515l2.1-6.37z"
+                  stroke="#4E5969"
+                  stroke-width="1.7"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M11.553 24.618V13.503"
+                  stroke="#4E5969"
+                  stroke-width="1.7"
+                />
+              </svg>
+            </n-icon>
+          </template>
+          {{ post_like }}
+        </n-button>
+        <!--取消点赞按钮-->
+        <n-button text @click="DeletePostLike" v-if="is_like_post == true">
+          <template #icon>
+            <n-icon>
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <path
+                  d="M25.383 16.614a2.389 2.389 0 00-2.27-3.137l-4.61.002.1-.754c.276-2.09.178-3.496-.292-4.169-.416-.596-1.085-1-1.642-1.047-.767-.066-1.282.247-1.454.908-.076.296-.57 1.56-1.002 2.469-.542 1.143-1.359 1.93-2.098 2.316-.49.256-.952.722-.952 1.274V22.5a2 2 0 002 2h8.063c.94 0 1.772-.61 2.057-1.515l2.1-6.37z"
+                  fill="#F04142"
+                />
+                <path
+                  d="M8.497 14.945v8"
+                  stroke="#F04142"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </n-icon> </template
+          >{{ post_like }}
+        </n-button>
       </n-space>
     </div>
   </div>
@@ -73,12 +116,12 @@
 <script setup>
 import { onBeforeMount, ref, watch, computed } from "vue";
 import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
-import usePostStore from "../stores/modules/PostStore";
-import useAuthStore from "../stores/modules/AuthStore";
-import useUserStore from "../stores/modules/UserStore";
+import usePostStore from "@/stores/modules/PostStore";
+import useAuthStore from "@/stores/modules/AuthStore";
+import useUserStore from "@/stores/modules/UserStore";
 import { storeToRefs } from "pinia";
-import CommentEditor from "../components/CommentEditor.vue";
-import CommentCard from "../components/CommentCard.vue";
+import CommentEditor from "@/components/CommentEditor.vue";
+import CommentCard from "@/components/CommentCard.vue";
 import axios from "axios";
 
 const router = useRouter();
@@ -92,6 +135,7 @@ const postStore = usePostStore();
 const userStore = useUserStore();
 
 const {
+  is_like_post,
   post_content,
   post_title,
   post_comment,
@@ -184,26 +228,44 @@ function DeleteFollow() {
     });
   is_follow_author.value = false;
 }
-//创建帖子点赞
+
+//点赞
 function CreatePostLike() {
-  if (authStore.is_Authenticated == false) {
-    alert("请先登录");
-  } else {
-    UserClient.post(`/post/like/create`, { post_id: postStore.post_id })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    postStore.GetPostInfoAsync(route.params.id); //重新获取帖子信息
-  }
+  UserClient.post(`/like/create`, {
+    post_id: postStore.post_id,
+    comment_id: 0,
+  })
+    .then((res) => {
+      is_like_post.value = true;
+      //点赞数加一
+      post_like.value++;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+//取消点赞
+function DeletePostLike() {
+  UserClient.delete(`/like/delete`, {
+    data: {
+      post_id: postStore.post_id,
+      comment_id: 0,
+    },
+  })
+    .then((res) => {
+      is_like_post.value = false;
+      //点赞数减一
+      post_like.value--;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 </script>
 
 <style scoped lang="less">
 .Page_Container {
-  width: 70%;
+  width: 50%;
   height: 100%;
   margin: 0 auto;
 }
@@ -233,8 +295,18 @@ function CreatePostLike() {
   background-color: #f4f4f4;
 }
 .CommentZone {
-  width: 40vw;
+  width: 50vw;
   margin-top: 5ch;
   margin-bottom: 5ch;
+}
+.PostContent {
+  width: 50vw;
+  /deep/ * {
+    img {
+      max-height: 100%;
+      max-width: 100%;
+      vertical-align: middle;
+    }
+  }
 }
 </style>
