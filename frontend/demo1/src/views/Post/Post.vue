@@ -114,6 +114,7 @@
 </template>
 
 <script setup>
+import "@/assets/sspai.less";
 import { useMessage, useDialog } from "naive-ui";
 import { onBeforeMount, ref, watch, computed } from "vue";
 import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";

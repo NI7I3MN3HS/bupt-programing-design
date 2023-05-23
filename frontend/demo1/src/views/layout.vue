@@ -262,7 +262,7 @@ function toWritePost() {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .header {
   height: 60px;
   top: 0px;
