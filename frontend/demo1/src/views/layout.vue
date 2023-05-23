@@ -155,8 +155,16 @@
   <!--搜索抽屉-->
   <n-drawer v-model:show="active" :height="180" :placement="placement">
     <n-drawer-content>
-      <n-input size="large" round placeholder="搜索" />
+      <n-input
+        v-model:value="searchValue"
+        size="large"
+        round
+        placeholder="搜索"
+        passively-activated
+        @keyup="toSearch"
+      />
       热门搜索
+      <SearchCard />
     </n-drawer-content>
   </n-drawer>
 
@@ -191,6 +199,7 @@ import { property } from "lodash";
 import useAuthStore from "@/stores/modules/AuthStore";
 import useUserStore from "@/stores/modules/UserStore";
 import { storeToRefs } from "pinia";
+import SearchCard from "@/components/SearchCard.vue";
 const route = useRoute();
 const router = useRouter();
 
@@ -259,6 +268,17 @@ function toWritePost() {
   } else {
     router.push("/loginandregister");
   }
+}
+
+const searchValue = ref("");
+
+function toSearch() {
+  router.push({
+    path: "/search/post/",
+    query: {
+      keyword: searchValue.value,
+    },
+  });
 }
 </script>
 
