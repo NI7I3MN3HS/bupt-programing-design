@@ -60,6 +60,15 @@ def create_user(db: Session, user: schemas.UserCreate, email: str):
     return db_user
 
 
+# 创建管理员用户
+def create_admin_user(db: Session, user_id: int):
+    db_user = db.query(models.User).get(user_id)
+    db_user.is_admin = True
+    db.commit()  # 提交保存到数据库中
+    db.refresh(db_user)  # 刷新数据库中的数据
+    return db_user
+
+
 # 根据用户id获取用户信息
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
@@ -76,8 +85,8 @@ def get_user_by_email(db: Session, email: str):
 
 
 # 获取所有用户信息
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.User).offset(skip).limit(limit).all()
+def get_users(db: Session):
+    return db.query(models.User).all()
 
 
 # 更新用户信息
@@ -214,8 +223,8 @@ def get_comment(db: Session, comment_id: int):
 
 
 # 获取所有评论信息
-def get_comments(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Comment).offset(skip).limit(limit).all()
+def get_comments(db: Session):
+    return db.query(models.Comment).all()
 
 
 # 根据评论id删除评论
@@ -497,8 +506,8 @@ def get_notification(db: Session, notification_id: int):
 
 
 # 获取所有通知信息
-def get_notifications(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Notification).offset(skip).limit(limit).all()
+def get_notifications(db: Session):
+    return db.query(models.Notification).all()
 
 
 # 获取用户的所有通知
