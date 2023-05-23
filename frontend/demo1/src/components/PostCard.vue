@@ -134,7 +134,7 @@ const formattedDate = computed(() => {
   const oneWeekAgo = addDays(now, -7);
 
   // 解析ISO格式的日期字符串
-  const date = parseISO(data.value.created_time);
+  const date = parseISO(data.value.create_time);
 
   if (date > oneHourAgo) {
     const minutesAgo = differenceInMinutes(now, date);
