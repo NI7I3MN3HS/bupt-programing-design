@@ -14,6 +14,9 @@ const useUserStore = defineStore("user", {
       is_active: true,
       id: 0,
       introduction: null,
+      used: "",
+      confirm: "",
+      now: ""
     };
   },
   actions: {
