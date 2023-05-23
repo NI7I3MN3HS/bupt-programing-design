@@ -39,7 +39,7 @@
           </div>
           <div class="FollowsAndFans">
             <n-space>
-              <n-button text @click="toFollowedTab">
+              <n-button text @click="toFollowedTab" color="black">
                 <template #icon>
                   <n-icon>
                     <svg
@@ -68,7 +68,7 @@
                 </template>
                 {{ userData.follow_count }}关注
               </n-button>
-              <n-button text @click="toFollowerTab">
+              <n-button text @click="toFollowerTab" color="black">
                 <template #icon>
                   <n-icon>
                     <svg
@@ -98,12 +98,20 @@
       </div>
     </div>
     <div class="ProfileContent">
-      <div v-if="pageTab == 1" v-for="item in followData">
-        <Follow :data="item" />
-      </div>
-      <div v-if="pageTab == 2" v-for="item in followerData">
-        <Follower :data="item" />
-      </div>
+      <el-tabs v-model="activeName" class="demo-tabs">
+        <el-tab-pane label="帖子" name="first">
+          <div v-for="item in postData">
+            <PostCard :data="item" /></div
+        ></el-tab-pane>
+        <el-tab-pane label="关注" name="second">
+          <div v-for="item in followData">
+            <Follow :data="item" /></div
+        ></el-tab-pane>
+        <el-tab-pane label="粉丝" name="third">
+          <div v-for="item in followerData">
+            <Follower :data="item" /></div
+        ></el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>
@@ -113,6 +121,7 @@ import { ref, reactive, defineComponent, watch, onBeforeMount } from "vue";
 import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
 import Follow from "@/components/follow.vue";
 import Follower from "@/components/follower.vue";
+import PostCard from "@/components/postCard.vue";
 import useAuthStore from "@/stores/modules/AuthStore";
 import useUserStore from "@/stores/modules/UserStore";
 import axios from "axios";
@@ -148,9 +157,8 @@ const userData = reactive({
 const followData = ref([]);
 //当前页粉丝列表数据
 const followerData = ref([]);
-
-//0-帖子 1-关注 2-粉丝
-const pageTab = ref(0);
+//当前页帖子列表数据
+const postData = ref([]);
 
 //获取当前用户详情的用户信息
 function fetchProfileUserInfo(user_id) {
@@ -186,6 +194,15 @@ function fetchProfileUserInfo(user_id) {
     .catch((error) => {
       console.error(error);
     });
+  axios
+    .get(`/post/user/${user_id}`)
+    .then((response) => {
+      console.log(response.data);
+      postData.value = response.data;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   if (authStore.is_Authenticated == true) {
     UserClient.get(`/follow/is_followed/${user_id}`)
       .then((response) => {
@@ -197,13 +214,6 @@ function fetchProfileUserInfo(user_id) {
       });
   }
 }
-
-//仅当 id 更改时才获取用户数据
-onBeforeRouteUpdate(async (to, from) => {
-  if (to.params.id !== from.params.id) {
-    fetchProfileUserInfo(to.params.id);
-  }
-});
 
 //组件挂载前获取数据
 onBeforeMount(() => {
@@ -246,25 +256,26 @@ function DeleteFollow() {
   userData.is_followed_by_me = false;
 }
 
-//跳转到帖子列表页面
-function toIndexTab() {
-  pageTab.value = 0;
-}
+const activeName = ref("first");
+
 //跳转到关注列表页面
 function toFollowedTab() {
-  pageTab.value = 1;
+  activeName.value = "second";
 }
 //跳转到粉丝列表页面
 function toFollowerTab() {
-  pageTab.value = 2;
+  activeName.value = "third";
 }
 </script>
 
 <style lang="less" scoped>
-.n-card {
-  width: 100%;
-  height: 120px;
+.demo-tabs > .el-tabs__content {
+  padding: 32px;
+  color: #6b778c;
+  font-size: 32px;
+  font-weight: 600;
 }
+
 .light-green {
   height: 108px;
   background-color: rgba(0, 128, 0, 0.12);
@@ -298,7 +309,8 @@ function toFollowerTab() {
     width: 100%;
   }
   .ProfileContent {
-    width: 70%;
+    width: 60%;
+    min-height: 100vh;
     margin: 0 auto;
   }
 }
