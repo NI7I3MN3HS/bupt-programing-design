@@ -5,6 +5,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const useUserStore = defineStore("user", {
+  persist: true,
   state: () => {
     return {
       username: "",
@@ -38,6 +39,7 @@ const useUserStore = defineStore("user", {
         .catch((error) => {
           console.error(error);
         });
+      console.log("setUserInfo");
     },
   },
 });

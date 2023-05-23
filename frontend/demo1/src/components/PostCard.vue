@@ -20,6 +20,7 @@
               <n-ellipsis
                 style="max-width: 490px; max-height: 200px"
                 :line-clamp="2"
+                :tooltip="false"
               >
                 <div v-html="data.content"></div>
               </n-ellipsis>

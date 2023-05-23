@@ -148,7 +148,11 @@
                   />
                 </n-form-item-row>
                 <n-space justify="space-between">
-                  <n-checkbox v-model:checked="value" text-color="#8590a6">
+                  <n-checkbox
+                    :checked="Checked"
+                    text-color="#8590a6"
+                    @update:checked="ClickRememberPassword"
+                  >
                     记住我
                   </n-checkbox>
                   <n-button
@@ -210,6 +214,7 @@ export default {
     function login() {
       authStore.login();
     }
+
     const themeOverrides = {
       Input: {
         borderFocus: "1px solid #8590a6",
@@ -260,8 +265,8 @@ export default {
     const PageStatus = ref(0); //页面状态
     const LoginValue = reactive({
       data: {
-        username: "",
-        password: "",
+        username: Cookies.get("username") ? Cookies.get("username") : "",
+        password: Cookies.get("password") ? Cookies.get("password") : "",
       },
       detail: "",
     }); //登录表单数据
@@ -402,6 +407,7 @@ export default {
         ],
       },
     }; //登录表单验证规则
+    const checkedRef = ref(Cookies.get("username") ? true : false); //是否记住密码
     return {
       login,
       is_input_email, //是否输入邮箱
@@ -421,6 +427,7 @@ export default {
       RegisterValue, //注册表单数据
       Email, //邮箱表单数据
       LoginRules, //登录表单验证规则
+      Checked: checkedRef, //是否记住密码
 
       //验证码倒计时结束回调
       SendcodeCountdownFinish() {
@@ -437,6 +444,17 @@ export default {
         axios
           .post("/login/", form)
           .then((res) => {
+            if (checkedRef.value) {
+              Cookies.set("username", LoginValue.data.username, {
+                expires: 30,
+              });
+              Cookies.set("password", LoginValue.data.password, {
+                expires: 30,
+              });
+            } else {
+              Cookies.remove("username");
+              Cookies.remove("password");
+            }
             Cookies.set("access_token", res.data.access_token, { expires: 1 });
             login();
             router.push("/");
@@ -517,6 +535,11 @@ export default {
       //点击忘记密码
       ClickToResetPassword() {
         router.push("/resetpassword");
+      },
+
+      //点击记住密码
+      ClickRememberPassword(Checked) {
+        checkedRef.value = Checked;
       },
     };
   },

@@ -114,6 +114,7 @@
 </template>
 
 <script setup>
+import { useMessage, useDialog } from "naive-ui";
 import { onBeforeMount, ref, watch, computed } from "vue";
 import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
 import usePostStore from "@/stores/modules/PostStore";
@@ -124,6 +125,8 @@ import CommentEditor from "@/components/CommentEditor.vue";
 import CommentCard from "@/components/CommentCard.vue";
 import axios from "axios";
 
+const message = useMessage();
+const dialog = useDialog();
 const router = useRouter();
 const route = useRoute();
 
@@ -166,13 +169,6 @@ onBeforeMount(() => {
   postStore.GetPostInfoAsync(route.params.id);
 });
 
-//仅当 id 更改时才获取帖子数据
-onBeforeRouteUpdate(async (to, from) => {
-  if (to.params.id !== from.params.id) {
-    postStore.GetPostInfoAsync(route.params.id);
-  }
-});
-
 //发布评论
 function CreateComment() {
   if (authStore.is_Authenticated) {
@@ -183,7 +179,11 @@ function CreateComment() {
       parent_id: 0,
     })
       .then((response) => {
-        console.log(response);
+        dialog.success({
+          title: "评论成功",
+          content: "经验+3 告辞！",
+          positiveText: "溜了溜了",
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -191,8 +191,7 @@ function CreateComment() {
     comment_input.value.commentvalueHtml = ""; //清空评论框
     postStore.GetPostInfoAsync(route.params.id); //重新获取帖子信息
   } else {
-    alert("请先登录");
-    router.push("/loginandregister");
+    message.error("请先登录");
   }
 }
 
@@ -203,7 +202,7 @@ function toAuthorProfile() {
 //创建关注
 function CreateFollow() {
   if (authStore.is_Authenticated == false) {
-    alert("请先登录");
+    message.error("请先登录");
   } else {
     UserClient.post(`/follow/create`, { followed_id: post_user_id.value })
       .then((response) => {
@@ -231,18 +230,22 @@ function DeleteFollow() {
 
 //点赞
 function CreatePostLike() {
-  UserClient.post(`/like/create`, {
-    post_id: postStore.post_id,
-    comment_id: 0,
-  })
-    .then((res) => {
-      is_like_post.value = true;
-      //点赞数加一
-      post_like.value++;
+  if (authStore.is_Authenticated == false) {
+    message.error("请先登录");
+  } else {
+    UserClient.post(`/like/create`, {
+      post_id: postStore.post_id,
+      comment_id: 0,
     })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((res) => {
+        is_like_post.value = true;
+        //点赞数加一
+        post_like.value++;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 }
 //取消点赞
 function DeletePostLike() {
@@ -295,7 +298,7 @@ function DeletePostLike() {
   background-color: #f4f4f4;
 }
 .CommentZone {
-  width: 50vw;
+  width: 40vw;
   margin-top: 5ch;
   margin-bottom: 5ch;
 }

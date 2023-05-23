@@ -19,6 +19,7 @@ const useAuthStore = defineStore("auth", {
     logout() {
       Cookies.remove("access_token");
       this.is_Authenticated = false;
+      console.log("logout");
     },
   },
 });

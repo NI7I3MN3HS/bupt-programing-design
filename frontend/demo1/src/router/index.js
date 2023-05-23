@@ -21,6 +21,7 @@ const router = createRouter({
         {
           path: "/profile/edit1",
           component: () => import("../views/profileedit/userinformation.vue"),
+          meta: { requiresAuth: true },
         },
         {
           path: "/profile/edit2",

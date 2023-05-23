@@ -111,8 +111,8 @@
 <script setup>
 import { ref, reactive, defineComponent, watch, onBeforeMount } from "vue";
 import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
-import Follow from "@/views/Profile/follow.vue";
-import Follower from "@/views/Profile/follower.vue";
+import Follow from "@/components/follow.vue";
+import Follower from "@/components/follower.vue";
 import useAuthStore from "@/stores/modules/AuthStore";
 import useUserStore from "@/stores/modules/UserStore";
 import axios from "axios";
