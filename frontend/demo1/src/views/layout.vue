@@ -162,9 +162,10 @@
 
   <!--回到顶部 可视高度50-->
   <div class="BackTop">
-    <n-back-top :bottom="100" :visibility-height="50" iconColorHover="black">
+    <n-back-top :bottom="150" :visibility-height="50" iconColorHover="black">
     </n-back-top>
   </div>
+
   <n-button
     type="info"
     round
@@ -177,7 +178,14 @@
 <script setup>
 import Cookies from "js-cookie";
 import { useRoute, useRouter } from "vue-router";
-import { ref, reactive, defineComponent, onBeforeMount, onMounted } from "vue";
+import {
+  ref,
+  reactive,
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  computed,
+} from "vue";
 import { useMessage } from "naive-ui";
 import { property } from "lodash";
 import useAuthStore from "@/stores/modules/AuthStore";
@@ -304,7 +312,7 @@ function toWritePost() {
 }
 .body-content {
   position: relative;
-  min-height: calc(100vh);
+  min-height: calc(100vh - 220px);
   margin-top: 60px;
 }
 .footer {
