@@ -3,7 +3,7 @@
     <div class="Post_Container">
       <n-space vertical>
         <div class="post_title">{{ post_title }}</div>
-        <n-card style="min-width: 60ch" :bordered="false">
+        <n-card style="width: 60ch; margin: 0 auto" :bordered="false">
           <n-space justify="space-between">
             <n-button text color="black" @click="toAuthorProfile">
               <n-space align="center">
@@ -38,7 +38,7 @@
       </n-space>
       <n-divider />
       <div
-        style="max-width: calc(70vw)"
+        style="max-width: 70vw"
         v-html="post_content"
         class="PostContent"
       ></div>

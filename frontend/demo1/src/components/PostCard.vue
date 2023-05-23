@@ -9,16 +9,18 @@
           <div class="PostInfo">
             <n-space align="center">
               <div class="AuthorName">{{ userData.username }}</div>
-              <div class="PostTime">{{ data.created_time }}</div>
+              <div class="PostTime">{{ formattedDate }}</div>
             </n-space>
           </div>
           <n-space vertical>
             <div class="PostTitle" @click="toPost(data.id)">
-              {{ data.title }}
+              <n-ellipsis style="max-width: 450px" :line-clamp="3">
+                {{ data.title }}
+              </n-ellipsis>
             </div>
             <div class="PostContent" @click="toPost(data.id)">
               <n-ellipsis
-                style="max-width: 490px"
+                style="max-width: 450px"
                 :line-clamp="3"
                 :tooltip="false"
               >
@@ -110,11 +112,43 @@ import {
 } from "vue";
 import useAuthStore from "../stores/modules/AuthStore";
 import { useRouter } from "vue-router";
+import {
+  parseISO,
+  format,
+  differenceInMinutes,
+  differenceInHours,
+  differenceInDays,
+  addDays,
+} from "date-fns";
 
 //获取路由
 const router = useRouter();
 
 const authStore = useAuthStore();
+
+const formattedDate = computed(() => {
+  const now = new Date();
+  const oneHourAgo = addDays(now, -1 / 24);
+  const oneDayAgo = addDays(now, -1);
+  const oneWeekAgo = addDays(now, -7);
+
+  // 解析ISO格式的日期字符串
+  const date = parseISO(data.value.created_time);
+
+  if (date > oneHourAgo) {
+    const minutesAgo = differenceInMinutes(now, date);
+    return `${minutesAgo} 分钟前`;
+  } else if (date > oneDayAgo) {
+    const hoursAgo = differenceInHours(now, date);
+    return `${hoursAgo} 小时前`;
+  } else if (date > oneWeekAgo) {
+    const daysAgo = differenceInDays(now, date);
+    return `${daysAgo} 天前`;
+  }
+
+  // 超过一周，显示为 'yyyy-MM-dd HH:mm:ss' 格式
+  return format(date, "yyyy-MM-dd HH:mm:ss");
+});
 
 //定义axios请求头
 const UserClient = axios.create({
