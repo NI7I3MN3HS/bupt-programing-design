@@ -292,8 +292,8 @@ function toFollowerTab() {
   min-height: calc(100vh);
   display: block;
   .ProfileBGImage {
-    height: 250px;
-    background-image: url(https://pic1.zhimg.com/80/v2-c9ccad67cdbdfaceaee4edca8b17f710_1440w.webp);
+    height: 350px;
+    background-image: url(https://w.wallhaven.cc/full/rr/wallhaven-rrodj7.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -303,7 +303,7 @@ function toFollowerTab() {
     position: absolute;
     left: 15%;
     width: 140px;
-    top: 200px;
+    top: 300px;
     z-index: 10;
   }
   .ProfileHeader {

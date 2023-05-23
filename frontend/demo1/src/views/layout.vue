@@ -101,7 +101,7 @@
               <n-button
                 text
                 tag="a"
-                href="https://anyway.fm/news.php"
+                href="https://github.com/NI7I3MN3HS"
                 target="_blank"
                 text-color="black"
               >
