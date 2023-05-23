@@ -46,6 +46,11 @@ const router = createRouter({
           path: "/notice",
           component: () => import("../views/Notice/index.vue"),
         },
+        {
+          path: "/search/post/",
+          name: "searchpost",
+          component: () => import("../views/Search/SearchPost.vue"),
+        },
       ],
     },
     {
@@ -59,9 +64,9 @@ const router = createRouter({
       component: () => import("../views/ResetPassword.vue"),
     },
     {
-      path: "/upload",
-      name: "upload",
-      component: () => import("../views/upload.vue"),
+      path: "/search",
+      name: "search",
+      component: () => import("../components/SearchCard.vue"),
     },
     {
       path: "/user/UserNotFound",

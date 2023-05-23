@@ -59,6 +59,7 @@
                   <n-input
                     v-model:value="model.introduction"
                     @keydown.enter.prevent
+                    maxlength="20"
                   />
                 </n-form-item>
                 <n-form-item path="email" label="邮箱">
@@ -109,6 +110,9 @@ import axios from "axios";
 import useAuthStore from "@/stores/modules/AuthStore";
 import useUserStore from "@/stores/modules/UserStore";
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -195,6 +199,13 @@ function UpdateUserInfo() {
     .then((response) => {
       message.success("更新成功");
       userStore.setUserInfo();
+      //如果用户名修改了，则需要重新登录
+      if (model.value.username != username.value) {
+        authStore.logout();
+        userStore.$reset();
+        router.push("/loginandregister");
+        return;
+      }
     })
     .catch((error) => {
       message.error("更新失败");
