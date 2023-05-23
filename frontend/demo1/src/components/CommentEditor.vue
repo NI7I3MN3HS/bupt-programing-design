@@ -7,7 +7,7 @@
       :mode="mode"
     />
     <Editor
-      style="height: 6ch; overflow-y: hidden"
+      style="min-height: 6ch; overflow-y: hidden"
       v-model="commentvalueHtml"
       :defaultConfig="editorConfig"
       :mode="mode"
@@ -29,7 +29,7 @@ const commentvalueHtml = ref("");
 //暴露commentvalueHtml给父组件使用
 defineExpose({ commentvalueHtml });
 
-const toolbarConfig = { toolbarKeys: ["emotion", "codeBlock"] };
+const toolbarConfig = { toolbarKeys: ["emotion"] };
 const editorConfig = {
   placeholder: "评论千万条，友善第一条",
 };

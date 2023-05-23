@@ -18,8 +18,8 @@
             </div>
             <div class="PostContent" @click="toPost(data.id)">
               <n-ellipsis
-                style="max-width: 490px; max-height: 200px"
-                :line-clamp="2"
+                style="max-width: 490px"
+                :line-clamp="3"
                 :tooltip="false"
               >
                 <div v-html="data.content"></div>
@@ -220,7 +220,7 @@ function toPost(post_id) {
 <style lang="less" scoped>
 .n-card {
   width: 600px;
-  height: 300px;
+  min-height: 300px;
 }
 .AuthorName {
   font-size: 14px;
