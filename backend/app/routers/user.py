@@ -89,3 +89,12 @@ async def get_user(
         "introduction": db_user.introduction,
         "is_active": db_user.is_active,
     }
+
+
+# 搜索用户
+@router.post("/search")
+async def search_user(
+    keyword: str,
+    db: Session = Depends(get_db),
+):
+    return crud.search_user(db, keyword=keyword)

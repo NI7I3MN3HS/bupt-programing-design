@@ -71,6 +71,7 @@ async def get_post(
         "like_count": crud.get_post_like_count(db, post_id=post_id),
     }
 
+
 # 获取用户发帖信息
 @router.get("/user/{user_id}")
 async def get_user_posts(
@@ -78,3 +79,12 @@ async def get_user_posts(
     db: Session = Depends(get_db),
 ):
     return crud.get_posts_by_user(db, user_id=user_id)
+
+
+# 搜索文章
+@router.post("/search")
+async def search_posts(
+    keyword: str,
+    db: Session = Depends(get_db),
+):
+    return crud.search_post(db, keyword=keyword)

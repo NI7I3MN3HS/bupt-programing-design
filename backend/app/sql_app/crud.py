@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from ..core import security
 from . import models, schemas
 
@@ -99,6 +100,11 @@ def delete_user(db: Session, user_id: int):
         return db_user
 
 
+# 搜索用户
+def search_user(db: Session, keyword: str):
+    return db.query(models.User).filter(models.User.username.like(f"%{keyword}%")).all()
+
+
 # post crud
 # 创建文章
 def create_post(db: Session, post: schemas.PostBase, user_id: int):
@@ -127,7 +133,7 @@ def get_posts(db: Session):
                 "created_time": post.create_time,
                 "user_id": post.user_id,
                 "comment_count": get_comments_count_by_post(db, post.id),
-                "like_count":  get_post_like_count(db, post.id),
+                "like_count": get_post_like_count(db, post.id),
             }
         )
     return post_info
@@ -166,10 +172,24 @@ def get_posts_by_user(db: Session, user_id: int):
                 "created_time": post.create_time,
                 "user_id": post.user_id,
                 "comment_count": get_comments_count_by_post(db, post.id),
-                "like_count":  get_post_like_count(db, post.id),
+                "like_count": get_post_like_count(db, post.id),
             }
         )
     return post_info
+
+
+# 搜索文章
+def search_post(db: Session, keyword: str):
+    return (
+        db.query(models.Post)
+        .filter(
+            or_(
+                models.Post.title.ilike(f"%{keyword}%"),
+                models.Post.content.ilike(f"%{keyword}%"),
+            )
+        )
+        .all()
+    )
 
 
 # comment crud
@@ -241,7 +261,6 @@ def get_comments_by_comment(db: Session, comment_id: int):
             }
         )
     return comment_info
-
 
 
 # 获取评论的评论数
