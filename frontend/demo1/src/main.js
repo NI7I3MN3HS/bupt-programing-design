@@ -7,7 +7,7 @@ import naive from "naive-ui";
 
 import ElementPlus from "element-plus";
 
-//import "./assets/base.less";
+import "./assets/base.less";
 import "./assets/sspai.less";
 
 import "element-plus/dist/index.css";
