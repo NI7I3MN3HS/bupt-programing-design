@@ -123,6 +123,7 @@ import SecondaryCommentInput from "./SecondaryCommentInput.vue";
 import {
   parseISO,
   format,
+  sub,
   differenceInMinutes,
   differenceInHours,
   differenceInDays,
@@ -142,7 +143,7 @@ const reply_id = ref(0); //回复的评论id
 
 const formattedDate = computed(() => {
   const now = new Date();
-  const oneHourAgo = addDays(now, -1 / 24);
+  const oneHourAgo = sub(now, { hours: 1 });
   const oneDayAgo = addDays(now, -1);
   const oneWeekAgo = addDays(now, -7);
 

@@ -128,7 +128,7 @@ const authStore = useAuthStore();
 
 const formattedDate = computed(() => {
   const now = new Date();
-  const oneHourAgo = addDays(now, -1 / 24);
+  const oneHourAgo = sub(now, { hours: 1 });
   const oneDayAgo = addDays(now, -1);
   const oneWeekAgo = addDays(now, -7);
 
