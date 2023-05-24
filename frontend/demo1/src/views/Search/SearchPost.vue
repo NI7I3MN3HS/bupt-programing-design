@@ -5,6 +5,7 @@
         <div v-for="item in postList">
           <SearchPostCard :data="item" />
         </div>
+        <div v-if="postList.length == 0">找不到你想要的</div>
       </n-space>
     </div>
   </div>

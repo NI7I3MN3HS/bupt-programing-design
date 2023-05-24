@@ -161,7 +161,7 @@
         round
         placeholder="搜索"
         passively-activated
-        @keyup="toSearch"
+        @keydown.enter="toSearch"
       />
       热门搜索
       <SearchCard />

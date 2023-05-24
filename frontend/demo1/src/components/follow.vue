@@ -123,7 +123,7 @@ function DeleteFollow() {
   is_followed.value = false;
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .UserName {
   font-size: 20px;
   font-weight: 600;
