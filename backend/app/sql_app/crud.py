@@ -189,7 +189,7 @@ def get_posts_by_user(db: Session, user_id: int):
 
 # 搜索文章
 def search_post(db: Session, keyword: str):
-    return (
+    posts = (
         db.query(models.Post)
         .filter(
             or_(
@@ -199,6 +199,20 @@ def search_post(db: Session, keyword: str):
         )
         .all()
     )
+    post_info = []
+    for post in posts:
+        post_info.append(
+            {
+                "id": post.id,
+                "title": post.title,
+                "content": post.content[:300],
+                "create_time": post.create_time,
+                "user_id": post.user_id,
+                "comment_count": get_comments_count_by_post(db, post.id),
+                "like_count": get_post_like_count(db, post.id),
+            }
+        )
+    return post_info
 
 
 # comment crud
