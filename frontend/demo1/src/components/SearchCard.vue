@@ -1,14 +1,21 @@
 <template>
   <n-config-provider :theme-overrides="themeOverrides">
     <n-space justify="center">
-      <n-input
-        style="width: 50vw; top: 30px; padding: 5px"
-        v-model:value="searchValue"
-        size="large"
-        placeholder="搜索"
-        passively-activated
-        @keydown.enter="toSearch"
-      />
+      <n-dropdown
+        trigger="click"
+        :options="options"
+        @select="handleSelect"
+        style="width: 50vw"
+      >
+        <n-input
+          style="width: 50vw; top: 30px; padding: 5px"
+          v-model:value="searchValue"
+          size="large"
+          placeholder="搜索"
+          passively-activated
+          @keydown.enter="toSearch"
+        />
+      </n-dropdown>
     </n-space>
     <div class="demo-tabs">
       <el-tabs v-model="activeName">
@@ -24,12 +31,14 @@
 </template>
 
 <script setup>
+import Cookies from "js-cookie";
 import axios from "axios";
 import {
   ref,
   reactive,
   defineComponent,
   watch,
+  onMounted,
   onBeforeMount,
   toRefs,
   defineProps,
@@ -64,6 +73,7 @@ function toSearch() {
     message.warning("请输入搜索内容");
     return;
   }
+  storeSearchHistory(searchValue.value);
   router.push({
     path: `/search/${activeName.value}`,
     query: {
@@ -71,6 +81,12 @@ function toSearch() {
     },
   });
 }
+
+//载入时读取搜索历史
+onBeforeMount(() => {
+  tagList.value = getSearchHistory();
+  // console.log(tagList.value);
+});
 
 //当tab页发生变化时，更新路由
 watch(
@@ -84,6 +100,59 @@ watch(
     });
   }
 );
+
+//搜索历史
+const tagList = ref([]);
+
+const options = computed(() => {
+  return tagList.value.map((item) => {
+    return {
+      label: item,
+      key: item,
+    };
+  });
+});
+
+// 存储搜索历史
+function storeSearchHistory(searchTerm) {
+  let searchHistory = getSearchHistory();
+
+  // 如果搜索历史中已经有这个搜索词，那么就不需要再添加
+  if (!searchHistory.includes(searchTerm)) {
+    // 如果搜索历史超过了10条，移除最旧的一条
+    if (searchHistory.length >= 10) {
+      searchHistory.shift();
+    }
+
+    // 添加新的搜索词
+    searchHistory.push(searchTerm);
+
+    // 将搜索历史数组转换为字符串
+    let searchHistoryString = JSON.stringify(searchHistory);
+
+    // 存储在cookie中
+    Cookies.set("searchHistory", searchHistoryString);
+  }
+}
+
+// 读取搜索历史
+function getSearchHistory() {
+  let searchHistoryString = Cookies.get("searchHistory");
+
+  // 如果找到了名为 "searchHistory" 的cookie，那么返回它的值
+  if (searchHistoryString) {
+    return JSON.parse(searchHistoryString);
+  }
+
+  // 如果没有找到名为 "searchHistory" 的cookie，那么返回一个空数组
+  return [];
+}
+
+//点击搜索历史
+function handleSelect(key) {
+  searchValue.value = String(key);
+  toSearch();
+}
 </script>
 
 <style scoped lang="less">

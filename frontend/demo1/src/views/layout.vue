@@ -325,6 +325,8 @@ function toSearch() {
     return;
   }
   storeSearchHistory(searchValue.value);
+  //收起抽屉
+  active.value = false;
   router.push({
     path: "/search/post/",
     query: {
