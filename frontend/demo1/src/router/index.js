@@ -47,14 +47,21 @@ const router = createRouter({
           component: () => import("../views/Notice/index.vue"),
         },
         {
-          path: "/search/post/",
-          name: "searchpost",
-          component: () => import("../views/Search/SearchPost.vue"),
-        },
-        {
-          path: "/search/user/",
-          name: "searchuser",
-          component: () => import("../views/Search/SearchUser.vue"),
+          path: "/search",
+          name: "search",
+          component: () => import("../components/SearchCard.vue"),
+          children: [
+            {
+              path: "post",
+              name: "searchpost",
+              component: () => import("../views/Search/SearchPost.vue"),
+            },
+            {
+              path: "user",
+              name: "searchuser",
+              component: () => import("../views/Search/SearchUser.vue"),
+            },
+          ],
         },
       ],
     },
@@ -67,11 +74,6 @@ const router = createRouter({
       path: "/ResetPassword",
       name: "ResetPassword",
       component: () => import("../views/ResetPassword.vue"),
-    },
-    {
-      path: "/search",
-      name: "search",
-      component: () => import("../components/SearchCard.vue"),
     },
     {
       path: "/user/UserNotFound",

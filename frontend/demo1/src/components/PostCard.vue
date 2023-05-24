@@ -13,12 +13,20 @@
             </n-space>
           </div>
           <n-space vertical>
-            <div class="PostTitle" @click="toPost(data.id)">
+            <div
+              class="PostTitle"
+              @click="toPost(data.id)"
+              style="cursor: pointer"
+            >
               <n-ellipsis style="max-width: 450px" :line-clamp="3">
                 {{ data.title }}
               </n-ellipsis>
             </div>
-            <div class="PostContent" @click="toPost(data.id)">
+            <div
+              class="PostContent"
+              @click="toPost(data.id)"
+              style="cursor: pointer"
+            >
               <n-ellipsis
                 style="max-width: 450px"
                 :line-clamp="3"
