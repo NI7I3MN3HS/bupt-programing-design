@@ -255,7 +255,7 @@ onMounted(() => {
   }
   //读取搜索历史
   tagList.value = getSearchHistory();
-  console.log(tagList.value);
+  //console.log(tagList.value);
 });
 
 //下拉菜单
