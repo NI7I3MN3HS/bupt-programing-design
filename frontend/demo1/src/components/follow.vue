@@ -2,7 +2,7 @@
   <div>
     <n-card>
       <n-space align="center" justify="space-between">
-        <div>
+        <div @click="toAuthorProfile" style="cursor: pointer">
           <n-space>
             <n-avatar :size="50" round :src="userData.avatar_url" />
             <div>
@@ -39,6 +39,11 @@ import {
 import axios from "axios";
 import useAuthStore from "@/stores/modules/AuthStore";
 import useUserStore from "@/stores/modules/UserStore";
+import { useRouter } from "vue-router";
+
+//获取路由
+const router = useRouter();
+
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
@@ -121,6 +126,11 @@ function DeleteFollow() {
       console.error(error);
     });
   is_followed.value = false;
+}
+
+//进入用户主页
+function toAuthorProfile() {
+  router.push(`/user/${data.value.followed_id}`);
 }
 </script>
 <style lang="less" scoped>

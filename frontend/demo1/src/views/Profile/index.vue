@@ -220,6 +220,12 @@ onBeforeMount(() => {
   fetchProfileUserInfo(route.params.id);
 });
 
+//当路由参数改变时重新获取数据
+onBeforeRouteUpdate((to, from, next) => {
+  fetchProfileUserInfo(to.params.id);
+  next();
+});
+
 //跳转到编辑个人资料页面
 function toEditProfile() {
   router.push("/profile/edit1");

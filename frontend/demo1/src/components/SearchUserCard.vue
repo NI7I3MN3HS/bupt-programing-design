@@ -2,7 +2,7 @@
   <div>
     <n-card>
       <n-space align="center" justify="space-between">
-        <div>
+        <div @click="toAuthorProfile" style="cursor: pointer">
           <n-space>
             <n-avatar :size="50" round :src="userData.avatar_url" />
             <div>
@@ -39,8 +39,13 @@ import {
 import axios from "axios";
 import useAuthStore from "@/stores/modules/AuthStore";
 import useUserStore from "@/stores/modules/UserStore";
+import { useRouter } from "vue-router";
+
 const authStore = useAuthStore();
 const userStore = useUserStore();
+
+//获取路由
+const router = useRouter();
 
 const props = defineProps({
   //子组件接收父组件传递过来的值
@@ -121,6 +126,11 @@ function DeleteFollow() {
       console.error(error);
     });
   is_followed.value = false;
+}
+
+//进入用户主页
+function toAuthorProfile() {
+  router.push(`/user/${data.value.id}`);
 }
 </script>
 <style lang="less" scoped>

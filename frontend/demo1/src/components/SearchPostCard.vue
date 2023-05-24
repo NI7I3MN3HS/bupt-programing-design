@@ -3,12 +3,24 @@
     <template #default>
       <n-space
         ><div class="Left">
-          <n-avatar :size="48" :src="userData.avatar_url" round />
+          <n-avatar
+            :size="48"
+            :src="userData.avatar_url"
+            round
+            @click="toAuthorProfile"
+            style="cursor: pointer"
+          />
         </div>
         <div class="Right">
           <div class="PostInfo">
             <n-space align="center">
-              <div class="AuthorName">{{ userData.username }}</div>
+              <div
+                class="AuthorName"
+                @click="toAuthorProfile"
+                style="cursor: pointer"
+              >
+                {{ userData.username }}
+              </div>
               <div class="PostTime">{{ formattedDate }}</div>
             </n-space>
           </div>
@@ -249,6 +261,11 @@ function toPost(post_id) {
   router.push({
     path: `/post/${post_id}`,
   });
+}
+
+//进入作者主页
+function toAuthorProfile() {
+  router.push(`/user/${data.value.user_id}`);
 }
 </script>
 
