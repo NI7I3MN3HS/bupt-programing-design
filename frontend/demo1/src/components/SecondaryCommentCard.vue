@@ -6,9 +6,18 @@
   >
     <template #header
       ><n-space>
-        <n-avatar round :src="userData.avatar_url" :size="40" />
+        <n-avatar
+          round
+          :src="userData.avatar_url"
+          :size="40"
+          @click="toAuthorProfile"
+          style="cursor: pointer"
+        />
         <n-space vertical :size="0">
-          <div style="font-size: 14px; font-weight: 600">
+          <div
+            style="font-size: 14px; font-weight: 600; cursor: pointer"
+            @click="toAuthorProfile"
+          >
             {{ userData.username }}
           </div>
           <div style="font-size: 12px; color: #c7ccda; font-weight: 400">
@@ -124,6 +133,9 @@ import {
   differenceInDays,
   addDays,
 } from "date-fns";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const authStore = useAuthStore();
 
@@ -269,6 +281,11 @@ function DeletePostLike() {
     .catch((err) => {
       console.log(err);
     });
+}
+
+//进入用户主页
+function toAuthorProfile() {
+  router.push(`/user/${data.value.user_id}`);
 }
 </script>
 

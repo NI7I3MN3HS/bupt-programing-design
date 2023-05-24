@@ -13,7 +13,7 @@
                   :src="post_author_avatar_url"
                   fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
                 ></n-avatar>
-                <n-space vertical>
+                <n-space vertical align="start">
                   <div style="font-weight: 600; font-size: 16px">
                     {{ post_author_name }}
                   </div>

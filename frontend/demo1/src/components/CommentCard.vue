@@ -2,9 +2,18 @@
   <n-card header-style="padding:20px 24px 10px 24px">
     <template #header
       ><n-space
-        ><n-avatar round :src="userData.avatar_url" :size="40" />
+        ><n-avatar
+          round
+          :src="userData.avatar_url"
+          :size="40"
+          @click="toAuthorProfile"
+          style="cursor: pointer"
+        />
         <n-space vertical :size="0">
-          <div style="font-weight: 600; font-size: 14px">
+          <div
+            style="font-weight: 600; font-size: 14px; cursor: pointer"
+            @click="toAuthorProfile"
+          >
             {{ userData.username }}
           </div>
           <div style="font-size: 12px; color: #c7ccda; font-weight: 400">
@@ -290,6 +299,10 @@ function DeletePostLike() {
     .catch((err) => {
       console.log(err);
     });
+}
+//进入用户主页
+function toAuthorProfile() {
+  router.push(`/user/${data.value.user_id}`);
 }
 </script>
 
