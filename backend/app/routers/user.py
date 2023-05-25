@@ -39,7 +39,7 @@ async def update_me(
 
 
 # 上传头像
-@router.post("/upload_avatar")
+"""@router.post("/upload_avatar")
 async def upload_avatar(
     avatar: UploadFile = File(...),
     user: schemas.User = Depends(security.get_current_user),
@@ -58,6 +58,20 @@ async def upload_avatar(
     # 更新数据库
     db_user = crud.get_user(db, user_id=user.id)
     db_user.avatar_url = "/static/avatar/" + avatar.filename
+    db.commit()
+    db.refresh(db_user)
+    return db_user"""
+
+
+@router.post("/upload_avatar")
+async def upload_avatar(
+    avatar: str,
+    user: schemas.User = Depends(security.get_current_user),
+    db: Session = Depends(get_db),
+):
+    # 更新数据库
+    db_user = crud.get_user(db, user_id=user.id)
+    db_user.avatar_url = avatar
     db.commit()
     db.refresh(db_user)
     return db_user
