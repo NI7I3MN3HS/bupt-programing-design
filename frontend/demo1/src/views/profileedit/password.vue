@@ -157,12 +157,12 @@ function validatePasswordSame(rule, value) {
 //model中有三项，声明和初始化变量
 const model = ref(
     {
-        "origin_passowrd": {
-            "password": ""
-        },
-        "new_password": {
-            "password": ""
-        }
+        origin_passowrd: ""
+            //password: ""
+        ,
+        new_password: ""
+            //password: ""
+        
     }
     // origin_passowrd: origin_passowrd.value,
     // new_password: new_password.value,
