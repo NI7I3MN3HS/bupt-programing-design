@@ -40,28 +40,30 @@
               </n-button>
 
               <!--信息按钮-->
-              <n-badge :value="NoticeNumber" :max="15">
-                <n-icon size="31" color="black">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                    viewBox="0 0 24 24"
-                  >
-                    <g
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+              <router-link to="/notice">
+                <n-badge :value="NoticeNumber" :max="99">
+                  <n-icon size="31" color="black">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      xmlns:xlink="http://www.w3.org/1999/xlink"
+                      viewBox="0 0 24 24"
                     >
-                      <path
-                        d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6"
-                      ></path>
-                      <path d="M9 17v1a3 3 0 0 0 6 0v-1"></path>
-                    </g>
-                  </svg>
-                </n-icon>
-              </n-badge>
+                      <g
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6"
+                        ></path>
+                        <path d="M9 17v1a3 3 0 0 0 6 0v-1"></path>
+                      </g>
+                    </svg>
+                  </n-icon>
+                </n-badge>
+              </router-link>
 
               <!--头像下拉菜单-->
               <n-dropdown trigger="click" :options="options">
@@ -304,7 +306,7 @@ const activate = (place) => {
 };
 
 //通知数量
-const NoticeNumber = ref(5);
+const NoticeNumber = ref(0);
 
 //去写文章
 function toWritePost() {
