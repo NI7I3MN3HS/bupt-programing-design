@@ -1,17 +1,27 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 
-import App from './App.vue'
-import router from './router'
-import naive from 'naive-ui'
-import ElementPlus from 'element-plus'
+import App from "./App.vue";
+import router from "./router";
+import naive from "naive-ui";
 
-import './assets/base.less'
+import ElementPlus from "element-plus";
 
-const app = createApp(App)
+import "./assets/base.less";
+import "./assets/style.less";
 
-app.use(createPinia())
-   .use(router)
-   .use(naive)
-   .use(ElementPlus)
-   .mount('#app')
+import "element-plus/dist/index.css";
+
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+
+import axios from "axios";
+
+axios.defaults.withCredentials = true; //跨域请求时发送cookie
+axios.defaults.baseURL = "http://localhost:8000"; //设置默认请求地址
+
+const store = createPinia();
+store.use(piniaPluginPersistedstate);
+
+const app = createApp(App);
+
+app.use(store).use(router).use(naive).use(ElementPlus).mount("#app");
