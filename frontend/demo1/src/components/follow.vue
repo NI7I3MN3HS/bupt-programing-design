@@ -89,6 +89,11 @@ onBeforeMount(() => {
   getFollowedUser(data.value.followed_id);
 });
 
+//组件更新后获取数据
+watch(data, () => {
+  getFollowedUser(data.value.followed_id);
+});
+
 //定义axios请求头
 const UserClient = axios.create({
   baseURL: "http://localhost:8000",

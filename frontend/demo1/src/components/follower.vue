@@ -98,6 +98,10 @@ function getFollowerUser(user_id) {
 onBeforeMount(() => {
   getFollowerUser(data.value.follower_id);
 });
+//组件更新后获取数据
+watch(data, () => {
+  getFollowerUser(data.value.follower_id);
+});
 
 //创建关注
 function CreateFollow() {

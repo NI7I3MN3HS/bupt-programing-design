@@ -222,6 +222,7 @@ onBeforeMount(() => {
 
 //当路由参数改变时重新获取数据
 onBeforeRouteUpdate((to, from, next) => {
+  console.log(to.params.id);
   fetchProfileUserInfo(to.params.id);
   next();
 });
