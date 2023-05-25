@@ -63,13 +63,18 @@
                   />
                 </n-form-item>
                 <n-form-item path="email" label="邮箱">
-                  <n-input class="_special1"
+                  <n-input
+                    class="_special1"
                     v-model:value="model.email"
                     @keydown.enter.prevent
                     :disabled="!is_ChangeEmail"
                     @blur="is_ChangeEmail = false"
                   />
-                  <n-button class="_special2" type="tertiary" @click="is_ChangeEmail = true">
+                  <n-button
+                    class="_special2"
+                    type="tertiary"
+                    @click="is_ChangeEmail = true"
+                  >
                     修改邮箱</n-button
                   >
                 </n-form-item>
@@ -116,6 +121,7 @@ const router = useRouter();
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
+const decodedUrl = ref("");
 
 const { avatar_url, username, email, introduction } = storeToRefs(userStore);
 
@@ -133,10 +139,47 @@ const UserClient = axios.create({
   },
 });
 
+//定义遇见图床请求头
+const UploadIMG = axios.create({
+  // 接口
+  baseURL: "https://www.hualigs.cn",
+  // 超时时间
+  timeout: 50000,
+});
+
 //上传头像
 const myUpload = (file) => {
   const formData = new FormData();
   formData.append("avatar", file.file.file);
+  const formData2 = new FormData();
+  formData2.append("image", file.file.file);
+  formData2.append("apiType", "this,chaoneng");
+  //formData2.append("privateStorage", "ftp");
+  formData2.append("token", "e45ae575be5ff0538a4d521787705823");
+  UploadIMG.post("/api/upload", formData2)
+    .then((response) => {
+      console.log(response);
+      const decodedUrl = response.data.data.url.chaoneng;
+      //上传头像url到后端
+      UserClient.post(
+        "/user/upload_avatar",
+        {},
+        { params: { avatar: decodedUrl } }
+      )
+        .then((response) => {
+          //刷新页面
+          window.location.reload();
+          message.success("上传成功");
+        })
+        .catch((error) => {
+          message.error("上传失败");
+        });
+    })
+    .catch((error) => {
+      message.error("上传失败");
+      console.log(error);
+    });
+  /*
   UserClient.post("/user/upload_avatar", formData)
     .then((response) => {
       message.success("上传成功");
@@ -145,7 +188,7 @@ const myUpload = (file) => {
     })
     .catch((error) => {
       message.error("上传失败");
-    });
+    });*/
 };
 
 const formRef = ref(null);
@@ -348,10 +391,10 @@ function UpdateUserInfo() {
                 color: #655e5e;
                 margin-bottom: 8px;
               }
-              ._special1{
+              ._special1 {
                 margin-right: 15px;
               }
-              ._special2{
+              ._special2 {
                 margin-right: 15px;
               }
               .n-input {
