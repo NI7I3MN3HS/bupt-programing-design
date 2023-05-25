@@ -14,11 +14,11 @@ admin_password = "admin"
 # 注册管理员用户
 @router.post("/register")
 async def create_admin_user(
-    admin_password: str,
+    password: str,
     current_user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db),
 ):
-    if admin_password != admin_password:
+    if password != admin_password:
         raise HTTPException(status_code=400, detail="Incorrect admin password")
     return crud.create_admin_user(db=db, user_id=current_user.id)
 
