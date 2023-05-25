@@ -197,17 +197,19 @@
 
     <!--回到顶部 可视高度50-->
     <div class="BackTop">
-      <n-back-top :bottom="150" :visibility-height="50" iconColorHover="black">
+      <n-back-top :bottom="50" :visibility-height="50" iconColorHover="black">
       </n-back-top>
     </div>
-
+    <!--
     <n-button
       type="info"
       round
       style="position: fixed; right: 20px; bottom: 20px"
+      @click="toWritePost"
     >
       浮动按钮
     </n-button>
+    -->
   </n-config-provider>
 </template>
 
