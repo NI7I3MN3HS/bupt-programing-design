@@ -106,7 +106,7 @@ def delete_user(db: Session, user_id: int):
     if db_user:
         db.delete(db_user)
         db.commit()
-        return "success"
+        return db_user
 
 
 # 搜索用户
