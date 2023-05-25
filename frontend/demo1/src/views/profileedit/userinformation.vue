@@ -63,13 +63,13 @@
                   />
                 </n-form-item>
                 <n-form-item path="email" label="邮箱">
-                  <n-input
+                  <n-input class="_special1"
                     v-model:value="model.email"
                     @keydown.enter.prevent
                     :disabled="!is_ChangeEmail"
                     @blur="is_ChangeEmail = false"
                   />
-                  <n-button type="tertiary" @click="is_ChangeEmail = true">
+                  <n-button class="_special2" type="tertiary" @click="is_ChangeEmail = true">
                     修改邮箱</n-button
                   >
                 </n-form-item>
@@ -344,7 +344,12 @@ function UpdateUserInfo() {
                 color: #655e5e;
                 margin-bottom: 8px;
               }
-
+              ._special1{
+                margin-right: 15px;
+              }
+              ._special2{
+                margin-right: 15px;
+              }
               .n-input {
                 display: flex;
                 width: 490px;

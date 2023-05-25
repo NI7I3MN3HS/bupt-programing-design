@@ -265,7 +265,7 @@ function UpdateUserInfo() {
                         display: flex;
                         flex-direction: column;
                         flex: 1;
-                        ._item {
+                        .n-form-item {
                             min-height: calc(15vh);
                             ._intro {
                                 display: flex;
@@ -274,7 +274,7 @@ function UpdateUserInfo() {
                                 color: #655e5e;
                                 margin-bottom: 8px;
                             }
-                            ._input {
+                            .n-input {
                                 display: flex;
                                 width: 650px;
                                 padding: 10px 12px;
