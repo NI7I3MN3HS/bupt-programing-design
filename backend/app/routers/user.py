@@ -24,6 +24,16 @@ async def update_me(
     user: schemas.User = Depends(security.get_current_user),
     db: Session = Depends(get_db),
 ):
+    # 判断用户名是否重复
+    if user_update.username != user.username:
+        db_user = crud.get_user_by_username(db, username=user_update.username)
+        if db_user:
+            raise HTTPException(status_code=400, detail="Username already registered")
+    # 判断邮箱是否重复
+    if user_update.email != user.email:
+        db_user = crud.get_user_by_email(db, email=user_update.email)
+        if db_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
     db_user = crud.update_user(db, user.id, user_update)
     return db_user
 
