@@ -325,6 +325,8 @@ function toSearch() {
     return;
   }
   storeSearchHistory(searchValue.value);
+  //存储搜索词
+  sessionStorage.setItem("searchValue", searchValue.value);
   //收起抽屉
   active.value = false;
   router.push({

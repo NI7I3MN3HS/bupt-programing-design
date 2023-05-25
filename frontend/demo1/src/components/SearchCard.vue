@@ -18,7 +18,7 @@
       </n-dropdown>
     </n-space>
     <div class="demo-tabs">
-      <el-tabs v-model="activeName">
+      <el-tabs v-model="activeName" @tab-change="handleTabsChange">
         <el-tab-pane label="帖子" name="post">
           <RouterView />
         </el-tab-pane>
@@ -45,6 +45,7 @@ import {
   defineExpose,
   computed,
   defineEmits,
+  getCurrentInstance,
 } from "vue";
 import PostCard from "./PostCard.vue";
 import { useRouter, useRoute } from "vue-router";
@@ -60,13 +61,15 @@ const themeOverrides = {
 };
 
 const router = useRouter();
+const route = useRoute();
 const message = useMessage();
 
 //tab页ref
+
 const activeName = ref("post");
 
 //搜索框ref
-const searchValue = ref("");
+const searchValue = ref();
 
 function toSearch() {
   if (searchValue.value.trim().length == 0) {
@@ -74,6 +77,8 @@ function toSearch() {
     return;
   }
   storeSearchHistory(searchValue.value);
+  //存储搜索词
+  sessionStorage.setItem("searchValue", searchValue.value);
   router.push({
     path: `/search/${activeName.value}`,
     query: {
@@ -85,19 +90,58 @@ function toSearch() {
 //载入时读取搜索历史
 onBeforeMount(() => {
   tagList.value = getSearchHistory();
-  // console.log(tagList.value);
+  const storedQuery = sessionStorage.getItem("searchValue");
+  if (storedQuery) {
+    searchValue.value = storedQuery;
+  }
 });
 
 //当tab页发生变化时，更新路由
 watch(
   () => activeName.value,
   (newVal) => {
+    const storedQuery = sessionStorage.getItem("searchValue");
+    if (storedQuery) {
+      searchValue.value = storedQuery;
+    }
     router.push({
       path: `/search/${newVal}`,
       query: {
         keyword: searchValue.value,
       },
     });
+  }
+);
+
+/*
+//监听路由参数，动态切换tab
+watch(
+  () => route.path,
+  (newVal) => {
+    if (newVal == "/search/post") {
+      activeName.value = "post";
+    } else if (newVal == "/search/user") {
+      activeName.value = "user";
+    } else if (newVal == "/search/post/") {
+      activeName.value = "post";
+    } else if (newVal == "/search/user/") {
+      activeName.value = "user";
+    }
+  }
+);*/
+
+//同时监听path和query的变化
+watch(
+  () => [route.path, route.query],
+  ([newPath, newQuery]) => {
+    if (newPath == "/search/post" || newPath == "/search/post/") {
+      activeName.value = "post";
+    } else if (newPath == "/search/user" || newPath == "/search/user/") {
+      activeName.value = "user";
+    }
+    if (newQuery.keyword) {
+      searchValue.value = newQuery.keyword;
+    }
   }
 );
 
