@@ -1,0 +1,7 @@
+{
+  "Version": "1.0.0",
+  "baseURL": {
+    "dev": "/api",
+    "prod": "http://localhost:8000"
+  }
+}
