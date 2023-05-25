@@ -208,7 +208,11 @@ function UpdateUserInfo() {
       }
     })
     .catch((error) => {
-      message.error("更新失败");
+      if (error.response.data.detail == "Username already registered")
+        message.error("用户名已存在");
+      else if (error.response.data.detail == "Email already registered")
+        message.error("邮箱已存在");
+      else message.error("更新失败");
     });
 }
 </script>
