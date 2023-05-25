@@ -14,9 +14,8 @@ const useUserStore = defineStore("user", {
       is_active: true,
       id: 0,
       introduction: null,
-      used: "",
-      confirm: "",
-      now: ""
+      origin_passowrd: "",
+      new_password: "",
     };
   },
   actions: {
@@ -38,6 +37,8 @@ const useUserStore = defineStore("user", {
           this.is_active = response.data.is_active;
           this.id = response.data.id;
           this.introduction = response.data.introduction;
+          this.origin_passowrd = response.data.origin_passowrd;
+          this.new_password = response.data.new_password;
         })
         .catch((error) => {
           console.error(error);

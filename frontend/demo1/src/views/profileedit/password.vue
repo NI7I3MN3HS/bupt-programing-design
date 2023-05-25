@@ -19,9 +19,9 @@
                         </router-link>
                     </li>
                     <li class="slide">
-                        <router-link to="/profile/edit2">
+                        <router-link to="/profile/edit3">
                             <span class="route exact">
-                                账号信息
+                                修改密码
                             </span>
                         </router-link>
                     </li>
@@ -29,21 +29,22 @@
             </nav>
             <div class="pageview">
                 <div class="pageview_view">
-                    <div class="_head">密码</div>
+                    <div class="_head">修改密码</div>
                     <div class="_main">
                         <div class="_code">
                             <n-form ref="formRef" :model="model" :rules="rules">
-                                <n-form-item path="used" label="当前密码">
+                                <n-form-item path="origin_passowrd" label="当前密码">
                                   <n-input
-                                    v-model:value="model.used"
-                                    @keydown.enter.prevent                                    
-                                    :disabled="!is_Change"
+                                    v-model:value="model.origin_passowrd"
+                                    @keydown.enter.prevent 
+                                 />                                   
+                                    <!-- :disabled="!is_Change"
                                     @blur="is_Change = false"        
-                                  />
+                                  /> -->
                                 </n-form-item>
-                                <n-form-item path="now" label="新密码">
+                                <n-form-item path="new_password" label="新密码">
                                   <n-input
-                                    v-model:value="model.now"
+                                    v-model:value="model.new_password"
                                     @keydown.enter.prevent
                                   />
                                 </n-form-item>
@@ -91,7 +92,7 @@ import { storeToRefs } from "pinia";
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
-const { used, confirm, now } = storeToRefs(userStore);
+const { origin_passowrd, new_password } = storeToRefs(userStore);
 
 //使用信息提示
 const message = useMessage();
@@ -108,18 +109,18 @@ const UserClient = axios.create({
     },
 });
 
-// const formRef = ref(null);
+const formRef = ref(null);
 
 //定义规则
 const rules = {
-    used: [
+    origin_passowrd: [
         {
             required: true,
             message: "用户名不可为空",
             //固定原本密码 待改动
         },
     ],
-    now: [
+    new_password: [
         {
             required: true,
             validator(rule, value) {
@@ -150,24 +151,30 @@ const rules = {
 };
 
 function validatePasswordSame(rule, value) {
-    return value === model.value.now;
+    return value === model.value.new_password;
 }
 
-//model中有三项
-const model = ref({
-    used: used.value,
-    now: now.value,
-    confirm: confirm.value,
-});
+//model中有三项，声明和初始化变量
+const model = ref(
+    {
+        "origin_passowrd": {
+            "password": ""
+        },
+        "new_password": {
+            "password": ""
+        }
+    }
+    // origin_passowrd: origin_passowrd.value,
+    // new_password: new_password.value,
+);
 
-const is_Change = ref(false);
+// const is_Change = ref(false);
 
 //更新用户信息
 function UpdateUserInfo() {
-    UserClient.put("/user/update", {
-        used: model.value.used,
-        now: model.value.now,
-        confirm: model.value.confirm,
+    UserClient.put("/user/reset_password", {
+        origin_passowrd: { password:model.value.origin_passowrd},
+        new_password: { password:model.value.new_password},
     })
         .then((response) => {
             message.success("更新成功");

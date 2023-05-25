@@ -19,8 +19,8 @@
             </router-link>
           </li>
           <li class="slide">
-            <router-link to="/profile/edit2">
-              <span class="route"> 账号信息 </span>
+            <router-link to="/profile/edit3">
+              <span class="route"> 修改密码 </span>
             </router-link>
           </li>
         </ul>

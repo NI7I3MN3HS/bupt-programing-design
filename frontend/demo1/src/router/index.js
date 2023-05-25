@@ -23,11 +23,11 @@ const router = createRouter({
           component: () => import("../views/profileedit/userinformation.vue"),
           meta: { requiresAuth: true },
         },
-        {
-          path: "/profile/edit2",
-          component: () =>
-            import("../views/profileedit/accountinformation.vue"),
-        },
+        // {
+        //   path: "/profile/edit2",
+        //   component: () =>
+        //     import("../views/profileedit/accountinformation.vue"),
+        // },
         {
           path: "/profile/edit3",
           component: () => import("../views/profileedit/password.vue"),
