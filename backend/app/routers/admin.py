@@ -133,7 +133,7 @@ async def delete_comment(
     db_comment = crud.get_comment(db, comment_id=comment_id)
     if db_comment is None:
         raise HTTPException(status_code=404, detail="Comment not found")
-    return crud.delete_comment(db=db, comment_id=db_comment.id)
+    return  {"success":crud.delete_comment(db=db, comment_id=db_comment.id)}
 
 
 # 删除通知信息
