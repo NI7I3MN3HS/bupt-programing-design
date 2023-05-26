@@ -97,7 +97,7 @@ const message = useMessage();
 //定义请求头
 //axios待写
 const UserClient = axios.create({
-  baseURL: "http://localhost:8000",
+  //baseURL: "http://localhost:8000",
   timeout: 10000,
   headers: {
     Accept: "application/json",

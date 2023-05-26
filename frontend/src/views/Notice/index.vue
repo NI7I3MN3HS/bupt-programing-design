@@ -31,7 +31,7 @@ const userStore = useUserStore();
 const notices = ref([]);
 
 const UserClient = axios.create({
-  baseURL: "http://localhost:8000",
+  //baseURL: "http://localhost:8000",
   timeout: 10000,
   headers: {
     Accept: "application/json",
