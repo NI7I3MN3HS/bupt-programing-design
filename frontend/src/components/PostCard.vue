@@ -269,7 +269,9 @@ function DeletePostLike() {
 }
 //跳转到评论区
 function toCommentZone() {
-  window.location.href = `/post/${data.value.id}`;
+  router.push({
+    path: `/post/${data.value.id}`,
+  });
 }
 
 // 跳转到帖子详情页
