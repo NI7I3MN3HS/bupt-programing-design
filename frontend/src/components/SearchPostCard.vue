@@ -218,6 +218,17 @@ onBeforeMount(() => {
   getLikeState(data.value.id, 0);
 });
 
+watch(
+  data,
+  () => {
+    // 当 'data' 发生变化时，'newVal' 将是更新后的值，'oldVal' 将是之前的值。
+    // 你可以在这里重新获取用户数据和点赞状态
+    getUserData();
+    getLikeState(data.value.id, 0);
+  },
+  { deep: true }
+);
+
 //点赞
 function CreatePostLike() {
   UserClient.post(`/like/create`, {

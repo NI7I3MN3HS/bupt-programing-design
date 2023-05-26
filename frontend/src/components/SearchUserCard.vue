@@ -84,6 +84,11 @@ function getFollowedUser(user_id) {
   }
 }
 
+//组件更新后获取数据
+watch(data, () => {
+  getFollowedUser(data.value.id);
+});
+
 //组件挂载前获取数据
 onBeforeMount(() => {
   getFollowedUser(data.value.id);
