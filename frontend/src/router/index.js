@@ -6,8 +6,8 @@ import {
 import useAuthStore from "../stores/modules/AuthStore";
 
 const router = createRouter({
-  //history: createWebHistory(import.meta.env.BASE_URL),
-  history: createWebHashHistory(),
+  history: createWebHistory("/"),
+  //history: createWebHashHistory(),
   routes: [
     {
       path: "/",
