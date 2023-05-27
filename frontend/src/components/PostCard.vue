@@ -311,4 +311,13 @@ function toAuthorProfile() {
 .PostExtraInfo {
   padding-left: 48px+16px;
 }
+.PostContent {
+  /deep/ * {
+    img {
+      max-height: 100%;
+      max-width: 100%;
+      vertical-align: middle;
+    }
+  }
+}
 </style>
