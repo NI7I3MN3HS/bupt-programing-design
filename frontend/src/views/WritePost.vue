@@ -33,15 +33,16 @@
 </template>
 
 <script setup>
+import { useMessage } from "naive-ui";
 import WangEditor from "@/components/WangEditor.vue";
 import Markdown from "@/components/Markdown.vue";
 import { computed, ref } from "vue";
 import useAuthStore from "../stores/modules/AuthStore";
 import axios from "axios";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
-const route = useRoute();
+const message = useMessage();
 
 const authStore = useAuthStore();
 
@@ -57,7 +58,7 @@ const ContentInput = computed(() => {
   if (EditorStatus.value == 0) {
     return Editor.value.valueHtml;
   } else {
-    return MarkdownEditor.value;
+    return MarkdownEditor.value.MarkdownToHtml;
   }
 });
 
@@ -80,10 +81,14 @@ function CreatePost() {
       content: ContentInput.value,
     })
       .then((response) => {
-        //跳转到帖子详情页
-        router.push(`/post/${response.data.id}`);
+        //等待提示发布成功后3s，跳转到帖子详情页
+        message.success("发布成功");
+        setTimeout(() => {
+          router.push(`/post/${response.data.id}`);
+        }, 3000);
       })
       .catch((error) => {
+        message.error("发布失败");
         console.error(error);
       });
     //清空标题和内容
@@ -91,7 +96,7 @@ function CreatePost() {
     Editor.value = "";
     MarkdownEditor.value = "";
   } else {
-    alert("请先登录");
+    message.error("请先登录");
   }
 }
 
