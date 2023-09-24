@@ -22,7 +22,7 @@ class TokenData(BaseModel):
 
 
 class Email(BaseModel):
-    email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
+    email: str = Field(pattern=r"\w{2,32}\@\w+\.\w+", max_length=64)
 
 
 class UserBase(BaseModel):
@@ -34,14 +34,14 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(UserBase):
-    email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
+    email: str = Field(pattern=r"\w{2,32}\@\w+\.\w+", max_length=64)
     introduction: str = Field(None, max_length=1024)
 
 
 class User(UserBase):
     id: int
     hashed_password: str
-    email: str = Field(regex=r"\w{2,32}\@\w+\.\w+", max_length=64)
+    email: str = Field(pattern=r"\w{2,32}\@\w+\.\w+", max_length=64)
     avatar_url: str = Field(None, max_length=256)
     introduction: str = Field(None, max_length=1024)
     create_time: datetime
