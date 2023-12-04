@@ -19,6 +19,7 @@ import "@wangeditor/editor/dist/css/style.css"; // 引入 css
 import { onBeforeUnmount, ref, shallowRef, onMounted, defineEmits } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { Boot } from "@wangeditor/editor";
+import { tr } from "date-fns/locale";
 //import { IButtonMenu, IDomEditor } from "@wangeditor/editor";
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef();
@@ -34,7 +35,6 @@ class AutoDetectLangMenu {
     // this.iconSvg = '<svg>...</svg>' // 可选
     this.tag = "button";
   }
-
   getValue(editor) {
     // JS 语法
     return editor.getText(); //获取编辑器内容
@@ -60,14 +60,18 @@ class ChineseToEnglishMenu {
     // this.iconSvg = '<svg>...</svg>' // 可选
     this.tag = "button";
   }
-
   getValue(editor) {
     // JS 语法
     return editor.getText(); //获取编辑器内容
   }
   isActive(editor) {
     // JS 语法
-    return false;
+    if(status.value === "zh"){
+      return true;
+    }
+    else if(status.value === "en"){
+      return false;
+    }
   }
   isDisabled(editor) {
     // JS 语法
@@ -88,14 +92,18 @@ class EnglishToChineseMenu {
     // this.iconSvg = '<svg>...</svg>' // 可选
     this.tag = "button";
   }
-
   getValue(editor) {
     // JS 语法
     return "";
   }
   isActive(editor) {
     // JS 语法
-    return false;
+    if(status.value === "en"){
+      return true;
+    }
+    else if(status.value === "zh"){
+      return false;
+    }
   }
   isDisabled(editor) {
     // JS 语法
@@ -153,6 +161,7 @@ onBeforeUnmount(() => {
 
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
+  status.value = "zh";
 };
 
 const mode = "default";

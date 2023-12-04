@@ -12,7 +12,7 @@
     <div class="Preview">
       <n-card>
         <!-- 这里是渲染内容-->
-        <TranslatePreview ref="TPreview" />
+        <TranslatePreview :toPreview="toPreview" />
       </n-card>
     </div>
   </div>
@@ -27,35 +27,45 @@ import { useMessage } from "naive-ui";
 
 const router = useRouter();
 const message = useMessage();
+const content = ref("");
+const status = ref("");
+const toPreview = ref("");
 
 const GetContentAndStatus = (val) => {
   console.log(val);
   console.log(val.content);
   console.log(val.status);
+  content.value = val.content;
+  status.value = val.status;
 };
 
 const toTranslate = () => {
-  /*
-  const editor = MarkdownEditor.value;
-  if (editor == null) return;
-  const html = editor.getHtml();
-  const text = editor.getText();
-  const title = text.split("\n")[0];
-  const content = text.split("\n").slice(1).join("\n");
-  axios
-    .post("/api/translate", {
-      title,
-      content,
-    })
-    .then((res) => {
-      if (res.data.code === 200) {
-        message.success("翻译成功");
-        在这里把获取到的后端返回的数据传给TranslatePreview组件
-        router.push(`/article/${res.data.data.id}`);
-      } else {
-        message.error("翻译失败");
-      }
-    });*/
+  if(status.value === "zh"){
+    axios.post("/translate/chinese2english", {
+    },
+      {
+        params: {
+          text: content.value,
+        },
+      })
+      .then((res) => {
+      toPreview.value = res.data;
+      });
+  }
+
+  else if(status.value === "en"){
+    axios.post("/translate/english2chinese", {
+    },
+      {
+        params: {
+          text: content.value,
+        },
+      })
+      .then((res) => {
+      toPreview.value = res.data;
+    });
+  }
+
 };
 </script>
 <style scoped>
