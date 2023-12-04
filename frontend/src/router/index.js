@@ -43,6 +43,10 @@ const router = createRouter({
           meta: { requiresAuth: true },
         },
         {
+          path: "/Translate",
+          component: () => import("../views/Translate.vue"),
+        },
+        {
           path: "/post/:id",
           name: "post",
           component: () => import("../views/Post/Post.vue"),
