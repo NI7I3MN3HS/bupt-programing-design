@@ -5,7 +5,7 @@
         <div class="header-content">
           <router-link to="/" class="header-left">
             <div class="homelogo">
-              <span class="logo-text"> BuptHub </span>
+              <span class="logo-text"> InnovEnglish </span>
             </div>
           </router-link>
           <div class="header-right">
@@ -95,7 +95,7 @@
         <div class="footer-content">
           <div class="footer-first">
             <div class="introduction">
-              <div style="font-weight: bolder">欢迎来到BUPTHUB</div>
+              <div style="font-weight: bolder">欢迎来到InnovEnglish</div>
               Welcome!
             </div>
             <div class="about-us">
@@ -115,7 +115,7 @@
           </div>
           <n-divider />
           <div class="footer-second">
-            <div class="footer-rights">© 2023 BUPTHub.All rights reserved.</div>
+            <div class="footer-rights">© 2023 InnovEnglish.All rights reserved.</div>
             <div class="github-link">
               <n-button
                 text
