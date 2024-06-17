@@ -64,6 +64,37 @@
                   </n-icon>
                 </n-badge>
               </router-link>
+              
+              <!-- 翻译跳转 -->
+              <router-link to="/translate">
+                <n-button text block>
+                  <template #icon>
+                    <n-icon size="36">
+                      <svg
+                        t="1679069498934"
+                        class="icon"
+                        viewBox="0 0 1024 1024"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        p-id="9562"
+                        width="200"
+                        height="200"
+                      >
+                        <path
+                          d="M768 128H256c-70.4 0-128 57.6-128 128v512c0 70.4 57.6 128 128 128h512c70.4 0 128-57.6 128-128V256c0-70.4-57.6-128-128-128zM896 768c0 35.2-28.8 64-64 64H256c-35.2 0-64-28.8-64-64V256c0-35.2 28.8-64 64-64h512c35.2 0 64 28.8 64 64v512z"
+                          fill="#272636"
+                          p-id="9563"
+                        ></path>
+                        <path
+                          d="M416 416h192v32H416zM416 480h192v32H416zM416 544h128v32H416z"
+                          fill="#272636"
+                          p-id="9564"
+                        ></path>
+                      </svg>
+                    </n-icon>
+                  </template>
+                </n-button>
+              </router-link>
 
               <!--头像下拉菜单-->
               <n-dropdown trigger="click" :options="options">

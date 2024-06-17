@@ -14,41 +14,37 @@
     @onChange="toFather"
   />
 </template>
+
 <script setup>
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css
-import { onBeforeUnmount, ref, shallowRef, onMounted, defineEmits } from "vue";
+import { onBeforeUnmount, ref, shallowRef, defineEmits } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import { Boot } from "@wangeditor/editor";
-import { tr } from "date-fns/locale";
-//import { IButtonMenu, IDomEditor } from "@wangeditor/editor";
+
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef();
 
 // 内容 HTML
 const valueHtml = ref("");
-
-const status = ref("zh");
+const status = ref("zh"); // 默认为中文输入
+const type = ref("trans"); // 默认为翻译模式
+const activeButton = ref("chineseToEnglish");
 
 class AutoDetectLangMenu {
   constructor() {
     this.title = "自动检查语言"; // 自定义菜单标题
-    // this.iconSvg = '<svg>...</svg>' // 可选
     this.tag = "button";
   }
   getValue(editor) {
-    // JS 语法
     return editor.getText(); //获取编辑器内容
   }
   isActive(editor) {
-    // JS 语法
     return false;
   }
   isDisabled(editor) {
-    // JS 语法
     return false;
   }
   exec(editor, value) {
-    // JS 语法
     if (this.isDisabled(editor)) return;
   }
 }
@@ -56,98 +52,171 @@ class AutoDetectLangMenu {
 //中译英
 class ChineseToEnglishMenu {
   constructor() {
-    this.title = "中文"; // 自定义菜单标题
-    // this.iconSvg = '<svg>...</svg>' // 可选
+    this.title = "中文";
     this.tag = "button";
   }
   getValue(editor) {
-    // JS 语法
-    return editor.getText(); //获取编辑器内容
+    return editor.getText();
   }
   isActive(editor) {
-    // JS 语法
-    if(status.value === "zh"){
-      return true;
-    }
-    else if(status.value === "en"){
-      return false;
-    }
+    return status.value === "zh" && type.value === "trans";
   }
   isDisabled(editor) {
-    // JS 语法
     return false;
   }
   exec(editor, value) {
-    // JS 语法
     if (this.isDisabled(editor)) return;
     status.value = "zh";
-    //editor.insertText(value); // value 即 this.value(editor) 的返回值
+    type.value = "trans";
+    activeButton.value = "chineseToEnglish";
+    emitToFather();
   }
 }
 
 //英译中
 class EnglishToChineseMenu {
   constructor() {
-    this.title = "英文"; // 自定义菜单标题
-    // this.iconSvg = '<svg>...</svg>' // 可选
+    this.title = "英文";
     this.tag = "button";
   }
   getValue(editor) {
-    // JS 语法
-    return "";
+    return editor.getText();
   }
   isActive(editor) {
-    // JS 语法
-    if(status.value === "en"){
-      return true;
-    }
-    else if(status.value === "zh"){
-      return false;
-    }
+    return status.value === "en" && type.value === "trans";
   }
   isDisabled(editor) {
-    // JS 语法
     return false;
   }
   exec(editor, value) {
-    // JS 语法
     if (this.isDisabled(editor)) return;
     status.value = "en";
+    type.value = "trans";
+    activeButton.value = "englishToChinese";
+    emitToFather();
+  }
+}
+
+class AcademicPaperMenu {
+  constructor() {
+    this.title = "学术论文翻译"; // 自定义菜单标题
+    this.tag = "button";
+  }
+  getValue(editor) {
+    return editor.getText(); //获取编辑器内容
+  }
+  isActive(editor) {
+    return type.value === "academic_paper";
+  }
+  isDisabled(editor) {
+    return false;
+  }
+  exec(editor, value) {
+    if (this.isDisabled(editor)) return;
+    status.value = "zh"; // 学术论文翻译对应中文输入
+    type.value = "academic_paper";
+    activeButton.value = "academicPaper";
+    emitToFather();
+  }
+}
+
+class WriteMenu {
+  constructor() {
+    this.title = "写作润色"; // 自定义菜单标题
+    this.tag = "button";
+  }
+  getValue(editor) {
+    return editor.getText(); //获取编辑器内容
+  }
+  isActive(editor) {
+    return type.value === "write";
+  }
+  isDisabled(editor) {
+    return false;
+  }
+  exec(editor, value) {
+    if (this.isDisabled(editor)) return;
+    status.value = "en"; // 写作润色对应英文输入
+    type.value = "write";
+    activeButton.value = "write";
+    emitToFather();
+  }
+}
+
+class WordMenu {
+  constructor() {
+    this.title = "单词联想"; // 自定义菜单标题
+    this.tag = "button";
+  }
+  getValue(editor) {
+    return editor.getText(); //获取编辑器内容
+  }
+  isActive(editor) {
+    return type.value === "word";
+  }
+  isDisabled(editor) {
+    return false;
+  }
+  exec(editor, value) {
+    if (this.isDisabled(editor)) return;
+    status.value = "en"; // 单词联想对应英文输入
+    type.value = "word";
+    activeButton.value = "word";
+    emitToFather();
   }
 }
 
 const AutoDetectLangMenuConf = {
-  key: "autodetectLang", // 定义 menu key ：要保证唯一、不重复（重要）
+  key: "autodetectLang",
   factory() {
-    return new AutoDetectLangMenu(); // 把 `YourMenuClass` 替换为你菜单的 class
+    return new AutoDetectLangMenu();
   },
 };
 
 const ChineseToEnglishMenuConf = {
-  key: "chineseToEnglish", // 定义 menu key ：要保证唯一、不重复（重要）
+  key: "chineseToEnglish",
   factory() {
-    return new ChineseToEnglishMenu(); // 把 `YourMenuClass` 替换为你菜单的 class
+    return new ChineseToEnglishMenu();
   },
 };
 
 const EnglishToChineseMenuConf = {
-  key: "englishToChinese", // 定义 menu key ：要保证唯一、不重复（重要）
+  key: "englishToChinese",
   factory() {
-    return new EnglishToChineseMenu(); // 把 `YourMenuClass` 替换为你菜单的 class
+    return new EnglishToChineseMenu();
+  },
+};
+
+const AcademicPaperMenuConf = {
+  key: "academicPaper",
+  factory() {
+    return new AcademicPaperMenu();
+  },
+};
+
+const WriteMenuConf = {
+  key: "write",
+  factory() {
+    return new WriteMenu();
+  },
+};
+
+const WordMenuConf = {
+  key: "word",
+  factory() {
+    return new WordMenu();
   },
 };
 
 Boot.registerMenu(AutoDetectLangMenuConf);
 Boot.registerMenu(ChineseToEnglishMenuConf);
 Boot.registerMenu(EnglishToChineseMenuConf);
+Boot.registerMenu(AcademicPaperMenuConf);
+Boot.registerMenu(WriteMenuConf);
+Boot.registerMenu(WordMenuConf);
 
 const toolbarConfig = {
-  toolbarKeys: [],
-};
-
-toolbarConfig.insertKeys = {
-  index: 0, // 插入的位置，基于当前的 toolbarKeys
-  keys: ["autodetectLang", "chineseToEnglish", "englishToChinese"], // 要插入的菜单 key
+  toolbarKeys: ["autodetectLang", "chineseToEnglish", "englishToChinese", "academicPaper", "write", "word"],
 };
 
 const editorConfig = { placeholder: "请输入内容..." };
@@ -162,18 +231,25 @@ onBeforeUnmount(() => {
 const handleCreated = (editor) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
   status.value = "zh";
+  type.value = "trans";
 };
 
-const mode = "default";
-
-// 通过 emit 事件，把 editor 实例传递给父组件
 const emit = defineEmits(["toFather"]);
-const toFather = (editor) => {
-  const content = editor.getText();
+const emitToFather = () => {
+  const content = editorRef.value.getText();
   let param = {
     content: content,
     status: status.value,
+    type: type.value,
   };
   emit("toFather", param);
 };
+
+const mode = "default";
 </script>
+
+<style scoped>
+.toolbar-button-active {
+  background-color: #8a8a8a; /* 激活按钮背景色 */
+}
+</style>
