@@ -15,7 +15,7 @@ emailpsw:邮箱密码
 """
 emailh = "smtp.qq.com"
 emailu = "1320598294@qq.com"
-emailpsw = "tzauqgpeswiphifd"
+emailpsw = "****"
 
 
 # 发送邮件
